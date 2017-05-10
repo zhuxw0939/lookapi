@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Home - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include './common/header.html' %}
+
+<div class="wrapper">
+	<h3 style="padding: 150px 0 50px; text-align: center;">欢迎使用SXAPI</h3>
+	{% if user %}
+	<p style="text-align: center; color: #aaa">
+		欢迎登录：{{user.name}}
+	</p>
+	{% else %}
+	<p style="text-align: center; color: #aaa">
+		<a href="/user/login" style="color: #999; padding: 0 10px;">登录</a> |
+		<a href="/user/register" style="color: #999;  padding: 0 10px;">注册</a>
+	</p>
+	{% endif %}
+</div>
+<div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px;">
+	<h5 style="padding: 20px 0;">公司项目：</h5>
+	<ul class="projects_list">
+	{% for item in Projects %}
+		<li>
+			<a class="_link" href="/api/list?p_id={{item.id}}">{{item.name}}</a>
+			<span>当前版本：{{item.version_name}}</span>
+			<span>创建者：{{item.user_name}}</span>
+			<span>创建时间：{{item.create_time | date('Y-m-d H:i:s', -480)}}</span>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
+
+{% include './common/footer.html' %}
+
+
+
+<script>
+$(function(){
+
+});
+</script>
+
+
+</body>
+</html>

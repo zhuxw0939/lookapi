@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>lookapis</title>
+<link rel="stylesheet" type="text/css" href="{{static_host}}/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/lookapi/css/page_index.css" />
+</head>
+
+<body>
+
+<div class="header_look">
+	<h2>接口访问记录</h2>
+	<span class="goright"><a href="/lookapi/apiSave">返回</a>&nbsp;|&nbsp;&nbsp;<a href="/lookapi/?apisaveid={{data.id}}">测试</a></span>
+</div>
+<div class="main_look" style="padding-left: 0">
+	<div class="look_right">
+		{% if data %}
+		<div class="api_page">
+			<h3 id="api_title">{{data.id}}</h3>
+			<p><strong>请求URL：</strong></p>
+			<ul class="txts">
+				<li><span class="url">{{data.url}}</span></li>
+			</ul>
+			<p><strong>请求参数：</strong></p>
+			<div class="json_box">
+				<div class="json">{{data.parameters}}</div>
+			</div>
+			<p><strong>请求详情：</strong></p>
+			<ul class="txts">
+				<li style="font-size: 14px; color: #999;"> &nbsp;&nbsp;{{data.ip}}&nbsp;&nbsp;&nbsp;&nbsp;{{data.requests}}&nbsp;&nbsp;&nbsp;&nbsp;{{data.times}}</li>
+			</ul>
+			<p><strong>返回：</strong></p>
+			<div class="json_box">
+				<p style="text-align: right">
+					<a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+					<a class="toggle-btn" href="#" id="toggle-btn">+</a>
+				</p>
+				<div class="json">{{data.back}}</div>
+			</div>
+		</div>
+		{% else %}
+		<h4>这儿是欢迎页面</h4>
+		{% endif %}
+	</div>
+</div>
+
+<!--
+
+<div class="wrapper">
+    <h2 style="border-bottom: 1px solid #ddd; margin-bottom: 80px; padding-bottom: 20px;">Api接口测试</h2>
+	<table class="table_default center" id="js_classAnalysisTable" width="100%">
+	    <thead>
+	        <tr>
+	            <th width="100">类型</th>
+				<th width="100">名称</th>
+	            <th>地址</th>
+	            <th>参数</th>
+	            <th width="100">备注</th>
+	            <th width="100">操作</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{%for data in data %}
+			<tr>
+				<td>{{data.type}}</td>
+				<td>{{data.name}}</td>
+				<td>{{data.url}}</td>
+				<td>{{data.data}}</td>
+				<td>{{JSON.stringify(data.time)}}</td>
+				<td><a href="#" class="delapi" data-id='{{JSON.stringify(data._id)}}'>删除</a></td>
+	        </tr>
+			{% endfor%}
+		</tbody>
+	</table>
+</div>
+-->
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.form.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.js"></script>
+<script src="/lookapi/script/jquery.jsonview.min.js"></script>
+
+<script>
+	$(function(){
+		$(".json").each(function () {
+			console.info(JSON.parse($(this).text()));
+			$(this).JSONView(JSON.parse($(this).text()));
+		});
+
+		$('#toggle-btn').on('click', function() {
+			$('.json').JSONView('toggle');
+			return false;
+		});
+		$('#toggle-level1-btn').on('click', function() {
+			$('.json').JSONView('toggle', 2);
+			return false;
+		});
+	});
+
+</script>
+
+
+</body>
+</html>

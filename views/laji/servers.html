@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>服务器配置</title>
+<link rel="stylesheet" type="text/css" href="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/lookapi/css/page_index.css" />
+</head>
+
+<body>
+
+<div class="index_header">
+	<div class="index_tabs">
+		<a href="/lookapi/servers" class="current first">服务器配置</a>
+		<a href="/lookapi/">接口测试</a>
+		<a href="/lookapi/list">接口列表</a>
+	</div>
+</div>
+<div class="wrapper wrapper_index">
+    <p>
+	    <span class="left_span">服务器url：</span>
+	    <input type="text" class="input longer" name="path" id="js_serverurl" placeholder="默认预发布环境 http://120.55.199.115:8881" value="{{serverURL}}">
+    </p>
+    <p>
+	    <span class="left_span">sessionid：</span>
+	    <input type="text" class="input longer" name="sessionid" id="js_session" placeholder="sessionid" value="{{sessionid}}">
+    </p>
+	<p class="submit">
+	    <a href="#" class="btns btns-blue" id="js_ajax"><i class="iconfont">&#xe689;</i>保存</a>
+	    <a href="#" class="btns btns-gray2" id="js_writeDAta"><i class="iconfont" style="top: -2px;">&#xe611;</i>选择配置</a>
+    </p>
+</div>
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.js"></script>
+<script>
+    $(function(){
+        $("#js_ajax").click(function (e) {
+	        if($("#js_session").val()=="" || $("#js_serverurl").val()==""){
+	        	alert("不能为空!");
+		        return false;
+	        }
+            $.ajax({
+                url:  "/lookapi/api/writeServers",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+	                url: $("#js_serverurl").val(),
+                    sessionid: $("#js_session").val()
+                },
+                success: function(data) {
+                    console.info(data);
+                    if(data.status===0){
+	                    alert(data.message);
+                    }
+                },
+                complete: function() {
+                }
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

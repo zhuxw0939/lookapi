@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>LooksApi-index - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+
+
+<div class="main_look">
+	<div class="look_left">
+		<div class="_menu">
+		</div>
+	</div>
+	<div class="look_right">
+		{% if data %}
+		<div class="api_page">
+			<h3 id="api_title" style="position: relative; height: 42px">
+				{% if data2.name %}
+					{{data2.name}}
+				{% else %}
+					{{data.swagger_id}}
+				{% endif %}
+				<span class="goright" style="top:28px; font-size: 13px; font-weight: 100;">
+					<a href="/api/detail/{{data2.id}}">详情</a>&nbsp;&nbsp;
+					<a href="/looks/api?p_id={{data.project_id}}&token=" id="js_backlist">访问记录</a>&nbsp;&nbsp;
+					<a href="/api/test?tid={{data.id}}">在线调试</a>&nbsp;&nbsp;
+				</span>
+				<!--<span class="goright" style="top:28px; font-size: 13px; font-weight: 100;">
+					<a href="/api/test?id={{data.id}}" >调试</a>
+					<a href="/api/update?id={{data.id}}" >编辑</a>
+				</span>-->
+			</h3>
+			<p><strong>请求时间：</strong></p>
+			<ul class="txts">
+				<li>{{data.time | date('Y-m-d H:i:s', -480)}}</li>
+			</ul>
+			<p><strong>请求URL：</strong></p>
+			<ul class="txts">
+				<li><span class="url">{{data.url}}</span></li>
+			</ul>
+			<p><strong>请求方式：</strong></p>
+			<ul class="txts">
+				<li>
+					{{data.server_type}}
+					 -
+					{{data.requests}}
+					{% if data2.fun_name %}
+					 -
+					{{data2.fun_name}}
+					{% endif %}
+				</li>
+			</ul>
+			<p><strong>请求时间：</strong></p>
+			<ul class="txts">
+				<li>{{data.send_time}}ms</li>
+			</ul>
+			<p><strong>请求参数：</strong></p>
+			<div class="json_box">
+				<div class="json" id="js_data_parameters">{{data.parameters}}</div>
+			</div>
+			<p><strong>返回结果：</strong></p>
+			<div class="json_box">
+				<p style="text-align: right">
+					<a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+					<a class="toggle-btn" href="#" id="toggle-btn">+</a>
+				</p>
+				<div class="json">{{data.back_data}}</div>
+			</div>
+
+		</div>
+		{% else %}
+		<div>没有数据</div>
+		{% endif %}
+	</div>
+
+{% include '../common/footer.html' %}
+
+<script>
+$(function(){
+
+	//
+	var dataParameters = JSON.parse($("#js_data_parameters").text());
+	$("#js_backlist").attr("href", $("#js_backlist").attr("href")+dataParameters.headers.TOKEN.slice(-5))
+
+
+	$(".json").each(function () {
+//		console.info(JSON.parse($(this).text()));
+		$(this).JSONView(JSON.parse($(this).text()));
+	});
+
+	$('#toggle-btn').on('click', function() {
+		$('.json').JSONView('toggle');
+		return false;
+	});
+	$('#toggle-level1-btn').on('click', function() {
+		$('.json').JSONView('toggle', 2);
+		return false;
+	});
+});
+</script>
+
+
+</body>
+</html>
+
+
+
+</body>
+</html>

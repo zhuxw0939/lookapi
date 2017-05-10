@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>我的消息 - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+<div class="wrapper">
+
+	<div class="sx_tabs cf" style="padding: 100px 0 30px; text-align: center;">
+		<a href="/user/center">个人中心</a>
+		<a href="/user/changePassword">修改密码</a>
+		<a href="/user/message" class="current">我的消息</a>
+		<a href="/user/env">我的环境</a>
+	</div>
+	<h4 style="margin: 20px 0 20px; border-bottom: 1px solid #ddd;">我的消息 </h4>
+
+	<ul class="my_message">
+		{% for item in data %}
+			<li>
+				<p class="_title">
+					{{item.title}}
+					{% if item.is_read %}
+					<span style="color:green; font-size: 12px; padding-left: 10px;">[已读]</span>
+					{% else %}
+					<span style="color:red; font-size: 12px; padding-left: 18px;">[未读]</span>
+					{% endif %}
+					<span style="color:#999; font-size: 12px; padding-left: 4px;">{{item.create_time | date('Y-m-d H:i:s', -480)}}</span>
+					<a href="{{item.id}}" data-id="{{item.id}}" class="goright del_message">删除消息</a>
+				</p>
+				<p class="_info">{{item.info}}<a href="#" data-p_id="{{item.link}}" class="jointeam">点击加入</a></p>
+			</li>
+		{% endfor %}
+	</ul>
+
+</div>
+
+
+{% include '../common/footer.html' %}
+<script>
+$(function(){
+
+	// 加入项目
+	$("a.jointeam").click(function(){
+		var p_id = $(this).data("p_id");
+		$.sx.confirm("确定加入项目吗？", "加入成功后即将跳转到该项目页面。", function(){
+			$.ajax({
+				url: "/project/joinTeam",
+				type: "POST",
+				dataType: "json",
+				data: {
+					p_id: p_id
+				},
+				success: function(data){
+					console.info(data);
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.location.href="/api/list?p_id="+p_id;
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+
+	// removeMessage
+	$(".del_message").click(function(){
+		$.ajax({
+			url: "/user/removeMessage",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: $(this).data("id")
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("操作成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+});
+</script>
+</body>
+</html>

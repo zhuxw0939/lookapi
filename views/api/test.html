@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Test - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+<div class="wrapper">
+	<form id="myform"  action="/api/testSend" method="post">
+		<ul class="_form">
+			<li>
+			    <span class="field">请求方式：</span>
+				<select name="request_header" class="select">
+				    <option value="1">HTTP</option>
+				    <option value="2">HTTPS</option>
+			    </select>
+				<select name="request_type" class="select" id="js_request_type">
+					{% for item in options.apiRequestType %}
+						{% if data.request_type %}
+							<option value="{{item.value}}" {%if data.request_type==item.value %}selected{%endif%}>{{item.name}}</option>
+						{% else %}
+							<option value="{{item.value}}" {%if 1==item.value %}selected{%endif%}>{{item.name}}</option>
+						{% endif %}
+					{% endfor %}
+			    </select>
+			</li>
+
+			<li>
+			    <span class="field">选择环境：</span>
+				<select name="env_id" class="select" id="js_env_id">
+					<option value="{{item.id}}">--请选择--</option>
+					{% for item in dataEnv %}
+						<option value="{{item.id}}" data-host="{{item.host}}" data-session_id="{{item.session_id}}">{{item.name}}</option>
+					{% endfor %}
+			    </select>
+				<input type="hidden" name="env_host" class="env_host">
+				<input type="hidden" name="env_session_id" class="env_session_id">
+				<a href="/user/env" class="btns-txt">环境设置</a>
+			</li>
+
+
+			<li>
+			    <span class="field">接口url：</span>
+				<input type="text" class="input longer" autocomplete="on" name="url" id="js_api_url" value="{{data.url}}" placeholder="不能为空">
+	            <a href="#" class="btns-txt"  id="js_xuanzeurl">选择接口</a>
+			</li>
+
+			{% include 'parameters.html' %}
+
+		</ul>
+		<input type="hidden" name="api_id" id="js_api_id2" value="{{data.id}}">
+
+	</form>
+</div>
+
+<div class="wrapper wrapper_index">
+    <p class="submit" style="position: relative;">
+	    <a href="#" class="btns btns-blue" id="js_ajax"><i class="iconfont">&#xe681;</i>测试</a>
+	    {% if query.id %}
+	    <a href="/api/update?id={{data.id}}" class="btns btns-gray2" id="js_saveDAta"><i class="iconfont" style="top: -2px;">&#xe601;</i>保存接口</a>
+	    {% endif %}
+	    <a href="#" class="btns btns-gray2" id="js_createApi"><i class="iconfont" style="top: -2px;">&#xe664;</i>创建新接口</a>
+	    <br> <font id="js_jsonp" style="display: inline-block; height: 20px; line-height: 32px; position: absolute; bottom: -20px; left:30px; color:red;"></font>
+    </p>
+    <div class="data_box">
+	    <a class="toggle-btn" href="#" id="toggle-btn">+</a>
+	    <a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+        <div id="data" class="data"></div>
+	    <input type="hidden" id="js_backdata">
+    </div>
+	<input type="hidden" id="js_api_id" value="{{data.id}}">
+</div>
+
+{% include '../common/footer.html' %}
+
+<script>
+	var typesJson = JSON.parse('{{JSON.stringify(options.apiParametersType)}}');
+	var mustsJson = JSON.parse('{{JSON.stringify(options.apiParametersMust)}}');
+	var authJson = JSON.parse('{{JSON.stringify(options.apiParametersAuth)}}');
+</script>
+<script src="/static/script/vue.min.js"></script>
+<script src="/static/script/page_api_test.js"></script>
+<script src="/static/script/page_api_parameters.js"></script>
+
+
+<script>
+$(function(){
+
+
+
+	// 先清除所有本地存储
+	localStorage.clear();
+
+	$("#js_env_id").change(function(){
+		envVal();
+	});
+	function envVal(){
+		$(".env_host").val($("#js_env_id option:checked").data("host"));
+		$(".env_session_id").val(JSON.stringify($("#js_env_id option:checked").data("session_id")));
+		//设置cookie
+		document.cookie="chose_evn="+$("#js_env_id option:checked").val();
+	}
+	if(getCookie("chose_evn")&&getCookie("chose_evn")!="undefined"&&getCookie("chose_evn")!=undefined){
+		$("#js_env_id").val(getCookie("chose_evn"));
+		envVal();
+	} else {
+		$("#js_env_id option:first").prop("checked");
+		envVal();
+	}
+
+
+	//获取cookie
+	function getCookie(name) {
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+
+	// 新建一个api
+	$("#js_createApi").click(function(){
+		console.info(localStorage);
+		saveApiLocal(0);
+		console.info(localStorage);
+		window.location.href="/api/create";
+		return false;
+	});
+
+	// 保存现有api
+	$("#js_saveDAta").click(function(){
+		console.info(localStorage);
+		saveApiLocal($("#js_api_id").val());
+		console.info(localStorage);
+		window.location.href="/api/update?id="+$("#js_api_id").val();
+		return false;
+	});
+
+	function saveApiLocal(id){
+		localStorage.setItem('api_id', id);
+		localStorage.setItem('api_url', $("#js_api_url").val());
+		localStorage.setItem('api_request_type', $("#js_request_type").val());
+		localStorage.setItem('api_parameters', $("#js_senddata").val());
+		localStorage.setItem('api_back_data', $("#js_backdata").val());
+	}
+
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>LooksApi-index - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+<style>
+	table.table_api tr.looksd td {
+		color: #999;
+	}
+	table.table_api tr.looksd td font {
+		color: #999 !important;
+	}
+</style>
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+
+
+<div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px; width: 1400px;">
+
+	<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; margin-bottom: 30px; position: relative;">
+		接口访问记录
+	<span class="goright" style="top: 30px; font-size: 12px;">
+		<a href="/looks/api?p_id={{p_id}}">查看所有</a>
+	</span>
+	</h4>
+
+
+
+	<div class="">
+
+		<table class="table_api" >
+			<thead>
+				<tr>
+					<th width="8%">方式</th>
+					<th width="20%">接口URL</th>
+					<th width="9%">访问时间</th>
+					<th width="6%">响应</th>
+					<th width="6%">code</th>
+					<th width="12%">message</th>
+					<th width="20%">返回结果</th>
+					<th width="14%" style="text-align: center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for item in data %}
+					<tr class="_{{item.id}}" data-id="{{item.id}}">
+						<td data-id="{{item.id}}">{{item.server_type}} - {{item.requests}}</td>
+						<td style="max-width: 400px;" title="{{item.url}}">{{item.url}}</td>
+						<td>{{item.time | date('Y-m-d H:i:s', -480)}}</td>
+						<td>
+							{% if item.send_time<100 %}
+								<font color="#58c760">{{item.send_time}}ms</font>
+							{% elseif item.send_time<300 %}
+								<font color="#e58f07">{{item.send_time}}ms</font>
+							{% elseif item.send_time<300 %}
+								<font color="#f90000" style="font-weight: 800">{{item.send_time}}ms</font>
+							{% else %}
+								<font color="#f90000">{{item.send_time}}ms</font>
+							{% endif %}
+						</td>
+						<td style="max-width: 100px;" class="back_code"></td>
+						<td style="max-width: 100px;" class="back_message"></td>
+						<td style="max-width: 100px;" title="{{item.back_data}}" class="js_back_data">{{item.back_data}}</td>
+						<td align="center">
+							<a target="_blank" href="/looks/api/detail?id={{item.id}}" class="btns btns-min btns-green">详情</a>
+							<a href="/looks/api?p_id={{item.project_id}}&token=" class="btns btns-min btns-blue js_go_mylist" data-liks="{{item.parameters}}">记录</a>
+							<a target="_blank" href="/api/test?tid={{item.id}}" class="btns btns-min btns-orange">调试</a>
+						</td>
+					</tr>
+				{% endfor%}
+			</tbody>
+		</table>
+
+
+	</div>
+
+
+</div>
+
+
+{% include '../common/footer.html' %}
+
+<script>
+$(function(){
+
+	$(".js_go_mylist").click(function(){
+		var dataParameters = $(this).data("liks");
+		if(dataParameters && dataParameters.headers && dataParameters.headers.TOKEN) {
+			$(this).attr("href", $(this).attr("href")+dataParameters.headers.TOKEN.slice(-5))
+		} else {
+			return false;
+		}
+	});
+
+	$(".js_back_data").each(function(){
+		try {
+			var json1 = $(this).text();
+			if(typeof json1 == "string"){
+				json1 = JSON.parse(json1);
+			}
+			if(typeof json1 == "string"){
+				json1 = JSON.parse(json1);
+			}
+			if(json1.code==200){
+				$(this).closest("tr").find(".back_code").html('<font color="#58c760">'+json1.code+'</font>');
+				$(this).closest("tr").find(".back_message").html('<font>'+json1.message+'</font>');
+			} else {
+				$(this).closest("tr").find(".back_code").html('<font color="#e58f07">'+json1.code+'</font>');
+				$(this).closest("tr").find(".back_message").html('<font>'+json1.message+'</font>');
+			}
+			$(this).text(JSON.stringify(json1.data));
+		} catch (error){
+			console.info(error);
+			$(this).text($(this).attr("title"));
+		}
+	});
+
+
+
+
+	/*首先从cookies中读取已经浏览过的数据*/
+	var looksend = getCookie("looks_api");
+//	console.info(looksend);
+	if(looksend!=undefined && looksend!="undefined" && looksend!=""){
+		var looksendArray = looksend.split(",");
+//		console.info(looksendArray);
+		for(i=0;i<looksendArray.length;i++){
+			try {
+				$("table tr[data-id='"+looksendArray[i]+"']").addClass("looksd");
+
+//				$("table tr._"+looksendArray[i]).css("color", "#999");
+			} catch (error){
+				console.info(error);
+			}
+		}
+	}
+
+	/*然后从服务端覆盖最新的cookies*/
+	delCookie("looks_api");
+	var looks = '{{looksApis}}';
+//	console.info(looks);
+	var looksArray = looks.split(",");
+	document.cookie="looks_api="+looks;
+
+	function getCookie(name) {
+//		console.info(name);
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	function delCookie(name){
+		var exp = new Date();
+		exp.setTime(exp.getTime() - 1);
+		var cval=getCookie(name);
+		if(cval!=null)
+			document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
+
+
+
+});
+</script>
+
+
+
+
+
+</body>
+</html>

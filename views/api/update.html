@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>创建Api - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+<div class="wrapper">
+	<form action="/api/updatePost" id="js_form" method="post">
+		<ul class="_form">
+
+	        {% include 'form.html' %}
+
+			<input type="hidden" name="id" id="js_api_id" value="{{data.id}}">
+
+			<input type="hidden" name="p_id" value="{{data.project_id}}">
+			<input type="hidden" name="v_id" value="{{data.version_id}}">
+
+			<input type="hidden" name="user_id" value="{{user.id}}">
+			<input type="hidden" name="user_name" value="{{user.name}}">
+
+	        <li style="margin: 50px 0 20px;">
+	            <span class="field"> </span>
+				<a href="#" id="js_saveapi" class="btns btns-blue btns-max" style="padding: 15px 50px;"><i class="iconfont" style="top: -2px;"></i>确定</a>
+				<a href="#" id="js_canceleapi" class="btns btns-gray2 btns-max" style="padding: 15px 50px; margin-left: 20px;"><i class="iconfont" style="top: -2px;"></i>取消</a>
+	        </li>
+	    </ul>
+
+	</form>
+</div>
+
+
+
+{% include '../common/footer.html' %}
+<script src="/static/script/vue.min.js"></script>
+<script src="/static/script/page_api_create.js"></script>
+<script src="/static/script/page_api_parameters.js"></script>
+
+
+<script>
+$(function(){
+	$("#js_fun_name").change(function(){
+		var api_id = $("#js_api_id").val();
+		$.ajax({
+			url: "/api/testFunName",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: api_id,
+				fun_name: $("#js_fun_name").val()
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					data = data.data;
+					if(data.length==1 && data[0].id!=api_id){
+						$.sx.alert("ApiFunction Name重复了，请排查！");
+					} else if(data.length>1){
+						$.sx.alert("ApiFunction Name有重复，请排查！");
+					}
+				}
+			}
+		});
+	});
+
+
+
+	$("#js_saveapi").click(function(){
+
+		$("li.parameter").each(function(){
+			if($(this).find("input[name=parameter_name]").val()==""){
+				$(this).remove();
+			}
+		});
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("api修改成功，即将刷新页面！");
+					setTimeout(function(){
+						if($("#js_api_id").val()!=""){
+							window.location.href='/api/detail/'+$("#js_api_id").val();
+						} else {
+							window.location.href='/api/list?p_id='+$("input[name=p_id]").val()+'&v_id='+$("input[name=v_id]").val()+'';
+						}
+					}, 1500);
+					/*	setTimeout(function(){
+							self.location=document.referrer;
+						}, 1500);*/
+				} else if(data.status==3){
+					var shtml = '<br>';
+					for(var i=0;i<data.data.length;i++){
+						shtml+='<a href="/api/detail/'+data.data[i].id+'" target="_blank" style="display: inline-block; font-size: 12px; margin-top: 10px; padding:0 5px;">点击查看</a>';
+					}
+					$.sx.alert(data.message+shtml);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+
+
+
+
+});
+</script>
+
+</body>
+</html>

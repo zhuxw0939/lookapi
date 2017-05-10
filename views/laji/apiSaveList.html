@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>最近接口访问查询</title>
+<link rel="stylesheet" type="text/css" href="{{static_host}}/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/lookapi/css/page_index.css" />
+<style>
+	.wrapper_apilist table.table_api tr td {
+		font-size: 12px;
+		border: 0;
+		border-bottom: 1px solid #ddd;
+		cursor: default;
+	}
+</style>
+</head>
+
+<body>
+
+<div class="index_header">
+	<h4 style="padding: 0 0 20px; color: #666;">最近接口访问查询</h4>
+</div>
+
+
+<div class="wrapper wrapper_apilist" style="width: 1400px">
+	<table class="table_api" >
+		<thead>
+			<tr>
+				<th width="10%">ID</th>
+				<th width="15%">访问者IP</th>
+				<th width="10%">方式</th>
+				<th width="25%">接口URL</th>
+				<th width="20%">参数</th>
+				<th width="20%">返回结果</th>
+				<th width="20%">请求时间</th>
+				<th width="10%">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{%for item in data %}
+				<tr class="_{{item.id}}">
+					<td>{{item.id}}</td>
+					<td>{{item.ip}}</td>
+					<td>{{item.requests}}</td>
+					<td style="max-width: 400px;" title="{{item.url}}">{{item.url}}</td>
+					<td style="max-width: 100px;" title="{{item.parameters}}">{{item.parameters}}</td>
+					<td style="max-width: 100px;" title="{{item.back}}">{{item.back}}</td>
+					<td>{{item.times}}</td>
+					<td>
+						<a href="/lookapi/apiSave/api?id={{item.id}}" target="_blank" class="btns btns-min btns-green">查看</a>
+					</td>
+				</tr>
+			{% endfor%}
+		</tbody>
+	</table>
+</div>
+
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.form.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.js"></script>
+<script src="/lookapi/script/jquery.jsonview.min.js"></script>
+
+<script>
+$(function(){
+
+	/*首先从cookies中读取已经浏览过的数据*/
+	var looksend = getCookie("looks");
+	if(looksend!=undefined){
+		var looksendArray = looksend.split(",");
+		for(i=0;i<looksendArray.length;i++){
+			$("table tr._"+looksendArray[i]).css("color", "#999");
+		}
+	}
+
+	/*然后从服务端覆盖最新的cookies*/
+	delCookie("looks");
+	var looks = '{{looksApis}}';
+	var looksArray = looks.split(",");
+	document.cookie="looks="+looks;
+
+	function getCookie(name) {
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	function delCookie(name){
+		var exp = new Date();
+		exp.setTime(exp.getTime() - 1);
+		var cval=getCookie(name);
+		if(cval!=null)
+			document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
+
+});
+</script>
+
+
+</body>
+</html>

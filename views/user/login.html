@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Login - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+
+
+<div class="wrapper wrapper_login" style="padding-top: 150px; text-align: center;">
+	<form action="/user/loginPost" method="post" id="js_form">
+		<p><input type="text" name="email" class="input" placeholder="邮箱地址"  value=""></p>
+		<p><input type="password" name="password" class="input" placeholder="密码"></p>
+		<p><a href="#" class="btns btns-blue btns-longer" id="js_submit">登录</a></p>
+		<input type="hidden" name="backurl" id="js_backurl" value="{{query.backurl}}">
+	</form>
+	{% if query.backurl %}
+	<p style="font-size: 15px; color: #bbb; text-align: center; padding: 60px 0;">
+		（*>.<*）…<br> 请登录后继续操作吧！
+	</p>
+	{% endif %}
+</div>
+
+
+
+
+{% include '../common/footer.html' %}
+
+
+
+
+<script>
+$(function(){
+	$("#js_submit").click(function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					if($("#js_backurl").val()!=""){
+						$.sx.alert("登录成功，即将返回前一个页面！");
+						setTimeout(function(){
+							window.location.href = $("#js_backurl").val();
+						}, 1500);
+					} else {
+						$.sx.alert("登录成功，即将返回首页！");
+						setTimeout(function(){
+							window.location.href = "/";
+						}, 1500);
+					}
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+});
+</script>
+
+
+</body>
+</html>

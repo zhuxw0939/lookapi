@@ -1,0 +1,343 @@
+@import url("jquery.jsonview.css");
+
+.header_look {
+	padding: 15px 15px;
+	border-bottom: 1px solid #eee;
+}
+.header_look h2  {
+	font-weight: 800;
+}
+.header_look .goright  {
+	top: 30px;
+	right: 30px;
+}
+
+.main_look {
+	position: relative;
+	padding-left: 240px;
+	min-width: 1000px;
+}
+
+.look_left {
+	background: rgb(245, 245, 245) none repeat scroll 0 0;
+	border-right: 1px solid rgb(221, 221, 221);
+	width: 220px;
+	padding-left: 20px;
+	min-height: 600px;
+	padding-top: 90px;
+	position: absolute;
+	top:0;
+	left: 0;
+}
+
+.look_right {
+	width: 900px;
+	margin: 0 auto;
+}
+
+
+
+.look_left ._menu {
+	padding: 0 0 0 0;
+}
+.look_left ._menu h4 {
+	border-left: 4px solid #3bb4f2;
+	padding: 2px 0 2px 18px;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: 13px;
+	color: #333;
+}
+.look_left ._menu ul li {
+	transition: .15s;
+}
+.look_left ._menu ul li a {
+	position: relative;
+	display: block;
+	font-size: 15px;
+	padding: 5px 21px;
+	border-radius: 0;
+	color: #666;
+}
+.look_left ._menu ul li a:hover {
+	background: #f0f0f0;
+	color: #444;
+}
+.look_left ._menu ul li a.current {
+	background: #0088cc;
+	color: #fff;
+}
+
+
+
+.api_page h3 {
+	border-bottom: 1px solid #d9d9d9;
+	padding-bottom: 15px;
+	padding-top: 25px;
+	font-weight: 600;
+	text-align: left;
+	margin-bottom: 20px;
+}
+.api_page p {
+	margin: 0 0 15px;
+}
+.api_page p strong {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+
+.api_page ul.txts {
+	font-size: 16px;
+	margin: 0 0 15px 25px;
+	padding: 0;
+}
+.api_page ul.txts li {
+	line-height: 30px;
+	list-style: disc  ;
+}
+
+.api_page span.url {
+	border-radius: 3px;
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	font-size: 14px;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	color: #d14;
+	padding: 5px 10px;
+	white-space: nowrap;
+}
+
+table.table_api {
+	width: 100%;
+	margin-bottom: 20px;
+}
+table.table_api tr th {
+	background-color: #0088cc;
+	color: #fff;
+	border: 1px solid #dddddd;
+	padding: 10px;
+	font-size: 15px;
+	text-align: left;
+	font-weight: 600;
+}
+table.table_api tr td {
+	font-size: 14px;
+	padding: 8px 10px;
+	border: 1px solid #dddddd;
+}
+table.table_api tr:hover td {
+	background: #f5f5f5;
+}
+
+
+.json_box {
+	background: #f5f5f5;
+	padding: 15px 25px;
+	border: 1px solid #d0d0d0;
+	border-radius: 5px;
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	margin-bottom: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.index_header {
+	padding: 50px 0 0;
+	text-align: center;
+	border-bottom: 1px solid #19bef6;
+	margin-bottom: 80px;
+}
+.index_header h2 {
+	padding: 0 0 20px;
+	font-size: 24px;
+}
+.index_tabs a {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 8px 40px;
+	border-top: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	margin-right: -6px;
+	color: #999;
+}
+.index_tabs a.first {
+	border-left: 1px solid #ddd;
+}
+.index_tabs a.current {
+	border-left: 0;
+	border-right: 0;
+	color: #fff;
+	z-index: 10;
+	position: relative;
+	background: #58c760 ;
+	background: #19bef6 ;
+	border-top: 1px solid #19bef6;
+}
+
+
+
+
+
+
+.wrapper_index p {
+	margin-top: 40px;
+	text-align: center;
+}
+.wrapper_index p {
+	margin-top: 40px;
+	text-align: center;
+}
+.wrapper_index p span.left_span {
+	display: inline-block;
+	vertical-align: middle;
+	width: 100px;
+	text-align: right;
+	font-size: 15px;
+	color: #555;
+	margin-right: 5px;
+}
+.wrapper_index p.submit{
+	padding: 30px 0 30px 80px;
+}
+.wrapper_index p.submit a {
+	margin-right: 20px;
+	padding: 14px 60px;
+}
+.wrapper_index p input.input,
+.wrapper_index p textarea.textarea {
+	margin-right: 10px;
+}
+.wrapper_index p textarea.textarea {
+	display: inline-block;
+	vertical-align: bottom;
+}
+.wrapper_index p textarea.longer,
+.wrapper_index p input.longer {
+	width: 700px;
+}
+.wrapper_index p a.btns-txt {
+	color: #999;
+	font-size: 12px;
+	position: relative;
+	top: 5px;
+}
+
+.data {
+	padding: 30px;
+	text-align: left;
+	font-size: 14px;
+	line-height: 1.8em;
+	color: #666;
+	background: #f0f0f0;
+	border: 1px solid #eee;
+	margin-top: 40px;
+	min-height: 600px;
+}
+.data_box {
+	position: relative;
+}
+.data_box a.toggle-btn {
+	display: inline-block;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background: #fff;
+	border: 1px solid #aaa;
+	color: #aaa;
+	width: 8px;
+	height: 8px;
+	padding: 0 1px 3px;
+	overflow: hidden;
+	line-height: 9px;
+	text-align: center;
+	font-size: 12px;
+}
+.data_box a.toggle-btn2 {
+	right: 45px;
+}
+textarea.textarea {
+	font-size: 15px;
+}
+#js_api_form {
+	max-width: 820px;
+	width: 720px;
+}
+
+
+.lookapi_dialog_list .dialog-content {
+	width: 900px;
+	height: 600px;
+	overflow-y: auto;
+}
+.lookapi_dialog_list .dialog-content h4 {
+	border-bottom: 1px solid #ddd;
+	font-size: 16px;
+	padding: 0 0 5px;
+	margin-bottom: 10px;
+}
+.lookapi_dialog_list .dialog-content ul {
+	margin-bottom: 10px;
+	min-height: 120px;
+}
+.lookapi_dialog_list .dialog-content ul li {
+	display: inline-block;
+	width: 300px;
+	vertical-align: middle;
+	line-height: 26px;
+}
+
+
+
+.wrapper_apilist {
+	width: 1400px;
+}
+.wrapper_apilist .table_api {
+	width: 100%;
+}
+.wrapper_apilist .table_api tr th {
+	font-size: 14px;
+}
+.wrapper_apilist .table_api tr td {
+	max-width: 500px;
+	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

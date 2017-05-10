@@ -1,0 +1,27 @@
+<p style="padding-left: 450px; text-align: left;">项目名称： <input type="text" name="name" class="input" value="{{data.name}}" placeholder="1~32位字符串"></p>
+{%if !query.p_id %}
+<p style="padding-left: 450px; text-align: left;">默认版本： <input type="text" name="v_name" class="input" value="" placeholder="如:1.0"></p>
+{%endif%}
+<p style="padding-left: 450px; text-align: left;">项目分类：
+	<select class="select" name="column" autocomplete="off">
+		<option value="Web" {%if data.column==='Web' %}selected{%endif%}>Web</option>
+		<option value="App" {%if data.column==='App' %}selected{%endif%}>App</option>
+		<option value="PC" {%if data.column==='PC' %}selected{%endif%}>PC</option>
+		<option value="其他" {%if data.column==='其他' %}selected{%endif%}>其他</option>
+	</select>
+</p>
+{%if query.p_id %}
+<p style="padding-left: 450px; text-align: left;">项目类型：
+	<select class="select" name="type" autocomplete="off" id="js_select_type">
+		<option value="0" {%if data.type==0 %}selected{%endif%}>普通</option>
+		<option value="1" {%if data.type==1 %}selected{%endif%}>公司项目</option>
+	</select>
+	<b id="js_type_info" style="font-size: 12px; color: #999; position: relative; top: 6px; margin-left: 10px;"></b>
+</p>
+{%endif%}
+<p style="padding-left: 450px; text-align: left;">访问密码： <input type="text" name="password" class="input" value="{{data.password}}" placeholder="可选，私密项目请设置密码"></p>
+<p style="padding-left: 520px; text-align: left;">
+	<label class="checkbox">
+        <input type="checkbox"> 复制已存在项目
+    </label>
+</p>

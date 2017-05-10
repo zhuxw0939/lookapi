@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>接口列表</title>
+<link rel="stylesheet" type="text/css" href="{{static_host}}/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/lookapi/css/page_index.css" />
+</head>
+
+<body>
+
+<div class="index_header">
+	<div class="index_tabs">
+		<a href="/lookapi/servers" class="first">服务器配置</a>
+		<a href="/lookapi/">接口测试</a>
+		<a href="/lookapi/list" class="current">接口列表</a>
+	</div>
+</div>
+
+
+<div class="wrapper wrapper_apilist">
+	<p style="text-align: right; padding-bottom: 15px;"><a style=" color: #999;" href="/lookapi/apisave">最近访问查询</a></p>
+	<table class="table_api">
+		<thead>
+			<tr>
+				<th width="15%">分类</th>
+				<th width="15%">接口名称</th>
+				<th width="40%">接口URL</th>
+				<th width="15%">创建日期</th>
+				<th width="10%">状态</th>
+				<th width="15%">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{%for item in data %}
+				<tr>
+					<td>
+						{% if item.column==1 %}
+							考试概况
+						{% elseif item.column==2 %}
+							兄弟学校对比
+						{% elseif item.column==3 %}
+							jsonp数据
+						{% endif %}
+					</td>
+					<td>{{item.name}}</td>
+					<td>
+						{% if item.requests==1 %}
+							<a href="#" class="btns btns-min btns-blue2" style="padding: 1px 5px 2px; font-size: 12px;">POST</a>
+						{% elseif item.requests==2 %}
+							<a href="#" class="btns btns-min btns-green2" style="padding: 1px 5px 2px; font-size: 12px;">GET</a>
+						{% endif %}
+						{{item.url}}
+					</td>
+					<td>{{item.times}}</td>
+					<td>{{item.type}}</td>
+					<td>
+						<a href="/lookapi/api?id={{item.id}}" target="_blank" class="btns btns-min btns-green">查看</a>
+						<a href="/lookapi/?id={{item.id}}" class="btns btns-min btns-blue">调试</a>
+						<a href="#" data-id="{{item.id}}" class="btns btns-min btns-orange btn_del_api">删除</a>
+					</td>
+				</tr>
+			{% endfor%}
+		</tbody>
+	</table>
+</div>
+
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.form.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.js"></script>
+<script src="/lookapi/script/jquery.jsonview.min.js"></script>
+
+<script>
+$(function(){
+	$(".btn_del_api").click(function(){
+		var my = $(this);
+		$.ajax({
+			url:  "/lookapi/delApi",
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				id: my.data("id")
+			},
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					my.closest("tr").remove();
+				} else {
+					alert(data.message);
+				}
+			},
+			complete: function() {
+			}
+		});
+		return false;
+	});
+});
+</script>
+
+
+</body>
+</html>

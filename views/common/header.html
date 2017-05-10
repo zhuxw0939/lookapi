@@ -1,0 +1,19 @@
+<div class="sxui_header">
+	<div class="wrapper">
+		<a href="/" class="logo"><img src="/static/img/logo.png"></a>
+		<ul class="cf">
+			<!-- <li><a href="/" {%if step==='home' %}class="active"{%endif%}>home</a></li> -->
+			<li><a {%if pageCurrent==='home' %}class="active"{%endif%} href="/">首页</a></li>
+			<li><a {%if pageCurrent==='project' %}class="active"{%endif%} href="/project/index">我的项目</a></li>
+			<li><a {%if pageCurrent==='apitest' %}class="active"{%endif%} href="/api/test">接口测试</a></li>
+			<li><a {%if pageCurrent==='mock' %}class="active"{%endif%} href="/mock/list">mock接口</a></li>
+			<li><a {%if pageCurrent==='looks' %}class="active"{%endif%} href="/looks/index">项目监控</a></li>
+			{% if user %}
+				<li><a {%if pageCurrent==='user' %}class="active"{%endif%} href="/user/center#{{user.id}}-{{user.level}}" title="{{user.name}}">个人中心</a></li>
+			{% else %}
+				<li><a {%if pageCurrent==='register' %}class="active"{%endif%} href="/user/register">注册</a></li>
+				<li><a {%if pageCurrent==='login' %}class="active"{%endif%} href="/user/login">登录</a></li>
+			{% endif %}
+		</ul>
+	</div>
+</div>

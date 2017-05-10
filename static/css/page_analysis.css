@@ -1,0 +1,27 @@
+.wrapper {
+  padding-top: 20px;
+}
+.tabs {
+}
+.tabs li {
+  display: inline-block;
+}
+.tabs a {
+  display: inline-block;
+  line-height: 32px;
+  padding: 0 30px;
+  border: 1px solid #ddd;
+  margin: 10px 10px;
+}
+.tabs a.current {
+  background: #05bffc;
+  color: #fff;
+  border: 1px solid #05bffc;
+}
+.mytable {
+  padding-top: 30px;
+}
+
+th, td {
+  min-width: 80px;
+}

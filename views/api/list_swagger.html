@@ -1,0 +1,469 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Myproject - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+
+
+
+<div class="main_look">
+	<div class="look_left">
+		<div class="_menu">
+			{% include '../common/api_left.html' %}
+		</div>
+	</div>
+	<div class="look_right">
+
+		<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; position: relative;">
+			{{data.name}}
+			<span style="font-size: 12px; color:#999;">
+				版本号：{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}
+				接口数量：{{apiList.length}}
+			</span>
+			<span class="goright" style="top: 30px; font-size: 16px;">
+				<select id="js_version_select" class="select select-min" autocomplete="off" style="margin-right: 20px;">
+					{% for item in versionList %}
+						<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
+					{% endfor %}
+				</select>
+				<a href="/user/env">环境管理</a>
+			</span>
+		</h4>
+		<input type="hidden" id="js_before_text_name" value="{{data.name}}">
+		<input type="hidden" id="js_before_text_vname" value="{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}">
+		<input type="hidden" id="js_before_text_vnumber" value="{{apiList.length}}">
+
+		<div class="sx_tabs cf">
+			<a href="/api/list?p_id={{query.p_id}}" class="current">接口文档</a>
+			<a href="/project/version?p_id={{query.p_id}}">版本管理</a>
+			<a href="/project/team?p_id={{query.p_id}}">协作管理</a>
+			<a href="/project/update?p_id={{query.p_id}}">项目设置</a>
+		</div>
+
+		<div class="sx_content">
+			<p style="text-align: right; padding-bottom: 20px; color: #999!important;">
+				<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="#" id="js_swagger">swagger导入</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="#" id="js_swagger">扫描api</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="#" id="js_write_apifunction" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="#" id="js_del_apis">删除所有api</a>
+			</p>
+		</div>
+
+
+		<div class="">
+			<table class="table_api" width="100%">
+				<thead>
+					<tr>
+						<th width="12%">接口名称</th>
+						<th width="9%">functionName</th>
+						<th width="9%">swagger_id</th>
+						<th width="40%">接口URL</th>
+						<th width="7%">创建人</th>
+						<th width="15%">创建日期</th>
+						<!--	<th width="10%">最后修改</th>
+						<th width="15%">修改日期</th>-->
+						<th width="20%">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{%for item in apiList %}
+						<tr>
+							<td class="api_id" data-id="{{item.id}}">{{item.name}}</td>
+							<td>
+								{% if item.fun_name %}
+									{{item.fun_name}}
+								{% else %}
+									{{item.id}}
+								{% endif %}
+							</td>
+							<td>{{item.swagger_id}}</td>
+							<td>
+								{% if item.request_type==1 %}
+									<a href="#" class="btns btns-min btns-blue" style="padding: 1px 5px 2px; font-size: 12px;">POST</a>
+								{% elseif item.request_type==2 %}
+									<a href="#" class="btns btns-min btns-green" style="padding: 1px 5px 2px; font-size: 12px;">GET</a>
+								{% elseif item.request_type==4 %}
+									<a href="#" class="btns btns-min btns-red" style="padding: 1px 5px 2px; font-size: 12px;">DELETE</a>
+								{% endif %}
+								{{item.url}}
+							</td>
+							<td>{{item.create_name}}</td>
+							<td>{{item.create_time | date('Y-m-d H:i:s', -480)}}</td>
+							<!--		<td>{{item.update_name}}</td>
+							<td>{{item.update_time | date('Y-m-d H:i:s', -480)}}</td>-->
+							<td>
+								<a href="/api/detail/{{item.id}}" class="btns btns-min btns-green">查看</a>
+								<a href="/api/update?id={{item.id}}" class="btns btns-min btns-green">编辑</a>
+								<a href="/api/test?id={{item.id}}" class="btns btns-min btns-blue">调试</a>
+								<a href="#" data-id="{{item.id}}" class="btns btns-min btns-orange btn_del_api">删除</a>
+							</td>
+						</tr>
+					{% endfor%}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+{% include '../common/footer.html' %}
+
+
+
+
+<!--tpl_add_version-->
+<script type="text/html" id="tpl_add_group">
+	<form action="/project/createGroupPost" id="js_form" method="post">
+		<p style="padding: 10px 50px;">栏目名称：<input type="text" name="group_name" class="input" value="" placeholder="1-24个字符"></p>
+		<input type="hidden" name="v_id" value="{{query.v_id}}">
+		<input type="hidden" name="p_id" value="{{query.p_id}}">
+		<input type="hidden" name="father_id" id="js_father_id" value="0">
+		<p style="padding: 10px 50px 10px 110px;">
+			<a class="btns btns-blue btns-longer" id="js_submit">保存</a>
+		</p>
+	</form>
+</script>
+
+<!--tpl_edit_version-->
+<script type="text/html" id="tpl_edit_group">
+	<form action="/project/updateGroupPost" id="js_form2" method="post">
+		<p style="padding: 10px 50px;">栏目名称：<input type="text" name="group_name" class="input" value="" placeholder="1-24个字符" id="edit_group_name"></p>
+		<p style="padding: 10px 50px;">排序：<input type="text" name="group_sort" class="input" value="" placeholder="输入数字，越大越靠前" id="edit_group_group_sort"></p>
+		<input type="hidden" name="group_id" id="edit_group_id">
+		<p style="padding: 10px 50px 10px 110px;">
+			<a class="btns btns-blue btns-longer" id="js_submit2">保存</a>
+		</p>
+	</form>
+</script>
+
+<!--tpl_edit_version-->
+<script type="text/html" id="tpl_swagger">
+	<form action="/makingapi/swaggerImport" id="js_form3" method="post">
+		<p style="padding: 10px 50px;">swagger地址：<input type="text" name="swagger_url" class="input" placeholder="http://192.168.2.82:8012/v2/api-docs" id="swagger_url_input" value="http://192.168.2.82:8012/v2/api-docs"></p>
+		<input type="hidden" name="g_id" value="{{query.g_id}}">
+		<input type="hidden" name="v_id" value="{{query.v_id}}">
+		<input type="hidden" name="p_id" value="{{query.p_id}}">
+		<p style="padding: 10px 50px 10px 110px;">
+			<a class="btns btns-blue btns-longer" id="js_submit3">确定导入</a>
+		</p>
+	</form>
+</script>
+
+<script>
+$(function(){
+
+	if($(".look_left ._menu .current").hasClass("level_1")){
+		console.info("level_1");
+		$("._ul_first").hide();
+		console.info($(".look_left ._menu .current"));
+		var uls = $(".look_left ._menu .current").next("._ul");
+		console.info(uls);
+		if(uls){
+			uls.show();
+		}
+	} else if ($(".look_left ._menu .current").hasClass("level_2")){
+		console.info("level_2");
+		$("._ul_first").hide();
+		console.info($(".look_left ._menu .current"));
+		$(".look_left ._menu .current").closest("._ul").show();
+	}
+
+	$("#js_showall_group").click(function(){
+		$(".look_left ._menu ul._ul").toggle();
+		return false;
+	});
+
+	$(".look_left ._menu .current").click(function(){
+		if($(this).hasClass("level_1")){
+			$(".look_left ._menu .current").next("._ul").toggle();
+		}
+		return false;
+	});
+
+	// 删除所有api
+	$("#js_del_apis").click(function(){
+		var newArray = [];
+		$(".api_id").each(function(){
+			newArray.push($(this).data("id"));
+		});
+		$.sx.confirm("确定删除所有api？", "删除api后，将无法恢复。", function(){
+			$.ajax({
+				url: "/api/removeApisPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					ids: newArray.join(",")
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.location.reload();
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+
+	// js_write_apifunction
+	$("#js_write_apifunction").click(function(){
+		var newArray = [];
+		$(".api_id").each(function(){
+			newArray.push($(this).data("id"));
+		});
+		var v_id = $(this).data("v_id");
+		var back_url = $(this).data("back_url");
+
+		$.sx.confirm("确定导出所有api？", "预计耗时10秒！", function(){
+			$.sx.progress("导出ApiFunction.js", "数据处理中...");
+			$.ajax({
+				url: "/makingapi/getServersApiFile",
+				type: "POST",
+				dataType: "json",
+				data: {
+					v_id: v_id,
+					ids: newArray.join(","),
+					b_name: $("#js_before_text_name").val(),
+					b_vname: $("#js_before_text_vname").val(),
+					b_bnumber: $("#js_before_text_vnumber").val(),
+					b_host: document.location.href
+				},
+				success: function(data){
+					console.info(data);
+					if(data.status==0){
+						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", "同步将会覆盖原文件！", function(){
+							window.location.href = back_url;
+						});
+					} else {
+						$.sx.alertAutoClosed(data.message,"success");
+					}
+				}
+			});
+		});
+		return false;
+	});
+
+
+	// swagger导入
+	$("#js_swagger").click(function(){
+		$.sx.dialog({
+			opentitle: "swagger导入api",
+			html: $("#tpl_swagger").html()
+		});
+		return false;
+	});
+	// 编辑栏目-提交
+	$("body").on("click", "#js_submit3", function(){
+		$("#js_form3").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("swagger导入成功，即将刷新页面！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+	// 改变版本号
+	$("#js_version_select").change(function(){
+		if("{{query.g_id}}"){
+			window.location.href = "/api/list?p_id={{query.p_id}}&v_id="+$(this).val()+"&g_id={{query.g_id}}"
+		} else {
+			window.location.href = "/api/list?p_id={{query.p_id}}&v_id="+$(this).val()
+		}
+	});
+
+	// 创建新栏目
+	$("#js_add_group").click(function(){
+		$.sx.dialog({
+			opentitle: "创建新栏目",
+			html: $("#tpl_add_group").html()
+		});
+		return false;
+	});
+
+	// 添加子栏目
+	$("a.add_son").click(function(){
+		$.sx.dialog({
+			opentitle: "创建新版本",
+			html: $("#tpl_add_group").html()
+		});
+		$("#js_father_id").val($(this).data("id"));
+		return false;
+	});
+
+	// 新建栏目和添加子栏目-提交
+	$("body").on("click", "#js_submit", function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("创建栏目成功，即将刷新页面！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+	// 编辑栏目
+	$("a.edit_group").click(function(){
+		$.sx.dialog({
+			opentitle: "编辑栏目",
+			html: $("#tpl_edit_group").html()
+		});
+		$("#edit_group_name").val($(this).data("name"));
+		$("#edit_group_group_sort").val($(this).data("sort"));
+		$("#edit_group_id").val($(this).data("id"));
+		return false;
+	});
+
+	// 编辑栏目-提交
+	$("body").on("click", "#js_submit2", function(){
+		$("#js_form2").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("编辑栏目成功，即将刷新页面！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+	// 删除栏目
+	$("a.del_group").click(function(){
+		var id = $(this).data("id");
+		if($(this).closest("li").hasClass("level_1") && $(this).closest("li").next("li").hasClass("level_2")){
+			$.sx.confirm("确定删除该栏目？", "删除栏目后，该栏目所对应的子栏目将同时删除。", function(){
+				ajaxDelGroupById(id);
+			});
+		} else {
+			$.sx.confirm("确定删除该栏目？", function(){
+				ajaxDelGroupById(id);
+			});
+		}
+		return false;
+	});
+
+	// 删除所有子栏目
+	$("a.del_son_groups").click(function(){
+		var uls = $(this).closest("h4").next("._ul");
+		if(uls){
+			var newArray = [];
+			uls.find("li").each(function(){
+				newArray.push($(this).find(".del_group").data("id"));
+			});
+		}
+		if(newArray.length>0){
+			var ids = newArray.join(",");
+			$.sx.confirm("确定删除该栏目下的所有子栏目？", "删除后，该栏目所对应的子栏目将同时删除。", function(){
+				ajaxDelGroupByIds(ids);
+			});
+		} else {
+			$.sx.alert("子栏目为空");
+		}
+		return false;
+	});
+
+	function ajaxDelGroupById(id){
+		$.ajax({
+			url: "/project/removeGroupPost",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: id
+			},
+			success: function(data){
+				if(data.status==0){
+					$.sx.alert("操作成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+	}
+
+	function ajaxDelGroupByIds(ids){
+		$.ajax({
+			url: "/project/removeGroupsPost",
+			type: "POST",
+			dataType: "json",
+			data: {
+				ids: ids
+			},
+			success: function(data){
+				if(data.status==0){
+					$.sx.alert("操作成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+	}
+
+	// 删除api
+	$("a.btn_del_api").click(function(){
+		$.ajax({
+			url: "/api/removeApiPost",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: $(this).data("id")
+			},
+			success: function(data){
+				if(data.status==0){
+					$.sx.alert("操作成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+
+});
+</script>
+
+
+</body>
+</html>

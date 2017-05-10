@@ -1,0 +1,22 @@
+共扫描接口数量：10
+
+※【更新接口】 =>  强制更新接口must=1/api/user-auth-notify/role-resources
+	已将旧api（Byqvq_9Phl）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/auth/login
+	已将旧api（SJ3Pc_5vnl）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/user-auth-notify/user-roles
+	已将旧api（BJygvcdqPnx）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/user-auth-notify/account
+	已将旧api（H1ew5O9vhg）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/auth/refresh_token
+	已将旧api（rkzxD5_cP2x）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/auth/authority
+	已将旧api（B1WeD9_qv2e）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/app/get-userapp
+	已将旧api（HyxxP9OqD2g）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/user-auth-notify/accounts/init
+	已将旧api（Hy0Pqd9v2g）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/user-auth-notify/user-resources
+	已将旧api（BypD5OqPnx）标记为过期
+※【更新接口】 =>  强制更新接口must=1/api/role/get-userapp-role/{appId}
+	已将旧api（BkjD5d9Pnx）标记为过期

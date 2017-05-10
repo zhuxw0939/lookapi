@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>系统提示 - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include './common/header.html' %}
+
+
+<div class="wrapper">
+
+	{% if data.type=="success" %}
+	<p style="font-size:18px; color: green; padding: 200px 0 0; text-align: center;">{{data.title}}</p>
+	{% elseif data.type=="error" %}
+	<p style="font-size:18px; color: red; padding: 200px 0 0; text-align: center;">{{data.title}}</p>
+	{% endif %}
+
+	{% if data.url!="-1" %}
+	<p style="font-size:14px; text-align: center;"><a href="{{data.url}}" style="font-size:14px; color: #3bb4f2">{{data.info}}</a></p>
+	{% else %}
+	<p style="font-size:14px; color: #999; padding: 10px 0 0; text-align: center;">2秒后返回</p>
+	{% endif %}
+
+</div>
+
+
+
+
+{% include './common/footer.html' %}
+
+
+
+
+<script>
+$(function(){
+	var url = '{{data.url}}';
+	var info = '{{data.info}}';
+	console.info(url);
+	console.info(info);
+
+	if(url==-1){
+		setTimeout(function(){
+			window.history.go(-1);
+		}, 1500)
+	}
+
+});
+</script>
+
+
+</body>
+</html>

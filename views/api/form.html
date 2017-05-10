@@ -1,0 +1,157 @@
+
+
+<li>
+    <span class="field">接口名称：</span>
+	<input name="name" id="js_api_name" class="input long" placeholder="2-12字符" type="text" value="{{data.name}}">
+</li>
+<li>
+    <span class="field">简要描述：</span>
+	<input name="description" type="text" id="js_api_description" class="input longer" placeholder="简述接口功能，不能为空" value="{{data.description}}">
+</li>
+
+
+<li>
+    <span class="field">所属项目：</span>
+
+	{% if formCurrent==="create" %}
+		<select name="chose_p_id" id="js_project_select" class="select" autocomplete="off">
+			{% for item in myProject %}
+				<option value="{{item.id}}" {%if query.p_id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+		<select name="chose_v_id" id="js_version_select" class="select" autocomplete="off">
+			{% for item in myVersion %}
+				{%if query.p_id %}
+					<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
+				{%else%}
+					<option value="{{item.id}}" {%if myProject[0].version_id==item.id %}selected{%endif%}>{{item.name}}</option>
+				{%endif%}
+			{% endfor %}
+		</select>
+	{% elseif formCurrent==="update" %}
+		<select name="chose_p_id" id="js_project_select" class="select" autocomplete="off" disabled>
+			{% for item in myProject %}
+				<option value="{{item.id}}" {%if data.project_id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+		<select name="chose_v_id" id="js_version_select" class="select" autocomplete="off" disabled>
+			{% for item in myVersion %}
+				<option value="{{item.id}}" {%if data.version_id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+	{% endif %}
+
+</li>
+
+
+
+<li>
+    <span class="field">所属栏目：</span>
+	<script>
+//		console.info(JSON.parse('{{JSON.stringify(group)}}'));
+//		console.info('{{JSON.stringify(group)}}');
+	</script>
+	<!--有二级栏目-->
+	{% if group.myGroup.father_id && group.myGroup.father_id!=0 %}
+		<select name="group_id" id="js_group_select" class="select" autocomplete="off">
+			<option value="">--选择栏目--</option>
+			{% for item in group.baseGroup %}
+				<option value="{{item.id}}" {%if group.myGroup.father_id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+		<select name="group_sonid" id="js_groupson_select" class="select" autocomplete="off">
+			<option value="">--选择栏目--</option>
+			{% for item in group.sonGroup %}
+				<option value="{{item.id}}" {%if group.myGroup.id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+	{% else %}
+	<!--无二级栏目-->
+		<select name="group_id" id="js_group_select" class="select" autocomplete="off">
+			<option value="">--选择栏目--</option>
+			{% for item in group.baseGroup %}
+				<option value="{{item.id}}" {%if group.myGroup.id==item.id %}selected{%endif%}>{{item.name}}</option>
+			{% endfor %}
+		</select>
+		<select name="group_sonid" id="js_groupson_select" class="select" style="display: none;" autocomplete="off"></select>
+	{% endif %}
+</li>
+<li>
+    <span class="field">请求方式：</span>
+    <select name="request_type" id="js_api_requests" class="select" autocomplete="on">
+	    {% for item in options.apiRequestType %}
+			<option value="{{item.value}}" {%if data.request_type==item.value %}selected{%endif%}>{{item.name}}</option>
+		{% endfor %}
+	</select>
+</li>
+<li>
+    <span class="field">请求URL：</span>
+	<input name="url" autocomplete="on" id="js_api_url" class="input longer" placeholder="请求URL不能为空" type="text" value="{{data.url}}">
+</li>
+<li>
+    <span class="field">ApiFunction Name：</span>
+	<input name="fun_name" class="input longer" placeholder="为空时使用id" type="text" value="{{data.fun_name}}" id="js_fun_name">
+</li>
+
+
+{% include 'parameters.html' %}
+
+
+
+<li>
+    <span class="field">返回示例：</span>
+	<textarea name="back_data" class="textarea longer" id="js_api_back" placeholder="返回示例">{{data.back_data}}</textarea>
+	<a href="#" id="js_avs_api_back" style="margin-left: 10px;">格式化</a>
+	<a href="http://tool.oschina.net/codeformat/json" target="_blank" style="margin-left: 10px;">编辑</a>
+
+	<!--<label class="checkbox_box checkbox_box_checkd">-->
+	<!--<input name="name_2" value="AM" checked="" autocomplete="off" type="checkbox">-->
+	<!--<i></i>-->
+	<!--使用测试数据-->
+	<!--</label>-->
+</li>
+<li>
+    <span class="field">返回参数说明：</span>
+	<input name="back_description" id="js_api_backinfo" class="input longer" placeholder="返回参数说明" type="text" value="{{data.back_description}}">
+</li>
+<li>
+    <span class="field">mock模板：</span>
+	<textarea name="mock_template" class="textarea longer" id="js_mock_template" placeholder="mock模板，为空则使用返回示例">{{data.mock_template}}</textarea>
+	<a href="#" id="js_avs_mock_template" style="margin-left: 10px;">格式化</a>
+	<a href="https://github.com/nuysoft/Mock/wiki/Mock.mock()" target="_blank" style="margin-left: 10px;">手册</a>
+	<a href="http://jsfiddle.net/nuysoft/Y3rg6/7/" target="_blank" style="margin-left: 10px;">测试</a>
+</li>
+<li>
+    <span class="field">备注：</span>
+	<textarea name="writes" class="textarea longer" id="js_api_info" placeholder="接口调用注意事项">{{data.writes}}</textarea>
+</li>
+
+
+
+
+<!--tpl_add_version
+<script type="text/html" id="js_add_par_tpl">
+	<li class="parameter">
+		<span class="field"></span>
+		<input name="parameter_name" class="input" style="width: 80px;" placeholder="参数名" type="text" value="{{item.name}}">&nbsp;
+		<input name="parameter_info" class="input" style="width: 267px;" placeholder="参数说明" type="text" value="{{item.info}}">&nbsp;
+		<input name="parameter_defaultvalue" class="input" style="width: 120px;" type="text" placeholder="参考值" value="{{item.default}}">
+		<select name="parameter_type" class="select">
+			{% for item in options.apiParametersType %}
+				<option value="item.value" >{{item.name}}</option>
+			{% endfor %}
+		</select>&nbsp;
+	    <select name="parameter_ismust" class="select">
+		    {% for item in options.apiParametersMust %}
+				<option value="item.value" >{{item.name}}</option>
+			{% endfor %}
+		</select>
+		<a href="#" class="del_par_html">删除</a>
+	</li>
+</script>
+-->
+<script>
+	var typesJson = JSON.parse('{{JSON.stringify(options.apiParametersType)}}');
+	var mustsJson = JSON.parse('{{JSON.stringify(options.apiParametersMust)}}');
+	var authJson = JSON.parse('{{JSON.stringify(options.apiParametersAuth)}}');
+</script>

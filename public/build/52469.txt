@@ -1,0 +1,35 @@
+共扫描接口数量：33
+
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_county_and_schools/{orgId}/{phase}
+※【创建接口】 =>  开始创建这个新接口/api/class/find_current_class
+※【创建接口】 =>  开始创建这个新接口/api/level/list_platform_levels/{subjectId}
+※【创建接口】 =>  开始创建这个新接口/api/common/list_subjects/{tenantId}/{phase}
+※【创建接口】 =>  开始创建这个新接口/api/common/find_city_grade/{schoolGradeId}
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_school_first_words
+※【创建接口】 =>  开始创建这个新接口/api/common/list_class_subjects/{classId}/{tenantId}
+※【创建接口】 =>  开始创建这个新接口/api/account/list_subject_leaders
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_word_and_schools
+※【创建接口】 =>  开始创建这个新接口/api/common/list_phases
+※【创建接口】 =>  开始创建这个新接口/api/organization/find_current_org
+※【创建接口】 =>  开始创建这个新接口/api/class/find_by_school/{schoolId}/{gradeId}
+※【创建接口】 =>  开始创建这个新接口/api/common/list_teacher_subjects/{teacherId}/{tenantId}
+※【创建接口】 =>  开始创建这个新接口/api/account/find_child/{parentId}
+※【创建接口】 =>  开始创建这个新接口/api/common/list_platform_terms/{tenantId}
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_children/{orgId}
+※【创建接口】 =>  开始创建这个新接口/api/grade/find_by_school_grade_leader/{accountId}
+※【创建接口】 =>  开始创建这个新接口/api/term/find_by_student/{accountId}
+※【创建接口】 =>  开始创建这个新接口/api/class/find_by_grade/{gradeId}
+※【创建接口】 =>  开始创建这个新接口/api/account/find_current_role
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_schools
+※【创建接口】 =>  开始创建这个新接口/api/point/search_platform_points/{subjectId}
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_county_and_schools/{orgId}
+※【创建接口】 =>  开始创建这个新接口/api/account/find_current_user
+※【创建接口】 =>  开始创建这个新接口/api/point/list_platform_points/{subjectId}
+※【创建接口】 =>  开始创建这个新接口/api/common/list_phase_grades
+※【创建接口】 =>  开始创建这个新接口/api/grade/find_by_school/{schoolId}
+※【创建接口】 =>  开始创建这个新接口/api/common/find_time/{tenantId}/{count}/{time}
+※【创建接口】 =>  开始创建这个新接口/api/class/find_by_teacher/{teacherId}/{termId}
+※【创建接口】 =>  开始创建这个新接口/api/account/find_current_roles
+※【创建接口】 =>  开始创建这个新接口/api/class/find_now_by_teacher/{teacherId}/{tenantId}
+※【创建接口】 =>  开始创建这个新接口/api/grade/find_by_school/{schoolId}/{phase}
+※【创建接口】 =>  开始创建这个新接口/api/organization/list_brother_schools/{schoolOrgId}/{phase}

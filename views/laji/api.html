@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>lookapis</title>
+<link rel="stylesheet" type="text/css" href="{{static_host}}/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/lookapi/css/page_index.css" />
+</head>
+
+<body>
+
+<div class="header_look">
+	<h2>Api接口测试</h2>
+	<span class="goright"><a href="/lookapi/list">返回</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/lookapi/?id={{data.id}}">测试</a></span>
+</div>
+<div class="main_look">
+	<div class="look_left">
+		<div class="_menu">
+			<h4>考试概况</h4>
+			<ul>
+				{%for item in datas %}
+				{% if item.column==1 %}
+					<li><a href='../api?id={{item.id}}' {%if query.id==item.id %}class="current"{%endif%}>{{item.name}}</a></li>
+				{% endif %}
+				{% endfor%}
+			</ul>
+			<h4>兄弟学校对比</h4>
+			<ul>
+				{%for item in datas %}
+				{% if item.column==2 %}
+					<li><a href='../api?id={{item.id}}' {%if query.id==item.id %}class="current"{%endif%}>{{item.name}}</a></li>
+				{% endif %}
+				{% endfor%}
+			</ul>
+			<h4>jsonp数据</h4>
+			<ul>
+				{%for item in datas %}
+				{% if item.column==3 %}
+					<li><a href='../api?id={{item.id}}' {%if query.id==item.id %}class="current"{%endif%}>{{item.name}}</a></li>
+				{% endif %}
+				{% endfor%}
+			</ul>
+
+<!--			<h4>更多组件</h4>
+			<ul>
+				<li><a href="#">Sortable拖动排序插件</a></li>
+				<li><a href="#">Chosen选择框插件</a></li>
+				<li><a href="#">jScrollPane滚动条插件</a></li>
+				<li><a href="#">rotate旋转插件</a></li>
+				<li><a href="#">Cookie</a></li>
+			</ul>-->
+		</div>
+	</div>
+	<div class="look_right">
+		{% if data %}
+		<div class="api_page">
+			<h3 id="api_title">{{data.name}}</h3>
+			<p><strong>简要描述：</strong></p>
+			<ul class="txts">
+				<li>{{data.description}}</li>
+			</ul>
+			<p><strong>请求URL：</strong></p>
+			<ul class="txts">
+				<li><span class="url">{{data.url}}</span></li>
+			</ul>
+			<p><strong>请求方式：</strong></p>
+			<ul class="txts">
+				<li>POST</li>
+			</ul>
+			<p><strong>参数：</strong></p>
+			<div>
+				<table class="table_api">
+					<thead>
+						<tr>
+							<th width="18%">参数名</th>
+							<th width="12%">必选</th>
+							<th width="12%">类型</th>
+							<th>说明</th>
+						</tr>
+					</thead>
+					<tbody>
+						{%for item in parameter %}
+							<tr>
+								<td>{{item.name}}</td>
+								<td>
+									{% if item.ismust==1 %}
+										必填
+									{% elseif item.ismust==2 %}
+										选填
+									{% endif %}
+								</td>
+								<td>
+									{% if item.type==1 %}
+										Number
+									{% elseif item.type==2 %}
+										String
+									{% elseif item.type==3 %}
+										Boolean
+									{% endif %}
+								</td>
+								<td>{{item.info}}</td>
+							</tr>
+						{% endfor%}
+					</tbody>
+				</table>
+			</div>
+			<p><strong>返回示例：</strong></p>
+			<div class="json_box">
+				<p style="text-align: right">
+					<a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+					<a class="toggle-btn" href="#" id="toggle-btn">+</a>
+				</p>
+				<div class="json">{{data.back}}</div>
+			</div>
+
+
+			</div>
+			{% if data.backinfo %}
+				<p><strong>返回参数说明：</strong></p>
+				<ul class="txts">
+					<li>{{data.backinfo}}</li>
+				</ul>
+			{% endif %}
+			{% if data.info %}
+				<p><strong>备注：</strong></p>
+				<ul class="txts">
+					<li>{{data.info}}</li>
+				</ul>
+			{% endif %}
+		</div>
+		{% else %}
+		<h4>这儿是欢迎页面</h4>
+		{% endif %}
+	</div>
+</div>
+
+<!--
+
+<div class="wrapper">
+    <h2 style="border-bottom: 1px solid #ddd; margin-bottom: 80px; padding-bottom: 20px;">Api接口测试</h2>
+	<table class="table_default center" id="js_classAnalysisTable" width="100%">
+	    <thead>
+	        <tr>
+	            <th width="100">类型</th>
+				<th width="100">名称</th>
+	            <th>地址</th>
+	            <th>参数</th>
+	            <th width="100">备注</th>
+	            <th width="100">操作</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{%for data in data %}
+			<tr>
+				<td>{{data.column}}</td>
+				<td>{{data.name}}</td>
+				<td>{{data.url}}</td>
+				<td>{{data.data}}</td>
+				<td>{{JSON.stringify(data.time)}}</td>
+				<td><a href="#" class="delapi" data-id='{{JSON.stringify(data._id)}}'>删除</a></td>
+	        </tr>
+			{% endfor%}
+		</tbody>
+	</table>
+</div>
+-->
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.form.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.js"></script>
+<script src="/lookapi/script/jquery.jsonview.min.js"></script>
+
+<script>
+	$(function(){
+		$(".json").each(function () {
+			console.info(JSON.parse($(this).text()));
+			$(this).JSONView(JSON.parse($(this).text()));
+		});
+
+		$('#toggle-btn').on('click', function() {
+			$('.json').JSONView('toggle');
+			return false;
+		});
+		$('#toggle-level1-btn').on('click', function() {
+			$('.json').JSONView('toggle', 2);
+			return false;
+		});
+	});
+
+</script>
+
+</script>
+
+
+</body>
+</html>

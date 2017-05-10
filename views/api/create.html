@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>创建Api - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+<div class="wrapper">
+	<form action="/api/createPost" id="js_form" method="post">
+		<ul class="_form">
+
+			{% include 'form.html' %}
+
+			<input type="hidden" name="id" id="js_api_id" value="">
+
+			<input type="hidden" name="p_id" value="{{query.p_id}}">
+			<input type="hidden" name="v_id" value="{{query.v_id}}">
+			<input type="hidden" name="user_id" value="{{user.id}}">
+			<input type="hidden" name="user_name" value="{{user.name}}">
+
+	        <li style="margin: 50px 0 20px;">
+	            <span class="field"> </span>
+				<a href="#" id="js_saveapi" class="btns btns-blue btns-max" style="padding: 15px 50px;"><i class="iconfont" style="top: -2px;"></i>确定</a>
+				<a href="#" id="js_canceleapi" class="btns btns-gray2 btns-max" style="padding: 15px 50px; margin-left: 20px;"><i class="iconfont" style="top: -2px;"></i>取消</a>
+	        </li>
+	    </ul>
+
+	</form>
+</div>
+
+
+
+{% include '../common/footer.html' %}
+
+<script src="/static/script/vue.min.js"></script>
+<script src="/static/script/page_api_create.js"></script>
+<script src="/static/script/page_api_parameters.js"></script>
+
+
+<script>
+$(function(){
+	$("#js_saveapi").click(function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("创建api成功，即将刷新页面！");
+					if($("input[name=p_id]").val()){
+						setTimeout(function(){
+							self.location=document.referrer;
+						}, 1500);
+					} else {
+						setTimeout(function(){
+							window.location.href='/api/list?p_id='+$("#js_project_select").val()+'&v_id='+$("#js_version_select").val()+'';
+						}, 1500);
+					}
+				} else if(data.status==3){
+					var shtml = '<br>';
+					for(var i=0;i<data.data.length;i++){
+						shtml+='<a href="/api/detail/'+data.data[i].id+'" target="_blank" style="display: inline-block; font-size: 12px; margin-top: 10px; padding:0 5px;">点击查看</a>';
+					}
+					$.sx.alert(data.message+shtml);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+
+
+
+
+
+
+
+	/*选择项目和版本，这个只有新建的时候才有*/
+	var query_vid = "{{query.v_id}}";
+	if( !query_vid&&$("#js_version_select").val()){
+		ajaxGetGrounpLists($("#js_version_select").val());
+	}
+
+
+
+
+
+	function ajaxGetGrounpLists(v_id) {
+		$.ajax({
+			url: "/project/getGroupList",
+			type: "POST",
+			dataType: "json",
+			data: {
+				v_id: v_id,
+				level: 1
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					data = data.data;
+					if(data.length==0){
+						//$("#js_group_select").closest("li").hide();
+						//return false;
+					}
+					var html = '<option value="">--选择栏目--</option>';
+					for(var i=0;i<data.length;i++){
+						html += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+					}
+					$("#js_group_select").html(html);
+				} else {
+					console.info(data.message);
+				}
+			}
+		});
+	}
+
+
+
+	function ajaxGetVersionList(p_id){
+		if(!p_id){
+			console.info("p_id不能为空");
+			return false;
+		}
+		$.ajax({
+			url: "/project/getVersionList",
+			type: "POST",
+			dataType: "json",
+			data: {
+				p_id: p_id
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					data = data.data;
+					if(data.length==0){
+						$("#js_version_select").hide();
+						return false;
+					}
+					var html = '';
+					for(var i=0;i<data.length;i++){
+						html += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+					}
+					$("#js_version_select").html(html).show().change();
+				} else {
+					console.info(data.message);
+				}
+			}
+		});
+	}
+
+});
+</script>
+
+</body>
+</html>

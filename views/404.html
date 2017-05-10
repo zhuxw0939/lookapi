@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>404</title>
+<!--<link rel="stylesheet" type="text/css" href="/static/css/sxui.css" />-->
+<!--<link rel="stylesheet" type="text/css" href="/static/css/page_error.css" />-->
+</head>
+
+<body>
+
+<div class="wrapper wrapper_error">
+	<!--<img src="/static/img/404.png" alt="">-->
+	<h4>对不起，您要访问的页面不存在或已经删除！</h4>
+
+    {% if env=="development" %}
+		{% if message %}
+			<h5>{{message}}</h5>
+		{% else %}
+			<h5>{{error}}</h5>
+		{% endif %}
+		<p><a href="/">返回首页</a></p>
+    <!--<h6>{{JSON.stringify(error)}}</h6>-->
+    {% else %}
+        <p>您可以尝试 <a href="#">重新打开</a> 或者 <a href="/">返回首页</a></p>
+	{% endif %}
+</div>
+
+</body>
+</html>

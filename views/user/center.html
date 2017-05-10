@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Center - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+{% include '../common/header.html' %}
+
+<div class="wrapper wrapper_login">
+	<!--<h5 style="word-break:break-all; padding: 30px 0;">{{JSON.stringify(data)}}</h5>-->
+
+	<div class="sx_tabs cf" style="padding: 100px 0; text-align: center;">
+		<a href="/user/center" class="current">个人中心</a>
+		<a href="/user/changePassword">修改密码</a>
+		<a href="/user/message">我的消息 <b id="js_newmessage_num" style="display:none; background: red;
+		 color: #fff; font-size: 8px; width: 14px; height: 14px; line-height: 14px; border-radius: 100%; top: -5px; position: relative"></b></a>
+		<a href="/user/env">我的环境</a>
+	</div>
+
+	<form action="/user/updatePost" method="post" id="js_form">
+		<p style="padding-left: 450px; text-align: left;">邮箱地址：{{user.email}}</p>
+		<p style="padding-left: 450px; text-align: left;">创建时间：{{user.last_login | date('Y-m-d H:i:s', -480)}} <a href="/user/logout">退出登录</a></p>
+		<p style="padding-left: 450px; text-align: left;">真实姓名：<input type="text" name="name" class="input" value="{{user.name}}"></p>
+		<p style="padding-left: 520px; text-align: left;"><a href="#" class="btns btns-blue btns-longer" id="js_submit">修改姓名</a></p>
+	</form>
+</div>
+
+{% include '../common/footer.html' %}
+
+<script>
+$(function(){
+
+	findNewMessage();
+
+	/*查询新消息数*/
+	function findNewMessage() {
+		$.ajax({
+			url: "/user/getMyNewMessageNumber",
+			type: "POST",
+			dataType: "json",
+			success: function(data){
+				console.info(data);
+				if(data.status==0&&data.data>0){
+					$("#js_newmessage_num").text(data.data).show();
+				} else {
+					console.info(data.message);
+				}
+				setTimeout(findNewMessage, 10000);
+			}
+		});
+	}
+
+
+	$("#js_submit").click(function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.alert("修改成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500)
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+});
+</script>
+
+
+</body>
+</html>

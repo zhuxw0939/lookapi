@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>接口调试</title>
+<link rel="stylesheet" type="text/css" href="http://192.168.2.56:3006/dist/sxui.v.min/sxui-0.1.1.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+</head>
+
+<body>
+
+<div class="index_header">
+	<div class="index_tabs">
+		<a href="/servers" class="first">服务器配置</a>
+		<a href="/" class="current">接口测试</a>
+		<a href="/list">接口列表</a>
+	</div>
+</div>
+<div class="wrapper wrapper_index">
+	<form id="myform"  action="/api/ajax" method="post">
+    <p>
+	    <span class="left_span">接口url：</span>
+	    <input type="text" class="input longer" autocomplete="on" name="url" id="js_url" value="{{data.url}}" placeholder="不能为空" value="/ScoreSchool/school/exam/loadExamCoursesByParam.do">
+        <a href="#" class="btns-txt"  id="js_xuanzeurl">选择接口</a>
+    </p>
+    <p>
+        <span class="left_span">接口参数：</span>
+		<textarea class="textarea longer" autocomplete="on" style=" height: 180px;" name="data" id="js_data" placeholder="参数不能为空，可以为空对象:{}">{{data.parameters}}</textarea>
+	    <a href="#" class="btns-txt"  id="js_xuanze">配置参数</a>
+    </p>
+    <p class="submit" style="position: relative;">
+	    <a href="#" class="btns btns-blue" id="js_ajax"><i class="iconfont">&#xe681;</i>测试</a>
+	    <a href="#" class="btns btns-gray2" id="js_writeDAta"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存接口</a>
+	    <br> <font id="js_jsonp" style="display: inline-block; height: 20px; line-height: 32px; position: absolute; bottom: -20px; left:30px; color:red;"></font>
+    </p>
+    <div class="data_box">
+	    <a class="toggle-btn" href="#" id="toggle-btn">+</a>
+	    <a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+        <div id="data" class="data"></div>
+	    <input type="hidden" id="js_backdata">
+    </div>
+	<input type="hidden" id="js_apihidden_id" value="{{data.id}}">
+	<input type="hidden" id="js_apihidden_type" value="{{data.type}}">
+	<input type="hidden" id="js_apihidden_column" value="{{data.column}}">
+	<input type="hidden" id="js_apihidden_name" value="{{data.name}}">
+	<input type="hidden" id="js_apihidden_requests" value="{{data.requests}}">
+	<input type="hidden" id="js_apihidden_info" value="{{data.info}}">
+	<input type="hidden" id="js_apihidden_backinfo" value="{{data.backinfo}}">
+	<input type="hidden" id="js_apihidden_description" value="{{data.description}}">
+	</form>
+</div>
+
+
+<script type="text/html" id="tpl_apihtml">
+	<ul class="_form" style="width:880px; height: 520px; overflow-y: auto; margin: 0 50px;">
+        <li>
+            <span class="field">接口名称：</span>
+			<input type="text" id="js_api_name" class="input long" placeholder="接口名称不能为空">
+        </li>
+		<li>
+            <span class="field">接口分类：</span>
+			<select id="js_api_column" class="select long" required="">
+				<option value="0" selected>--请选择--</option>
+				<option value="1">考试概况</option>
+				<option value="2">兄弟学校对比</option>
+				<option value="3">jsonp数据</option>
+			</select>
+			<input type="hidden" id="js_api_type" value="0">
+        </li>
+		<li>
+            <span class="field">请求方式：</span>
+	        <select id="js_api_requests" class="select long" required="">
+				<option value="0">--请选择--</option>
+				<option value="1" selected>POST</option>
+				<option value="2">GET</option>
+			</select>
+        </li>
+        <li>
+            <span class="field">请求URL：</span>
+			<input type="text" id="js_api_url" class="input longer" placeholder="简要描述不能为空">
+        </li>
+		<li id="js_add_parameter" style="text-align: right">
+            <span class="field"></span>
+			<a href="#" style="margin-right: 95px;">添加</a>
+        </li>
+		<li>
+            <span class="field">简要描述：</span>
+			<input type="text" id="js_api_description" class="input longer" placeholder="简述接口功能，不能为空">
+        </li>
+		<li>
+            <span class="field">返回示例：</span>
+			<label class="checkbox_box checkbox_box_checkd">
+				<input name="name_2" value="AM" checked="" autocomplete="off" type="checkbox">
+				<i></i>
+				使用测试数据
+			</label>
+			<a href="#" id="js_open_backtxt">添加返回说明</a>
+        </li>
+		<li class="hidden backtxt">
+            <span class="field">返回参数说明：</span>
+			<input type="text" id="js_api_backinfo" class="input longer" placeholder="返回参数说明">
+        </li>
+		<li class="hidden backtxt">
+            <span class="field">备注：</span>
+			<textarea class="textarea longer" id="js_api_info" placeholder="接口调用注意事项"></textarea>
+        </li>
+        <li style="margin: 50px 0 20px;">
+            <span class="field"> </span>
+			<a href="#" id="js_saveapi" class="btns btns-blue btns-max" style="padding: 15px 50px;"><i class="iconfont" style="top: -2px;">&#xe601;</i>确定</a>
+			<a href="#" id="js_canceleapi" class="btns btns-gray2 btns-max" style="padding: 15px 50px; margin-left: 20px;"><i class="iconfont" style="top: -2px;">&#xe601;</i>取消</a>
+        </li>
+    </ul>
+</script>
+
+<script type="text/html" id="tpl_parameterhtml">
+    <span class="field"></span>
+	<input type="text" class="input parameter_name" style="width: 80px;" placeholder="参数名称">&nbsp;
+	<input type="text" class="input parameter_info" style="width: 267px;" placeholder="参数说明">&nbsp;
+	<select class="select parameter_type" required="">
+		<option value="0" selected="">参数类型</option>
+		<option value="1">Number</option>
+		<option value="2">String</option>
+		<option value="3">Boolean</option>
+		<option value="4">Date</option>
+		<option value="5">null</option>
+	</select>&nbsp;
+    <select class="select parameter_ismust" required="">
+		<option value="0" selected>请选择</option>
+		<option value="1">必填</option>
+		<option value="2">选填</option>
+	</select>
+	<input type="hidden" class="parameter_defaultvalue">
+</script>
+
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.min.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/lib/jquery.form.js"></script>
+<script src="http://192.168.2.56:3006/dist/sxui.v.last/script/sxui.min.js"></script>
+<script src="/static/script/jquery.jsonview.min.js"></script>
+<script src="/static/script/page_api_test.js"></script>
+<script>
+
+</script>
+
+
+</body>
+</html>
