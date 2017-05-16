@@ -1,13 +1,99 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_api.css" />
 {% endblock %}
 
 {% block body %}
 
+<div class="column_api">
+	<div class="_left">
+
+		<h4 class="{%if query.g_id==''&&query.type!=2 %}current{%endif%}">
+			<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}">所有接口</a>
+		</h4>
+
+		{%for item in groupList %}
+			<h4 class="level_{{item.level}} {%if query.g_id==item.id %}current active{%endif%}">
+				<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{item.id}}">{{item.name}}</a>
+				<i class="iconfont">&#xe615;</i>
+			</h4>
+			<ul class="_ul {% if loop.first %}_ul_first{% endif %}">
+			{%for itemSon in groupSonList %}
+				{%if item.id==itemSon.father_id %}
+					<li class="level_{{itemSon.level}} {%if query.g_id==itemSon.id %}current{%endif%}">
+						<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{itemSon.id}}">{{itemSon.name}}</a>
+						<!--<span class="goright">
+							<a href="#" class="edit_group" data-id="{{itemSon.id}}" data-sort="{{itemSon.sort}}" data-name="{{itemSon.name}}" data-swagger_url="{{itemSon.swagger_url}}" data-servers_api_path="{{itemSon.servers_api_path}}">编辑</a>
+							<a href="#" class="del_group" data-id="{{itemSon.id}}">×删除</a>
+						</span>-->
+					</li>
+				{%endif%}
+			{% endfor%}
+			</ul>
+		{% endfor%}
+
+	</div>
+	<div class="_right">
+
+		<div class="table_box">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th width="25%">接口名称</th>
+						<th width="25%">接口URL</th>
+						<th width="12%">functionName</th>
+						<th width="10%">创建时间</th>
+						<th width="10%">最后修改</th>
+						<th width="18%">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{%for item in apiList %}
+						<tr>
+							<td class="api_id" data-id="{{item.id}}" style="max-width: 250px;" title="{{item.name}}">{{item.name}}</td>
+							<td title="{{item.url}}">
+								{% if item.request_type==1 %}
+									<span class="btn btn-sm btn-type btn-primary">POST</span>
+								{% elseif item.request_type==2 %}
+									<span class="btn btn-sm btn-type btn-success">GET</span>
+								{% elseif item.request_type==3 %}
+									<span class="btn btn-sm btn-type btn-warning">PUT</span>
+								{% elseif item.request_type==4 %}
+									<span class="btn btn-sm btn-type btn-danger">DELETE</span>
+								{% endif %}<br>
+								{{item.url}}
+							</td>
+							<td style="max-width: 100px;">
+								{% if item.fun_name %}
+									<span title="{{item.fun_name}}" style="color: #58c760;">{{item.fun_name}}</span>
+								{% elseif item.swagger_id %}
+									<span title="{{item.swagger_id}}" style="color: #999;">{{item.swagger_id}}</span>
+								{% else %}
+									<span title="{{item.id}}" style="color: #999;">{{item.id}}</span>
+								{% endif %}
+							</td>
+							<td title="{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>{{item.create_time | date('m-d H:i:s', -480)}}<br>({{item.create_name}})</td>
+							<td title="{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="max-width: 120px; color: #999;"{%else%}style="color: #999; max-width: 120px;"{%endif%}>{{item.update_time | date('m-d H:i:s', -480)}}<br>
+								{% if item.swagger_upinfo %}
+									(<a href="javascript:$.sx.alert('{{item.swagger_upinfo}}')">更新记录</a>)
+							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>
+							<td>
+								<a href="/api/detail/{{item.id}}" class="btns btns-min btns-green">查看</a>
+								<a href="/api/update?id={{item.id}}" class="btns btns-min btns-green">编辑</a>
+								<a href="/api/test?id={{item.id}}" class="btns btns-min btns-blue">调试</a>
+								<a href="#" data-id="{{item.id}}" class="btns btns-min btns-orange btn_del_api">删除</a>
+							</td>
+						</tr>
+					{% endfor%}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
 		<!-- Main jumbotron for a primary marketing message or call to action -->
-	<div class="jumbotron">
+<!--	<div class="jumbotron">
 		<div class="container">
 			<h1 class="display-3">{{data.name}}</h1>
 			<p>
@@ -30,10 +116,10 @@
 			</p>
 			<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
 		</div>
-	</div>
+	</div>-->
 <div class="container">
 
-		<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; position: relative;">
+<!--		<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; position: relative;">
 			{{data.name}}
 			<span class="go_sort_span" style="font-size: 12px; color:#999;">
 				版本号：{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}&nbsp;&nbsp;&nbsp;
@@ -85,61 +171,7 @@
 				<a href="#" id="js_del_apis">删除所有api</a>
 			</p>
 		</div>
-
-
-		<div class="">
-			<table class="table_api table_api_list" width="100%">
-				<thead>
-					<tr>
-						<th width="20%">接口名称</th>
-						<th width="30%">接口URL</th>
-						<th width="12%">functionName</th>
-						<th width="10%">创建时间</th>
-						<th width="10%">最后修改</th>
-						<th width="18%">操作</th>
-					</tr>
-				</thead>
-				<tbody>
-					{%for item in apiList %}
-						<tr>
-							<td class="api_id" data-id="{{item.id}}" style="max-width: 250px;" title="{{item.name}}">{{item.name}}</td>
-							<td title="{{item.url}}">
-								{% if item.request_type==1 %}
-									<a href="#" class="btns btns-min btns-blue" style="padding: 1px 5px 2px; font-size: 12px;">POST</a>
-								{% elseif item.request_type==2 %}
-									<a href="#" class="btns btns-min btns-green" style="padding: 1px 5px 2px; font-size: 12px;">GET</a>
-								{% elseif item.request_type==3 %}
-									<a href="#" class="btns btns-min btns-green2" style="padding: 1px 5px 2px; font-size: 12px;">PUT</a>
-								{% elseif item.request_type==4 %}
-									<a href="#" class="btns btns-min btns-red" style="padding: 1px 5px 2px; font-size: 12px;">DELETE</a>
-								{% endif %}<br>
-								{{item.url}}
-							</td>
-							<td style="max-width: 100px;">
-								{% if item.fun_name %}
-									<span title="{{item.fun_name}}" style="color: #58c760;">{{item.fun_name}}</span>
-								{% elseif item.swagger_id %}
-									<span title="{{item.swagger_id}}" style="color: #999;">{{item.swagger_id}}</span>
-								{% else %}
-									<span title="{{item.id}}" style="color: #ddd;">{{item.id}}</span>
-								{% endif %}
-							</td>
-							<td title="{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>{{item.create_time | date('m-d H:i:s', -480)}}<br>({{item.create_name}})</td>
-							<td title="{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="max-width: 120px; color: #999;"{%else%}style="color: #999; max-width: 120px;"{%endif%}>{{item.update_time | date('m-d H:i:s', -480)}}<br>
-								{% if item.swagger_upinfo %}
-									(<a href="javascript:$.sx.alert('{{item.swagger_upinfo}}')">更新记录</a>)
-							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>
-							<td>
-								<a href="/api/detail/{{item.id}}" class="btns btns-min btns-green">查看</a>
-								<a href="/api/update?id={{item.id}}" class="btns btns-min btns-green">编辑</a>
-								<a href="/api/test?id={{item.id}}" class="btns btns-min btns-blue">调试</a>
-								<a href="#" data-id="{{item.id}}" class="btns btns-min btns-orange btn_del_api">删除</a>
-							</td>
-						</tr>
-					{% endfor%}
-				</tbody>
-			</table>
-		</div>
+-->
 
 </div>
 
@@ -215,32 +247,44 @@
 <script>
 $(function(){
 
-	if($(".look_left ._menu .current").hasClass("level_1")){
+	if($(".column_api ._left .current").hasClass("level_1")){
 		console.info("level_1");
 		$("._ul_first").hide();
-		console.info($(".look_left ._menu .current"));
-		var uls = $(".look_left ._menu .current").next("._ul");
+		console.info($(".column_api ._left .current"));
+		var uls = $(".column_api ._left .current").next("._ul");
 		console.info(uls);
 		if(uls){
 			uls.show();
 		}
-	} else if ($(".look_left ._menu .current").hasClass("level_2")){
+	} else if ($(".column_api ._left .current").hasClass("level_2")){
 		console.info("level_2");
 		$("._ul_first").hide();
-		console.info($(".look_left ._menu .current"));
-		$(".look_left ._menu .current").closest("._ul").show();
+		console.info($(".column_api ._left .current"));
+		$(".column_api ._left .current").closest("._ul").show();
+		$(".column_api ._left .current").closest("._ul").prev("h4").addClass("active, active_1");
 	}
 
 	$("#js_showall_group").click(function(){
-		$(".look_left ._menu ul._ul").toggle();
+		$(".column_api ._left ul._ul").slideToggle();
 		return false;
 	});
 
-	$(".look_left ._menu .current").click(function(){
-		if($(this).hasClass("level_1")){
-			$(".look_left ._menu .current").next("._ul").toggle();
+	$(".column_api ._left h4 i.iconfont").click(function(e){
+		e.stopPropagation();
+		console.info("click iconfont ");
+		var $this = $(this).closest("h4");
+		if($this.hasClass("level_1")){
+			$this.next("._ul").slideToggle();
 		}
+		$this.toggleClass("active");
 		return false;
+	});
+
+
+	$(".column_api ._left h4").each(function(e){
+		if($(this).next("._ul").find("li").length<=0){
+			$(this).find("i.iconfont").remove();
+		}
 	});
 
 	// 删除所有api

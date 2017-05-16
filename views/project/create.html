@@ -1,21 +1,32 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
 {% endblock %}
 
 {% block body %}
-<div class="container">
-	<div class="breadcrumb">
-		创建项目
+
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">创建项目</h1>
+		<p>Amaze UI 概览，下载、使用，模板示例，二次开发……</p>
 	</div>
-	<form action="/project/createPost" id="js_form" method="post">
+</div>
+
+
+<div class="container">
+
+	<form action="/project/createPost" class="_form" id="js_form" method="post">
 
 		{% include 'form.html' %}
 
-		<p style="padding-left: 520px; padding-top: 20px; text-align: left;">
-			<button type="submit" class="btns btns-blue btns-longer" style="height: auto;">创建项目</button>
-		</p>
+		<div class="form-group row">
+			<label class="col-sm-2 form-control-label"></label>
+			<div class="col-sm-10">
+				<button type="submit" class="btn btn-primary btn-lg" >创建项目 &raquo;</button>
+			</div>
+		</div>
+
 	</form>
 </div>
 {% endblock %}

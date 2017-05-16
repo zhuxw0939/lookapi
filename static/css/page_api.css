@@ -1,0 +1,119 @@
+
+
+
+
+.column_api {
+	min-height: 700px;
+	position: relative;
+	padding-left: 250px;
+	overflow: hidden;
+}
+.column_api ._left {
+	padding: 2rem 0;
+	background-color: #f7f7f7;
+	
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 250px;
+	height: 6000px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.column_api ._right {
+	padding: 3rem;
+}
+
+
+.table_box tr th {
+	font-size: 14px;
+}
+.table_box tr td {
+	font-size: 12px;
+	white-space: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 280px;
+}
+.table_box tr td .btn-type {
+	margin-left: -5px;
+	font-size: 11px;
+	padding: 4px 8px;
+	-webkit-transform: scale(0.8);
+	-o-transform: scale(1);
+	cursor: default;
+	border: 0;
+}
+footer {
+	display: none;
+}
+.table-hover tbody tr:hover {
+	background-color: #fafafa;
+}
+
+
+.column_api ._left a {
+	display: block;
+	padding: 0 2rem;
+	line-height: 3rem;
+	height: 3rem;
+	font-size: 14px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #6f6f6f;
+}
+.column_api ._left a:hover {
+	color: #108ee9;
+}
+.column_api ._left .current a {
+	color: #69b8f1;
+	background-color: #ecf6fd;
+	border-right: 3px solid #108ee9;
+}
+.column_api ._left ul._ul a {
+	color: #888;
+	line-height: 2.6rem;
+	height: 2.6rem;
+	font-size: 12px;
+	padding-left: 3.2rem;
+}
+.column_api ._left ul._ul a:hover {
+	color: #108ee9;
+}
+.column_api ._left ul._ul .current a {
+	color: #69b8f1;
+}
+.column_api ._left h4 {
+	position: relative;
+}
+.column_api ._left h4.active_1 {
+	background: #f2f2f2;
+}
+.column_api ._left h4.level_1 i.iconfont {
+	line-height: 3rem;
+	height: 3rem;
+	padding: 0 10px;
+	
+	position: absolute;
+	top: 0;
+	right: 6px;
+	display: inline-block;
+	font-size: 12px;
+	font-size: 8px\9;
+	-webkit-transform: scale(.66666667) rotate(0deg);
+	-ms-transform: scale(.66666667) rotate(0deg);
+	transform: scale(.66666667) rotate(0deg);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=1, M12=0, M21=0, M22=1)";
+	zoom: 1;
+	cursor: pointer;
+}
+.column_api ._left h4.active i.iconfont {
+	-ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+	-webkit-transform: rotate(180deg) scale(.75);
+	-ms-transform: rotate(180deg) scale(.75);
+	transform: rotate(180deg) scale(.75);
+}
+.column_api ._left ul {
+	display: none;
+}
