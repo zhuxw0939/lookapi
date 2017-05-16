@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Home - Lookapi</title>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/sxui.min.css" />
+{% block style %}{% endblock %}
+</head>
+<body>
+
+<header>
+	<nav class="navbar navbar-expand-lg navbar-inverse bg-inverse">
+		<a href="/" class="navbar-brand logo"><img src="/static/img/logo.png" style="width114px; height: 28px;"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarsExample09">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item {%if pageCurrent==='home' %}active{%endif%}">
+					<a class="nav-link" href="/">首页</a>
+				</li>
+				<li class="nav-item {%if pageCurrent==='project' %}active{%endif%}">
+					<a class="nav-link" href="/project/index">我的项目</a>
+				</li>
+				<li class="nav-item {%if pageCurrent==='apitest' %}active{%endif%}">
+					<a class="nav-link" href="/api/test">接口测试</a>
+				</li>
+				<li class="nav-item {%if pageCurrent==='mock' %}active{%endif%}">
+					<a class="nav-link" href="/mock/list">mock接口</a>
+				</li>
+				<li class="nav-item {%if pageCurrent==='looks' %}active{%endif%}">
+					<a class="nav-link" href="/looks/index">项目监控</a>
+				</li>
+			</ul>
+
+			<form class="form-inline my-2 my-md-0">
+				<ul class="navbar-nav mr-auto">
+					{% if user %}
+						<li class="nav-item dropdown {%if pageCurrent==='user' %}active{%endif%}">
+							<a class="nav-link dropdown-toggle" href="/user/center#{{user.id}}-{{user.level}}" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{user.name}}">个人中心</a>
+							<div class="dropdown-menu" aria-labelledby="dropdown09">
+								<a class="dropdown-item" href="/user/center">我的资料</a>
+								<a class="dropdown-item" href="/user/message">我的消息</a>
+								<a class="dropdown-item" href="/user/env">我的环境</a>
+								<a class="dropdown-item" href="/user/changePassword">修改密码</a>
+								<a class="dropdown-item" href="/user/logout">退出登录</a>
+							</div>
+						</li>
+					{% else %}
+						<li class="nav-item {%if pageCurrent==='login' %}active{%endif%}">
+							<a class="nav-link" href="/user/login">登录</a>
+						</li>
+						<li class="nav-item {%if pageCurrent==='register' %}active{%endif%}">
+							<a class="nav-link" href="/user/register">注册</a>
+						</li>
+					{% endif %}
+				</ul>
+			</form>
+		</div>
+	</nav>
+</header>
+
+{% block body %} {% endblock %}
+
+<footer class="bd-footer text-muted" role="contentinfo">
+	<div class="container">
+		<ul class="bd-footer-links">
+			<li><a href="https://github.com/twbs/bootstrap">GitHub</a></li>
+			<li><a href="https://twitter.com/getbootstrap">Twitter</a></li>
+			<li><a href="/project/bootstrap4/examples/">实例</a></li>
+			<li><a href="/project/bootstrap4/about/history/">关于</a></li>
+		</ul>
+		<p>由<a href="https://twitter.com/mdo" target="_blank">@mdo</a> 与 <a href="https://twitter.com/fat" target="_blank">@fat</a> 设计构建. 由 <a href="https://github.com/orgs/twbs/people">核心团队 </a> 提供支持维护，感谢 <a href="https://github.com/twbs/bootstrap/graphs/contributors">贡献者们 </a>的帮助。</p>
+		<p>当前版本 v4.0.0-alpha。 代码License <a rel="license" href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT</a>, 文档 <a rel="license" href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
+	</div>
+</footer>
+
+<div class="modal fade" id="loginDialog" tabindex="-1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="loginDialogLabel">New message</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">Recipient:</label>
+						<input type="text" class="form-control" id="recipient-name">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="control-label">Message:</label>
+						<textarea class="form-control" id="message-text"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Send message</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="/static/script/jquery.min.js"></script>
+<script type="text/javascript" src="/static/script/jquery.form.js"></script>
+<script type="text/javascript" src="/static/script/tether.min.js"></script>
+<script type="text/javascript" src="/static/script/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/script/sxui.min.js"></script>
+<script type="text/javascript" src="/static/script/module_dialog.js"></script>
+{% block script %}{% endblock %}
+</body>
+</html>

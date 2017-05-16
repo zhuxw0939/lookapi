@@ -1,60 +1,27 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Myproject - Lookapi</title>
+{% extends '../common/layout.html' %}
+
+{% block style %}
 <link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% endblock %}
 
-<body>
-
-{% include '../common/header.html' %}
-
-
-
-<div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px;">
-	<h5 style="padding: 20px 0;">所有项目：</h5>
-	<ul class="projects_list">
-	{% for item in data %}
-		<li>
-			<a class="_link" href="/api/list?p_id={{item.id}}&v_id={{item.version_id}}">{{item.name}}</a>
-			{% if item.user_id === user.id %}
-				<span><a href="#" class="del_project" data-id="{{item.id}}"><i class="iconfont">&#xe646;</i>删除</a></span>
-				<span style="color: orange;">创建者</span>
-			{% else %}
-				<span style="color: #58c760;">协作者</span>
-			{% endif %}
-			<span>当前版本：{{item.version_name}}</span>
-			<span>创建者：{{item.user_name}}</span>
-			<span>创建时间：{{item.create_time | date('Y-m-d H:i:s', -480)}}</span>
-		</li>
-	{% endfor %}
-	</ul>
-</div>
-
-
-<div class="wrapper">
-	<div class="project_index">
-		<ul class="cf">
-			<li style=" margin:0 auto; float: none; ">
-				<a href="/project/create" title="添加一个新项目添加一个新项目">
-					新建项目&nbsp;<i class="iconfont">&#xe664;</i>
-				</a>
-			</li>
-		</ul>
+{% block body %}
+<div class="container">
+	<div class="index_title">
+		我的项目
 	</div>
-
+	<div class="row">
+		<div class="col-sm-4" style="margin-bottom: 2rem">
+			<a href="/project/create">新建项目</a>
+		</div>
+		{% for item in data %}
+			{% set item.currentPage='my_project' %}
+			{% include '../common/project_card.html' %}
+		{% endfor %}
+	</div>
 </div>
+{% endblock %}
 
-
-
-
-
-{% include '../common/footer.html' %}
-
-
-
-
+{% block script %}
 <script>
 $(function(){
 	$(".del_project").click(function(e) {
@@ -84,7 +51,4 @@ $(function(){
 	});
 });
 </script>
-
-
-</body>
-</html>
+{% endblock %}

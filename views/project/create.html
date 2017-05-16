@@ -1,16 +1,14 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>创建项目 - Lookapi</title>
+{% extends '../common/layout.html' %}
+
+{% block style %}
 <link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% endblock %}
 
-<body>
-
-{% include '../common/header.html' %}
-
-<div class="wrapper wrapper_login" style="padding-top: 150px; text-align: center;">
+{% block body %}
+<div class="container">
+	<div class="breadcrumb">
+		创建项目
+	</div>
 	<form action="/project/createPost" id="js_form" method="post">
 
 		{% include 'form.html' %}
@@ -20,10 +18,7 @@
 		</p>
 	</form>
 </div>
+{% endblock %}
 
-
-
-{% include '../common/footer.html' %}
-
-</body>
-</html>
+{% block script %}
+{% endblock %}

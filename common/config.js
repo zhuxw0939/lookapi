@@ -12,7 +12,7 @@ module.exports = {
 	// 程序运行的端口
 	port: siteConfig.port,
 	// 项目名称
-	name: "school-app.score",
+	name: "lookapi.cn",
 	// 版本号
 	v: "0.1.0",
 
@@ -20,19 +20,7 @@ module.exports = {
 	debug: siteConfig.debug,
 	logger_level: siteConfig.logger_level,
 
-	// 接口服务器
-	servers: siteConfig.servers,
-
-	// apiFunction
-	apiFunction: siteConfig.apiFunction,
-
-	// webpackServer 为 true 时，用于本地调试， 为 false 时，用于线上编绎环境，此时需要使用"npm run dev"启动webpack服务器
-	webpackServer: siteConfig.webpackServer,
-
 	static_host: siteConfig.static_host,
-
-	// mock设置 为 true 时，从mock服务器取数据，为 false 时从servers取数据
-	mock: siteConfig.mock,
 
 	// 往客户端写cookies的生效时间
 	maxAge: siteConfig.maxAge, // cookie 有效期30分钟
@@ -61,6 +49,9 @@ module.exports = {
 		password: siteConfig.redis.pass,
 		db: Number(siteConfig.redis.db)
 	},
+
+	// apiFunction
+	apiFunction: siteConfig.apiFunction,
 
 	options: {
 		apiRequestType: [

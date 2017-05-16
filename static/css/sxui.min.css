@@ -1,0 +1,314 @@
+/**
+ * SXUI MODULES
+ *
+ * dialog.css | 弹出框样式
+ * 包括alerts方法和alertsform等
+ *
+ * Copyright (c) 2015-2016 生学教育 (http://www.sxw.cn)
+ *
+ */
+
+.dialog-bg {
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, .5);
+	background: rgba(1, 16, 20, 0.35);
+	background: url(../img/opacity/b50.png) repeat\9;
+	position: fixed;
+	_position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1001;
+	display: none;
+}
+
+.dialogalert-bg {
+	background: rgba(1, 16, 20, 0.75);
+	background: url(../img/opacity/b50.png) repeat\9;
+	z-index: 5001;
+}
+
+.dialog-bg-no {
+	background: none !important;
+}
+
+.dialog-box {
+	min-height: 320px;
+	min-width: 640px;
+	max-width: 1150px;
+	margin: 0 auto;
+	position: fixed;
+	z-index: 1005;
+	display: none;
+	border: 1px solid #999;
+	background: #fff;
+}
+
+.dialogalert-box {
+	border: 1px solid #222;
+	z-index: 5005;
+}
+
+.dialog-box-absolute {
+	position: absolute;
+}
+
+
+/**/
+
+.dialog-title {
+	font-size: 16px;
+	color: #666;
+	height: 32px;
+	line-height: 32px;
+	font-size: 14px;
+	color: #666;
+	padding-left: 15px;
+	font-weight: 400;
+	background: #f5f5f5;
+	border-bottom: 1px solid #eee;
+	text-shadow: 0px 1px #fbfbfb;
+	font-size: 19px;
+	color: #000;
+	padding: 14px 25px 12px;
+}
+
+
+/**/
+
+.dialog-closed {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	padding: 10px;
+	position: absolute;
+	top: 5px;
+	right: 8px;
+	font-size: 24px;
+}
+
+.dialog-closed i {
+	color: #f60;
+	color: #999;
+	text-shadow: 0 1px #fbfbfb;
+}
+
+.dialog-closed i:hover {
+	color: #f30;
+	text-shadow: 0 2px #fff;
+}
+
+
+/**/
+
+.dialog-content {
+	padding: 20px 25px 20px;
+	font-size: 14px;
+	line-height: 1.8em;
+	color: #666;
+	min-width: 300px;
+	min-height: 100px;
+	background: #fff;
+}
+
+
+/*dialogajax*/
+
+.dialogajax {
+	position: relative;
+}
+
+.dialogajax-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -30px;
+	margin-left: -30px;
+}
+
+
+/* alert */
+
+.alert {
+	min-height: 180px;
+	min-width: 400px;
+	max-width: 540px;
+	text-align: center;
+	background: #fff;
+	border-radius: 4px;
+}
+.alert .dialog-content {
+	padding: 30px;
+}
+
+.alert .dialog-closed {
+	top: 0;
+	right: 20px;
+	font-size: 20px;
+}
+
+.alert-type span {
+	display: inline-block;
+	vertical-align: middle;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	color: #fff;
+	line-height: 40px;
+	font-size: 36px;
+}
+
+.alert-type span.info {
+	background: #0275d8;
+}
+
+.alert-type span.success {
+	background: #00db2b;
+}
+
+.alert-type span.error {
+	background: #ff6600;
+}
+
+.alert-type span.warning {}
+
+.alert-type span i.iconfont {
+	display: inline-block;
+	line-height: 50px;
+	vertical-align: middle;
+}
+
+.alert-type span.warning i {
+	color: #ff6600;
+	font-size: 50px;
+}
+
+.alert-title {
+	color: #111;
+	font-size: 24px;
+	padding: 10px 0 12px;
+}
+
+.alert-title-only {
+	padding: 15px 0 14px;
+}
+
+.alert-cont {
+	color: #a3a3a3;
+	font-size: 14px;
+	padding: 0 0 0;
+	line-height: 20px;
+}
+
+.alert-btns {
+	padding: 32px 0 0;
+}
+
+.alert-btns a {
+	margin: 0 10px;
+	padding: 10px 50px;
+}
+
+.alert-loading-img {
+	padding: 45px 0 0;
+}
+
+.alert-loading {
+	width: 150px;
+	height: 15px;
+	margin: 0 auto;
+	padding: 45px 0 0;
+}
+
+.alert-loading span {
+	display: inline-block;
+	width: 15px;
+	height: 100%;
+	margin-right: 5px;
+	background: lightgreen;
+	background: #19bef6;
+	-webkit-transform-origin: right bottom;
+	-webkit-animation: load 1s ease infinite;
+}
+
+.alert-loading span:last-child {
+	margin-right: 0px;
+}
+
+@-webkit-keyframes load {
+	0% {
+		opacity: 1;
+		-webkit-transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: rotate(90deg) scale(.3);
+	}
+}
+
+.alert-loading span:nth-child(1) {
+	-webkit-animation-delay: 0.13s;
+}
+
+.alert-loading span:nth-child(2) {
+	-webkit-animation-delay: 0.26s;
+}
+
+.alert-loading span:nth-child(3) {
+	-webkit-animation-delay: 0.39s;
+}
+
+.alert-loading span:nth-child(4) {
+	-webkit-animation-delay: 0.52s;
+}
+
+.alert-loading span:nth-child(5) {
+	-webkit-animation-delay: 0.65s;
+}
+
+
+/*弹出的表单提交层*/
+
+.dialog-form {
+	max-width: 580px;
+	min-width: 400px;
+	padding: 20px 30px 20px 10px;
+}
+
+.dialog-form p {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+.dialog-form p span.span {
+	display: inline-block;
+	min-width: 150px;
+	padding: 0 10px;
+	text-align: right;
+}
+
+.dialog-form p label.checkbox_box {
+	padding-right: 15px;
+}
+
+.dialog-form p.submit_p {
+	margin-top: 20px;
+	padding-bottom: 10px;
+}
+
+.dialog-form p.submit_p a {
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin: 0 15px 0 0;
+}
+
+.dialog-form p.error_p {
+	margin: -10px 0;
+}
+
+.dialog-form p.error_p b {
+	color: red;
+	font-size: 13px;
+}

@@ -1,0 +1,25 @@
+<div class="col-sm-4" style="margin-bottom: 2rem">
+	<div class="card" style="font-size: 90%;">
+		<div class="card-header" style="color: #999;">
+			创建者：{{item.user_name}} {{item.page}}
+			<div class="goright">
+				{% if item.currentPage === 'my_project' %}
+					{% if item.user_id === user.id %}
+						<span><a href="#" class="del_project" data-id="{{item.id}}"><i class="iconfont">&#xe646;</i>删除</a></span>
+						<span style="color: orange;">创建者</span>
+					{% else %}
+						<span style="color: #58c760;">协作者</span>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+		<div class="card-block">
+			<h3 class="card-title">{{item.name}}</h3>
+			<p class="card-text" style="padding-bottom: 15px;  color: #999;">
+				当前版本：{{item.version_name}}<br>
+				创建时间：{{item.create_time | date('Y-m-d H:i:s', -480)}}
+			</p>
+			<a href="/api/list?p_id={{item.id}}" class="btn btn-primary" style="width: 8rem">查看详情</a>
+		</div>
+	</div>
+</div>

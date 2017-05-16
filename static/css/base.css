@@ -1,0 +1,174 @@
+
+body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, th, td, p, blockquote, pre, form, fieldset, legend, input, button, textarea, hr {
+	margin: 0;
+	padding: 0;
+}
+fieldset, img {
+	border: 0 none;
+}
+li {
+	list-style: none outside none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* special */
+a {
+	color:#05bffc;
+	text-decoration: none;
+	outline:none;
+}
+a:hover {
+	color:#0096d5;
+	text-decoration: none;
+}
+strong {
+	font-weight: normal;
+}
+
+
+/* class */
+.yellow {
+	color: #CDB37C;
+}
+.yellow2 {
+	color: #c60;
+}
+.red {
+	color: #f00;
+}
+.error{
+}
+.yahei {
+	font-family:"微软雅黑","黑体",Arial,Helvetica,sans-serif;
+}
+input {
+	font-family: "Helvetica Neue","HelveticaNeue","Arial","Helvetica","微软雅黑","宋体";
+}
+.bold {
+	font-weight:bold;
+	color:#111;
+}
+.hidden {
+	display:none;
+}
+.goout {
+	position:absolute;
+	top:-9999px;
+	left:-9999px;
+}
+.overflow {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.relative {
+	position: relative;
+}
+.goleft,
+.goright {
+	position: absolute;
+	top: 0;
+}
+.goleft {
+	left: 0;
+}
+.goright {
+	right: 0;
+}
+.center,
+table.center tr td {
+	text-align: center;
+}
+/* float */
+.cf:after {
+	content:".";
+	display:block;
+	clear:both;
+	visibility:hidden;
+	height:0px;
+}
+.cf {
+	zoom:1;
+}
+.fl {
+	float:left;
+}
+.fr {
+	float:right;
+}
+.pointer {
+	cursor: pointer;
+}
+/* sprite icon */
+.icon {
+	display: inline-block;
+}
+
+
+/* iconfont */
+@font-face {
+	font-family: 'iconfont';
+	src: url('//at.alicdn.com/t/font_1468401154_1614668.eot');/* IE9*/
+	src: url('//at.alicdn.com/t/font_1468401154_1614668.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	url('//at.alicdn.com/t/font_1468401154_1614668.woff') format('woff'), /* chrome、firefox */
+	url('//at.alicdn.com/t/font_1468401154_1614668.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	url('//at.alicdn.com/t/font_1468401154_1614668.svg#iconfont') format('svg');/* iOS 4.1- */
+}
+.iconfont{
+	font-family:"iconfont" !important;
+	font-style:normal;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+
+
+header {
+	font-size: 90%;
+}
+header .nav-item {
+	padding: 0 .5rem;
+	font-weight: 100;
+	text-transform: uppercase;
+}
+header .dropdown-menu {
+	left: auto;
+	right: 0;
+}
+
+
+.bd-footer {
+	font-size: 90%;
+	padding: 4rem 0;
+	margin-top: 4rem;
+	background-color: #f7f7f7;
+	text-align: left;
+}
+
+.bd-footer-links li {
+	display: inline-block;
+	margin-right: 1.5rem;
+	margin-bottom: 1rem;
+}
+.bd-footer a {
+	font-weight: 500;
+	color: #55595c;
+}
+.bd-footer a:hover {
+	color: #0275d8;
+}
+
+
+
+
+
+
+
+
+
+
+

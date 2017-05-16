@@ -35,9 +35,16 @@ var app = express();
 app.use(compression());
 
 // view engine setup
+// swig.init();
 app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
+
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'html');
+// app.engine('html', ejs);
+// app.locals._layoutFile = 'layout.html';
+// app.enable('trust proxy'); 反向代理？
 
 // Request logger。请求时间
 app.use(requestLog);

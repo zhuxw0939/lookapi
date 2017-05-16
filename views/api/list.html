@@ -1,25 +1,37 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Myproject - Lookapi</title>
+{% extends '../common/layout.html' %}
+
+{% block style %}
 <link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% endblock %}
 
-<body>
+{% block body %}
 
-{% include '../common/header.html' %}
-
-
-
-
-<div class="main_look">
-	<div class="look_left">
-		<div class="_menu">
-			{% include '../common/api_left.html' %}
+		<!-- Main jumbotron for a primary marketing message or call to action -->
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="display-3">{{data.name}}</h1>
+			<p>
+				版本号：{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}&nbsp;&nbsp;&nbsp;
+				接口数量：{{apiList.length}}&nbsp;&nbsp;&nbsp;&nbsp;
+				排序：
+				{% if query.g_id %}
+					{% if query.sort!=undefined&&query.sort=="update" %}
+					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}" class="go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}&sort=update" class="current go_sort">最后修改</a>
+					{% else %}
+					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}" class="current go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}&sort=update" class="go_sort">最后修改</a>
+					{% endif %}
+				{% else %}
+					{% if query.sort!=undefined&&query.sort=="update" %}
+					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}" class="go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&sort=update" class="current go_sort">最后修改</a>
+					{% else %}
+					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}" class="current go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&sort=update" class="go_sort">最后修改</a>
+					{% endif %}
+				{% endif %}
+			</p>
+			<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
 		</div>
 	</div>
-	<div class="look_right">
+<div class="container">
 
 		<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; position: relative;">
 			{{data.name}}
@@ -129,9 +141,7 @@
 			</table>
 		</div>
 
-	</div>
-
-{% include '../common/footer.html' %}
+</div>
 
 
 
@@ -199,7 +209,9 @@
 		</p>
 	</form>
 </script>
+{% endblock %}
 
+{% block script %}
 <script>
 $(function(){
 
@@ -324,8 +336,8 @@ $(function(){
 
 //					$.sx.alert("swagger导入成功，请刷新页面查看，！");
 					/*setTimeout(function(){
-						window.location.reload();
-					}, 1500);*/
+					 window.location.reload();
+					 }, 1500);*/
 				} else {
 					$.sx.alert(data.message);
 				}
@@ -559,7 +571,4 @@ $(function(){
 
 });
 </script>
-
-
-</body>
-</html>
+{% endblock %}

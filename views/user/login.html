@@ -1,40 +1,35 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Login - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_user.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
+{% block body %}
+<div class="container">
+	<form class="form-signin" action="/user/loginPost" method="post" id="js_form">
+		<h2 class="form-signin-heading center">登录</h2>
 
+		<label for="inputEmail" class="sr-only">Email address</label>
+		<input type="email" name="email" id="inputEmail" class="form-control input_first" placeholder="邮箱地址" required autofocus>
 
-
-<div class="wrapper wrapper_login" style="padding-top: 150px; text-align: center;">
-	<form action="/user/loginPost" method="post" id="js_form">
-		<p><input type="text" name="email" class="input" placeholder="邮箱地址"  value=""></p>
-		<p><input type="password" name="password" class="input" placeholder="密码"></p>
-		<p><a href="#" class="btns btns-blue btns-longer" id="js_submit">登录</a></p>
+		<label for="inputPassword" class="sr-only">Password</label>
+		<input type="password" name="password" id="inputPassword" class="form-control input_last" placeholder="密码" required>
+		<div class="checkbox">
+			<label><input type="checkbox" value="remember-me"> 记住密码</label>
+		</div>
+		<button class="btn btn-lg btn-primary btn-block pointer" type="submit" id="js_submit">登录</button>
 		<input type="hidden" name="backurl" id="js_backurl" value="{{query.backurl}}">
+		{% if query.backurl %}
+		<p style="font-size: 15px; color: #bbb; text-align: center; padding: 60px 0;">
+			（*>.<*）…<br> 请登录后继续操作吧！
+		</p>
+		{% endif %}
 	</form>
-	{% if query.backurl %}
-	<p style="font-size: 15px; color: #bbb; text-align: center; padding: 60px 0;">
-		（*>.<*）…<br> 请登录后继续操作吧！
-	</p>
-	{% endif %}
 </div>
+{% endblock %}
 
-
-
-
-{% include '../common/footer.html' %}
-
-
-
-
-<script>
+{% block script %}
+<script type="text/javascript">
 $(function(){
 	$("#js_submit").click(function(){
 		$("#js_form").ajaxSubmit({
@@ -42,18 +37,18 @@ $(function(){
 				console.info(data);
 				if(data.status==0){
 					if($("#js_backurl").val()!=""){
-						$.sx.alert("登录成功，即将返回前一个页面！");
+						$.sx.alert("登录成功，即将返回前一个页面！", "success");
 						setTimeout(function(){
 							window.location.href = $("#js_backurl").val();
 						}, 1500);
 					} else {
-						$.sx.alert("登录成功，即将返回首页！");
+						$.sx.alert("登录成功，即将返回首页！", "success");
 						setTimeout(function(){
 							window.location.href = "/";
 						}, 1500);
 					}
 				} else {
-					$.sx.alert(data.message);
+					$.sx.alert(data.message, "info");
 				}
 			}
 		});
@@ -61,7 +56,4 @@ $(function(){
 	});
 });
 </script>
-
-
-</body>
-</html>
+{% endblock %}
