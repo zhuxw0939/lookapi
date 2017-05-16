@@ -1,0 +1,23 @@
+<h4 class="{%if query.g_id==''&&query.type!=2 %}current{%endif%}">
+	<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}">所有接口</a>
+</h4>
+
+{%for item in groupList %}
+	<h4 class="level_{{item.level}} {%if query.g_id==item.id %}current active{%endif%}">
+		<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{item.id}}">{{item.name}}</a>
+		<i class="iconfont">&#xe615;</i>
+	</h4>
+	<ul class="_ul {% if loop.first %}_ul_first{% endif %}">
+	{%for itemSon in groupSonList %}
+		{%if item.id==itemSon.father_id %}
+			<li class="level_{{itemSon.level}} {%if query.g_id==itemSon.id %}current{%endif%}">
+				<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{itemSon.id}}">{{itemSon.name}}</a>
+				<!--<span class="goright">
+					<a href="#" class="edit_group" data-id="{{itemSon.id}}" data-sort="{{itemSon.sort}}" data-name="{{itemSon.name}}" data-swagger_url="{{itemSon.swagger_url}}" data-servers_api_path="{{itemSon.servers_api_path}}">编辑</a>
+					<a href="#" class="del_group" data-id="{{itemSon.id}}">×删除</a>
+				</span>-->
+			</li>
+		{%endif%}
+	{% endfor%}
+	</ul>
+{% endfor%}

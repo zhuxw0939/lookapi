@@ -1,43 +1,39 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>创建项目 - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
-
-<div class="wrapper">
-
-	<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd;">{{data.name}}</h4>
-
-	<div class="sx_tabs cf">
-		<a href="/api/list?p_id={{query.p_id}}">接口文档</a>
-		<a href="/project/version?p_id={{query.p_id}}">版本管理</a>
-		<a href="/project/team?p_id={{query.p_id}}">协作管理</a>
-		<a href="/project/update?p_id={{query.p_id}}" class="current">项目设置</a>
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">{{data.name}}</h1>
+		<p>Amaze UI 概览，下载、使用，模板示例，二次开发……</p>
 	</div>
 </div>
-
-<div class="wrapper wrapper_login" style="padding-top: 50px; text-align: center;">
-
-	<form action="/project/updatePost" id="js_form" method="post">
-
-		{% include 'form.html' %}
-
-		<input type="hidden" name="p_id" value="{{query.p_id}}">
-		<p style="padding-left: 520px; padding-top: 20px; text-align: left;">
-			<button type="submit" class="btns btns-blue btns-longer" style="height: auto;">保存项目</button>
-		</p>
-	</form>
+<div class="container">
+	<div class="row row-offcanvas row-offcanvas-right">
+		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+			{% set currentNav='update' %}
+			{% include './nav.html' %}
+		</div>
+		<div class="col-xs-12 col-sm-9 column_right">
+			<form action="/project/updatePost" class="_form" id="js_form" method="post">
+				{% include 'form.html' %}
+				<input type="hidden" name="p_id" value="{{query.p_id}}">
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label"></label>
+					<div class="col-sm-10">
+						<button type="submit" class="btn btn-primary btn-lg" >保存设置 &raquo;</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
+{% endblock %}
 
-
-
-{% include '../common/footer.html' %}
+{% block script %}
 <script>
 $(function(){
 	$("#js_select_type").change(function(){
@@ -52,5 +48,4 @@ $(function(){
 	$("#js_select_type").change();
 });
 </script>
-</body>
-</html>
+{% endblock %}

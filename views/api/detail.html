@@ -1,373 +1,172 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Myproject - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_api.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
+{% block body %}
 
-<div class="main_look">
-	<div class="look_left">
-		<div class="_menu">
-			{% include '../common/api_left.html' %}
-		</div>
+<div class="column_api">
+	<div class="_left">
+		{% include './left.html' %}
 	</div>
-	<div class="look_right">
-		{% if data %}
-		<div class="api_page">
-			<h3 id="api_title" style="position: relative; padding-bottom: 50px;">
-				{{data.name}}
-				<span class="goright" style="top: auto; bottom:0; font-size: 13px; font-weight: 100;">
-					<a href="#" id="js_getapiajaxcode" data-id="{{data.id}}">Ajax代码</a>&nbsp;&nbsp;
-					<a href="#" id="js_getapinodejscode" data-id="{{data.id}}">Node代码</a>&nbsp;&nbsp;
-					<a href="#" id="js_getapifun" data-id="{{data.id}}">获取ApiFunction</a>&nbsp;&nbsp;
-					<a href="#" id="js_makeapifunfile" data-id="{{data.id}}" data-swagger_id="{{data.swagger_id}}" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;
-					<a href="/api/test?id={{data.id}}" >调试</a>&nbsp;&nbsp;
-					<a href="/api/update?id={{data.id}}" >编辑</a>&nbsp;&nbsp;
-					<a href="#" data-id="{{data.id}}" id="js_api_lose">设为过期</a>&nbsp;&nbsp;
-					<a class="btn_del_api" href="#" data-id="{{data.id}}">删除</a>
-				</span>
-			</h3>
-			<div id="js_getapiajaxcode_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #89caea; background: #e8f5fb; display: none;"></div>
-			<div id="js_getapinodejscode_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #ffbca4; background: #fef4f0; display: none;"></div>
-			<div id="js_getapifun_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #eee; background: #f8f8f8; display: none;"></div>
-			<p><strong>简要描述：</strong></p>
-			<ul class="txts">
-				<li>{% if data.description %}{{data.description}}{% else %}<span style="color: #bbb;">暂无</span>{% endif %}</li>
-			</ul>
-			<p><strong>请求URL：</strong></p>
-			<ul class="txts">
-				<li><span class="url">{{data.url}}</span></li>
-			</ul>
-			{% for item in options.apiRequestType %}
-				{%if data.request_type==item.value && item.value!=0 %}
-					<p><strong>请求方式：</strong></p>
-					<ul class="txts"><li>{{item.name}} - {{data.fun_name}} - {{data.swagger_id}}</li></ul>
-				{%endif%}
-			{% endfor %}
-
-			<p><strong>接口记录：</strong></p>
-			<div class="txts_history">
-				<!--{{updatesData | json}}-->
-				{% for itemArray in updatesData %}
-					{% for item in itemArray.data %}
-						<a href="/api/detail/{{itemArray.id}}">
-						<p class="{% if itemArray.id==data.id %}current {% else %}not_current {% endif %}{% if loop.first %}first {% endif %}{% if loop.last %} last{% endif %}" >
-							<span class="s_1">
-								<i class="red">-</i>
-								{{item.update_time | date('Y-m-d H:i:s', -480)}}
-								{% if item.update_old %}
-									<!--{{item.update_old}}-->
-								{% else %}
-									<font>(初次创建)</font>
-								{% endif %}
-							</span>
-							<span class="s_2">
-								<i class="red">-</i>
-								by {{item.update_name}} {{item.update_type}}
-
-								{% if itemArray.id==data.id %}
-									<font color="#dc143c">（{{data.swagger_upinfo}}）</font>
-								{% endif %}
-							</span>
-							<span class="s_3"><i class="red">-</i>{{item.update_info}}</span>
-							<span class="s_4"><a href="/api/detail/{{itemArray.id}}" class="_lit"><i class="red">-</i>查看<i class="red">-</i></a></span>
-						</p>
-						</a>
-					{% endfor %}
-				{% endfor %}
-			</div>
-
-			{% if parameter.length>0 && parameter[0]!="" %}
-			<p><strong>参数：</strong></p>
-			<div>
-				<table class="table_api">
-					<thead>
-						<tr>
-							<th width="18%">参数名</th>
-							<th width="10%">必选</th>
-							<th width="10%">类型</th>
-							<th width="10%">in_type</th>
-							<th width="18%">说明</th>
-							<th width="40%">示例</th>
-						</tr>
-					</thead>
-					<tbody>
-						{%for item in parameter %}
-							<tr>
-								<td>{{item.name}}</td>
-								<td>
-									{% for types in options.apiParametersMust %}
-										{%if item.ismust==types.value && types.value!=0 %}
-											{{types.name}}
-										{%endif%}
-									{% endfor %}
-								</td>
-								<td>
-									{% for types in options.apiParametersType %}
-										{%if item.type==types.value && types.value!=0 %}
-											{{types.name}}
-										{%endif%}
-									{% endfor %}
-								</td>
-								<td>{{item.in_type}}</td>
-								<td>{{item.info}}</td>
-								<td style="overflow-wrap: break-word; white-space: normal;">
-									<div class="json json_back json_back_hide">{{item.default}}</div>
-								</td>
-							</tr>
-
-							{% if item.default_object %}
-							<tr>
-								<td></td>
-								<td colspan="5" style="overflow-wrap: break-word; white-space: normal;">
-									<div class="json json_back json_back_hide">{{item.default_object|json}}</div>
-								</td>
-							</tr>
-							{% endif %}
-
-						{% endfor%}
-					</tbody>
-				</table>
-			</div>
-			{% endif %}
-
-			<p><strong>返回示例：</strong></p>
-			<div class="json_box">
-				<p style="text-align: right">
-					<a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
-					<a class="toggle-btn" href="#" id="toggle-btn">+</a>
-				</p>
-				<div class="json json_back">{{data.back_data}}</div>
-			</div>
-
-			{% if data.back_description %}
-			<div class="mustjson_box">
-				<p><strong>返回参数说明：</strong></p>
-				<div class="json json_mustjson json_back_hide">{{data.back_description}}</div>
-
-				<!--<ul class="txts">
-					<li>{{data.back_description}}</li>
-				</ul>-->
-			</div>
-			{% endif %}
-			{% if data.writes %}
-				<p><strong>备注：</strong></p>
+	<div class="_right">
+		<div class="look_right">
+			{% if data %}
+			<div class="api_page">
+				<h3 id="api_title" style="position: relative; padding-bottom: 50px;">
+					{{data.name}}
+					<span class="goright" style="top: auto; bottom:0; font-size: 13px; font-weight: 100;">
+						<a href="#" id="js_getapiajaxcode" data-id="{{data.id}}">Ajax代码</a>&nbsp;&nbsp;
+						<a href="#" id="js_getapinodejscode" data-id="{{data.id}}">Node代码</a>&nbsp;&nbsp;
+						<a href="#" id="js_getapifun" data-id="{{data.id}}">获取ApiFunction</a>&nbsp;&nbsp;
+						<a href="#" id="js_makeapifunfile" data-id="{{data.id}}" data-swagger_id="{{data.swagger_id}}" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;
+						<a href="/api/test?id={{data.id}}" >调试</a>&nbsp;&nbsp;
+						<a href="/api/update?id={{data.id}}" >编辑</a>&nbsp;&nbsp;
+						<a href="#" data-id="{{data.id}}" id="js_api_lose">设为过期</a>&nbsp;&nbsp;
+						<a class="btn_del_api" href="#" data-id="{{data.id}}">删除</a>
+					</span>
+				</h3>
+				<div id="js_getapiajaxcode_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #89caea; background: #e8f5fb; display: none;"></div>
+				<div id="js_getapinodejscode_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #ffbca4; background: #fef4f0; display: none;"></div>
+				<div id="js_getapifun_back" style="margin-bottom: 20px; padding: 20px 40px; border: 1px solid #eee; background: #f8f8f8; display: none;"></div>
+				<p><strong>简要描述：</strong></p>
 				<ul class="txts">
-					<li>{{data.writes}}</li>
+					<li>{% if data.description %}{{data.description}}{% else %}<span style="color: #bbb;">暂无</span>{% endif %}</li>
 				</ul>
+				<p><strong>请求URL：</strong></p>
+				<ul class="txts">
+					<li><span class="url">{{data.url}}</span></li>
+				</ul>
+				{% for item in options.apiRequestType %}
+					{%if data.request_type==item.value && item.value!=0 %}
+						<p><strong>请求方式：</strong></p>
+						<ul class="txts"><li>{{item.name}} - {{data.fun_name}} - {{data.swagger_id}}</li></ul>
+					{%endif%}
+				{% endfor %}
+
+				<p><strong>接口记录：</strong></p>
+				<div class="txts_history">
+					<!--{{updatesData | json}}-->
+					{% for itemArray in updatesData %}
+						{% for item in itemArray.data %}
+							<a href="/api/detail/{{itemArray.id}}">
+							<p class="{% if itemArray.id==data.id %}current {% else %}not_current {% endif %}{% if loop.first %}first {% endif %}{% if loop.last %} last{% endif %}" >
+								<span class="s_1">
+									<i class="red">-</i>
+									{{item.update_time | date('Y-m-d H:i:s', -480)}}
+									{% if item.update_old %}
+									<!--{{item.update_old}}-->
+									{% else %}
+										<font>(初次创建)</font>
+									{% endif %}
+								</span>
+								<span class="s_2">
+									<i class="red">-</i>
+									by {{item.update_name}} {{item.update_type}}
+
+									{% if itemArray.id==data.id %}
+										<font color="#dc143c">（{{data.swagger_upinfo}}）</font>
+									{% endif %}
+								</span>
+								<span class="s_3"><i class="red">-</i>{{item.update_info}}</span>
+								<span class="s_4"><a href="/api/detail/{{itemArray.id}}" class="_lit"><i class="red">-</i>查看<i class="red">-</i></a></span>
+							</p>
+							</a>
+						{% endfor %}
+					{% endfor %}
+				</div>
+
+				{% if parameter.length>0 && parameter[0]!="" %}
+				<p><strong>参数：</strong></p>
+				<div>
+					<table class="table_api">
+						<thead>
+							<tr>
+								<th width="18%">参数名</th>
+								<th width="10%">必选</th>
+								<th width="10%">类型</th>
+								<th width="10%">in_type</th>
+								<th width="18%">说明</th>
+								<th width="40%">示例</th>
+							</tr>
+						</thead>
+						<tbody>
+							{%for item in parameter %}
+								<tr>
+									<td>{{item.name}}</td>
+									<td>
+										{% for types in options.apiParametersMust %}
+											{%if item.ismust==types.value && types.value!=0 %}
+												{{types.name}}
+											{%endif%}
+										{% endfor %}
+									</td>
+									<td>
+										{% for types in options.apiParametersType %}
+											{%if item.type==types.value && types.value!=0 %}
+												{{types.name}}
+											{%endif%}
+										{% endfor %}
+									</td>
+									<td>{{item.in_type}}</td>
+									<td>{{item.info}}</td>
+									<td style="overflow-wrap: break-word; white-space: normal;">
+										<div class="json json_back json_back_hide">{{item.default}}</div>
+									</td>
+								</tr>
+
+								{% if item.default_object %}
+								<tr>
+									<td></td>
+									<td colspan="5" style="overflow-wrap: break-word; white-space: normal;">
+										<div class="json json_back json_back_hide">{{item.default_object|json}}</div>
+									</td>
+								</tr>
+								{% endif %}
+
+							{% endfor%}
+						</tbody>
+					</table>
+				</div>
+				{% endif %}
+
+				<p><strong>返回示例：</strong></p>
+				<div class="json_box">
+					<p style="text-align: right">
+						<a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
+						<a class="toggle-btn" href="#" id="toggle-btn">+</a>
+					</p>
+					<div class="json json_back">{{data.back_data}}</div>
+				</div>
+
+				{% if data.back_description %}
+				<div class="mustjson_box">
+					<p><strong>返回参数说明：</strong></p>
+					<div class="json json_mustjson json_back_hide">{{data.back_description}}</div>
+
+					<!--<ul class="txts">
+						<li>{{data.back_description}}</li>
+					</ul>-->
+				</div>
+				{% endif %}
+				{% if data.writes %}
+					<p><strong>备注：</strong></p>
+					<ul class="txts">
+						<li>{{data.writes}}</li>
+					</ul>
+				{% endif %}
+			</div>
+			{% else %}
+			<div>没有数据</div>
 			{% endif %}
 		</div>
-		{% else %}
-		<div>没有数据</div>
-		{% endif %}
 	</div>
 </div>
+{% endblock %}
 
-{% include '../common/footer.html' %}
-
+{% block script %}
+<script type="text/javascript" src="/static/script/page_api_left.js"></script>
 <script>
-$(function(){
-
-	$("#js_getapifun").click(function(){
-		console.info($(this).data("id"));
-		$.ajax({
-			url: "/makingapi/getServersApiFunctionCode",
-			type: "POST",
-			dataType: "json",
-			data: {
-				id: $(this).data("id")
-			},
-			success: function(data){
-				console.info(data);
-				if(data.status==0){
-					$("#js_getapifun_back").html("<pre>"+data.data+"</pre>").toggle();
-				} else {
-					$.sx.alert(data.message);
-				}
-			}
-		});
-		return false;
-	});
-
-
-
-	$("#js_getapiajaxcode").click(function(){
-		console.info($(this).data("id"));
-		$.ajax({
-			url: "/makingapi/getApiFunctionAjaxCode",
-			type: "GET",
-			dataType: "json",
-			data: {
-				id: $(this).data("id")
-			},
-			success: function(data){
-				console.info(data);
-				if(data.status==0){
-					$("#js_getapiajaxcode_back").html("<pre>"+data.data+"</pre>").toggle();
-				} else {
-					$.sx.alert(data.message);
-				}
-			}
-		});
-		return false;
-	});
-
-
-	$("#js_getapinodejscode").click(function(){
-		console.info($(this).data("id"));
-		$.ajax({
-			url: "/makingapi/getApiFunctionNodejsCode",
-			type: "GET",
-			dataType: "json",
-			data: {
-				id: $(this).data("id")
-			},
-			success: function(data){
-				console.info(data);
-				if(data.status==0){
-					$("#js_getapinodejscode_back").html("<pre>"+data.data+"</pre>").toggle();
-				} else {
-					$.sx.alert(data.message);
-				}
-			}
-		});
-		return false;
-	});
-
-	$("#js_makeapifunfile").click(function(){
-		console.info($(this).data("id"));
-		var back_url = $(this).data("back_url");
-		$.ajax({
-			url: "/makingapi/updateServersApiFile",
-			type: "POST",
-			dataType: "json",
-			data: {
-				id: $(this).data("id"),
-				swagger_id: $(this).data("swagger_id"),
-				v_id: $(this).data("v_id")
-			},
-			success: function(data){
-				console.info(data);
-				if(data.status==0){
-					$.sx.confirm("更新ApiFunction.js成功，是否同步到本地？", "同步将会覆盖原函数！", function(){
-						window.location.href = back_url;
-					});
-				} else {
-					$.sx.alert(data.message);
-				}
-			}
-		});
-		return false;
-	});
-
-	// 删除api
-	$("a.btn_del_api").click(function(){
-		var id = $(this).data("id");
-		$.sx.confirm("确定删除api？", "删除api后，将无法恢复。", function(){
-			$.ajax({
-				url: "/api/removeApiPost",
-				type: "POST",
-				dataType: "json",
-				data: {
-					id: id
-				},
-				success: function(data){
-					if(data.status==0){
-						$.sx.alert("操作成功！");
-						setTimeout(function(){
-							window.history.go(-1);
-						}, 1500);
-					} else {
-						$.sx.alert(data.message);
-					}
-				}
-			});
-		});
-		return false;
-	});
-
-	// 设置api为过期
-	$("#js_api_lose").click(function(){
-		var id = $(this).data("id");
-		$.sx.confirm("确定设置api为过期？", "设置后，可在过期接口栏目中查询到。", function(){
-			$.ajax({
-				url: "/api/loseApiPost",
-				type: "POST",
-				dataType: "json",
-				data: {
-					id: id
-				},
-				success: function(data){
-					if(data.status==0){
-						$.sx.alert("操作成功！");
-						setTimeout(function(){
-							window.history.go(-1);
-						}, 1500);
-					} else {
-						$.sx.alert(data.message);
-					}
-				}
-			});
-		});
-		return false;
-	});
-
-
-
-	$(".look_left ._menu .current").each(function(){
-		if($(this).hasClass("level_2")){
-			$(this).closest("ul").show();
-		}
-		return false;
-	});
-
-	$(".json_mustjson").each(function () {
-		var _this = this;
-		try {
-			console.info(JSON.parse($(this).text()));
-		} catch (error){
-			console.info(error);
-			console.info("不是mustjson格式");
-			$(_this).closest(".mustjson_box").remove();
-		}
-	});
-
-
-
-
-
-	$(".json").each(function () {
-		try {
-			console.info(JSON.parse($(this).text()));
-			$(this).JSONView(JSON.parse($(this).text()));
-			if($(this).hasClass("json_back_hide")){
-				$(this).JSONView('toggle', 1);
-			}
-		} catch (error){
-			console.info(error);
-			console.info("不是json格式");
-		}
-	});
-
-
-
-
-	$('#toggle-btn').on('click', function() {
-		$('.json_back').JSONView('toggle');
-		return false;
-	});
-	$('#toggle-level1-btn').on('click', function() {
-		$('.json_back').JSONView('toggle', 2);
-		return false;
-	});
-});
 </script>
-
-
-</body>
-</html>
+{% endblock %}

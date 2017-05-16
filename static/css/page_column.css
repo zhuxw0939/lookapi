@@ -10,7 +10,41 @@
 
 
 form._form {
-	padding: 3rem 12rem 2rem;
+	padding: 1rem 4rem;
 	min-height: 20rem;
 	font-size: 90%;
+}
+form._form .form-group {
+	margin-bottom: 1.2rem;
+}
+.column_right {
+	min-height: 20rem;
+}
+
+
+
+
+ul.my_message {
+	padding: 10px 50px;
+}
+ul.my_message li {
+	padding: 15px 0 15px 20px;
+	font-size: 16px;
+	border-bottom: 1px solid #ddd;
+}
+ul.my_message li p._title {
+	color: #111;
+	font-size: 15px;
+	line-height: 2em;
+	position: relative;
+}
+ul.my_message li p._title a.goright {
+	font-size: 13px;
+	color: orange;
+	right: 20px;
+}
+
+ul.my_message li p._info {
+	color: #888;
+	font-size: 12px;
 }

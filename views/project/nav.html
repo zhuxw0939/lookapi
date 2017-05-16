@@ -1,0 +1,6 @@
+<div class="list-group">
+	<a href="/project/update?p_id={{query.p_id}}" class="list-group-item {% if currentNav=='update' %}active{% endif %}">项目设置</a>
+	<a href="/project/version?p_id={{query.p_id}}" class="list-group-item {% if currentNav=='version' %}active{% endif %}">版本管理</a>
+	<a href="/project/team?p_id={{query.p_id}}" class="list-group-item {% if currentNav=='team' %}active{% endif %}">协作管理</a>
+	<a href="/api/list?p_id={{query.p_id}}" class="list-group-item {% if currentNav=='abc' %}active{% endif %}">接口文档</a>
+</div>

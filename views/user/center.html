@@ -1,36 +1,73 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Center - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
-
-<div class="wrapper wrapper_login">
-	<!--<h5 style="word-break:break-all; padding: 30px 0;">{{JSON.stringify(data)}}</h5>-->
-
-	<div class="sx_tabs cf" style="padding: 100px 0; text-align: center;">
-		<a href="/user/center" class="current">个人中心</a>
-		<a href="/user/changePassword">修改密码</a>
-		<a href="/user/message">我的消息 <b id="js_newmessage_num" style="display:none; background: red;
-		 color: #fff; font-size: 8px; width: 14px; height: 14px; line-height: 14px; border-radius: 100%; top: -5px; position: relative"></b></a>
-		<a href="/user/env">我的环境</a>
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">个人中心</h1>
+		<p>Amaze UI 概览，下载、使用，模板示例，二次开发……</p>
 	</div>
-
-	<form action="/user/updatePost" method="post" id="js_form">
-		<p style="padding-left: 450px; text-align: left;">邮箱地址：{{user.email}}</p>
-		<p style="padding-left: 450px; text-align: left;">创建时间：{{user.last_login | date('Y-m-d H:i:s', -480)}} <a href="/user/logout">退出登录</a></p>
-		<p style="padding-left: 450px; text-align: left;">真实姓名：<input type="text" name="name" class="input" value="{{user.name}}"></p>
-		<p style="padding-left: 520px; text-align: left;"><a href="#" class="btns btns-blue btns-longer" id="js_submit">修改姓名</a></p>
-	</form>
+</div>
+<div class="container">
+	<div class="row row-offcanvas row-offcanvas-right">
+		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+			{% set currentNav='center' %}
+			{% include './nav.html' %}
+		</div>
+		<div class="col-xs-12 col-sm-9 column_right">
+			<form action="/user/updatePost" class="_form" method="post" id="js_form">
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label">邮箱地址：</label>
+					<div class="col-sm-10">
+						{{user.email}}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label">创建时间：</label>
+					<div class="col-sm-10">
+						{{user.last_login | date('Y-m-d H:i:s', -480)}}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label">真实姓名：</label>
+					<div class="col-sm-10">
+						<input type="text" name="name" class="form-control" value="{{user.name}}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label"></label>
+					<div class="col-sm-10">
+						<button type="submit" class="btn btn-primary btn-lg" >修改姓名 &raquo;</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
-{% include '../common/footer.html' %}
+<!--tpl_add_version-->
+<script type="text/html" id="tpl_add_teams">
+	<form action="/project/sendJoinTeamMessage" id="js_form" method="post">
+		<p style="padding: 10px 50px;">用户邮箱：<input type="text" name="email" class="input" value="" placeholder="输入该用户邮箱地址"> *对方必须同意才能加入</p>
+		<p style="padding: 10px 50px 10px 110px;">
+			<label class="checkbox">
+		        <input type="checkbox" id="js_checkbox" name="is_sendmail"> 给他发送邮件提醒
+		    </label>
+		</p>
+		<input type="hidden" name="p_id" value="{{data.id}}">
+		<input type="hidden" name="p_name" value="{{data.name}}">
+		<p style="padding: 10px 50px 10px 110px;">
+			<a class="btns btns-blue btns-longer" id="js_submit">确定</a>
+		</p>
+	</form>
 
+</script>
+{% endblock %}
+
+{% block script %}
 <script>
 $(function(){
 
@@ -73,7 +110,4 @@ $(function(){
 	});
 });
 </script>
-
-
-</body>
-</html>
+{% endblock %}
