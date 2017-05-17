@@ -24,6 +24,9 @@ router.get('/maketest', api.maketest); // 接口测试
 
 router.get('/getApiList', api.getApiList); // 接口测试
 
+router.get('/get/apiDetail', api.getApiDetail); // 编辑Api
+
+
 // POST
 router.post('/createPost', authModel.userMustLogin, api.createPost); // 创建Api
 router.post('/updatePost', authModel.userMustLogin, api.updatePost); // 编辑Api

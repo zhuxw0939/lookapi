@@ -1,49 +1,144 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>创建Api - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_editer.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
-
-<div class="wrapper">
-	<form action="/api/updatePost" id="js_form" method="post">
-		<ul class="_form">
-
-	        {% include 'form.html' %}
-
-			<input type="hidden" name="id" id="js_api_id" value="{{data.id}}">
-
-			<input type="hidden" name="p_id" value="{{data.project_id}}">
-			<input type="hidden" name="v_id" value="{{data.version_id}}">
-
-			<input type="hidden" name="user_id" value="{{user.id}}">
-			<input type="hidden" name="user_name" value="{{user.name}}">
-
-	        <li style="margin: 50px 0 20px;">
-	            <span class="field"> </span>
-				<a href="#" id="js_saveapi" class="btns btns-blue btns-max" style="padding: 15px 50px;"><i class="iconfont" style="top: -2px;"></i>确定</a>
-				<a href="#" id="js_canceleapi" class="btns btns-gray2 btns-max" style="padding: 15px 50px; margin-left: 20px;"><i class="iconfont" style="top: -2px;"></i>取消</a>
-	        </li>
-	    </ul>
-
-	</form>
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">修改api</h1>
+		<p>……</p>
+	</div>
 </div>
+<div class="container">
+	<div class="row" style="min-height: 400px;">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10" id="js_vue" v-cloak>
+			<form action="/api/updatePost" class="_form" id="js_form" method="post">
+				{% include 'form.html' %}
 
+				<input type="hidden" name="id" id="js_api_id" value="{{data.id}}">
 
+				<input type="hidden" name="p_id" value="{{data.project_id}}">
+				<input type="hidden" name="v_id" value="{{data.version_id}}">
 
-{% include '../common/footer.html' %}
+				<input type="hidden" name="user_id" value="{{user.id}}">
+				<input type="hidden" name="user_name" value="{{user.name}}">
+
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label"></label>
+					<div class="col-sm-10">
+						<a href="#" id="js_saveapi" class="btn btn-primary" style="padding: 15px 50px;"><i class="iconfont" style="top: -2px;"></i>确定</a>
+						<a href="#" id="js_canceleapi" class="btn btn-secondary" style="padding: 15px 50px; margin-left: 20px;"><i class="iconfont" style="top: -2px;"></i>取消</a>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-1"></div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
 <script src="/static/script/vue.min.js"></script>
-<script src="/static/script/page_api_create.js"></script>
-<script src="/static/script/page_api_parameters.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/vue.resource/1.3.1/vue-resource.min.js"></script>
+<!--<script src="/static/script/page_api_create.js"></script>-->
+<!--<script src="/static/script/page_api_parameters.js"></script>-->
 <script>
 $(function(){
+
+
+	var vm = new Vue({
+		el: '#js_vue',
+		delimiters: ['${', '}'],
+		data: function() {
+			return {
+				apiId: '{{query.id}}',
+				data: {},
+				group: {},
+				versions: [],
+				projects: [],
+				configOptions: [],
+				parameters: []
+			}
+		},
+		created: function() {
+			console.info(this.apiId);
+			if(!this.apiId){
+				alert("apiId为空，无法编辑");
+			} else {
+				this.ajaxGetApiDetail(this.apiId);
+			}
+		},
+		methods: {
+			ajaxGetApiDetail: function() {
+				this.$http.get("/api/get/apiDetail?id="+this.apiId).then(function(data){
+					data = data.body;
+					if(data.status==0){
+						data = data.data;
+						console.info(data);
+						this.data = data.data;
+						this.group = data.group;
+						this.versions = data.versions;
+						this.projects = data.projects;
+						this.configOptions = data.configOptions;
+					} else {
+						console.info(data);
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			}
+		}
+
+	});
+
+
+
+
+
+
+
+
+
+
+
+//	console.info("$.jquery is coming.. ");
+////	var strs = '{{data|json_encode}}';
+//	var strs = '{{data|json_encode}}';
+//	console.info(strs);
+//	strs = strs.replace(/&quot;&quot;{/gi,"&quot;&#x27;{");
+//	strs = strs.replace(/}&quot;&quot;/gi,"}&#x27;&quot;");
+////	strs = strs.replace(/\\&quot;/gi,"&#x27;");
+//	console.info(strs);
+//	console.info($.parseJSON(strs));
+
+
+	return false;
+
+	console.info(JSON.parse(strs));
+
+
+//	var config_options = JSON.parse('{{JSON.stringify(options)}}');
+	var data = JSON.parse('{{JSON.stringify(data)}}');
+	console.info(data);
+	data = JSON.parse(data);
+
+//	console.info(JSON.stringify(config_options));
+	console.info(JSON.stringify(data));
+
+
+
+
+
+
+
+
+
 	$("#js_fun_name").change(function(){
 		var api_id = $("#js_api_id").val();
 		$.ajax({
@@ -90,8 +185,8 @@ $(function(){
 						}
 					}, 1500);
 					/*	setTimeout(function(){
-							self.location=document.referrer;
-						}, 1500);*/
+					 self.location=document.referrer;
+					 }, 1500);*/
 				} else if(data.status==3){
 					var shtml = '<br>';
 					for(var i=0;i<data.data.length;i++){
@@ -113,6 +208,4 @@ $(function(){
 
 });
 </script>
-
-</body>
-</html>
+{% endblock %}

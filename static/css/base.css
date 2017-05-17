@@ -29,6 +29,10 @@ strong {
 }
 
 
+[v-cloak]{
+	display: none;
+}
+
 /* class */
 .yellow {
 	color: #CDB37C;
@@ -146,6 +150,7 @@ table.center tr td {
 }
 
 
+/* bootcss */
 .btn i.iconfont {
 	font-size: 10px;
 	position: relative;
@@ -155,6 +160,29 @@ table.center tr td {
 .btn-sm {
 	padding: .25rem 1em;
 }
+.table-striped tbody tr:nth-of-type(odd) {
+	background: #f9f9f9;
+}
+.table-hover tbody tr:hover {
+	background-color: #f3f3f3;
+}
+.form-control-inline {
+	display: inline-block;
+	width: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 header {

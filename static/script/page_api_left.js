@@ -1,5 +1,7 @@
 $(function(){
 
+	$("#js_fx_html").text($(".column_api ._left .current a").text());
+
 	// 初始化left_menu
 	if($(".column_api ._left .current").hasClass("level_1")){
 		console.info("level_1");

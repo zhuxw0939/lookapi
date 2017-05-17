@@ -83,7 +83,7 @@ module.exports = {
 		],
 		apiParametersType: [
 			{
-				name: "-请选择-",
+				name: "--请选择--",
 				value: 0
 			}, {
 				name: "Number",

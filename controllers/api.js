@@ -388,11 +388,105 @@ exports.createPost = function (req, res, next) {
 	});
 };
 
+// 获取某个api的详细信息
+exports.getApiDetail = function (req, res, next) {
+
+	if(!req.query.id){
+		return next("参数错误");
+	}
+
+	var ep = new eventproxy();
+	ep.fail(next);
+
+	// api基本信息
+	apiModel.getApiById(req.query.id, ep.done('get_api'));
+
+	// 获取api所属的栏目
+	ep.all('get_api', function (apiData) {
+		if(!apiData){
+			res.send({
+				status: 1,
+				data: [],
+				message: "获取数据失败"
+			});
+			next();
+		}
+	});
+
+	// 获取api所属的栏目
+	ep.all('get_api', function (apiData) {
+		if(apiData && apiData.group_id){
+			// 如果该api有栏目id,返回栏目信息
+			projectModel.getGroupById(apiData.group_id, ep.done('get_group'));
+		} else {
+			ep.emit("get_group", null);
+		}
+	});
+
+	// 获取api所属一级栏目下的二级栏目
+	ep.all('get_group', function (groupData) {
+		// 如果传的栏目id是二级栏目,则返回子栏目信息
+		if(groupData && groupData.father_id && groupData.father_id!=0){
+			projectModel.getGroupByFatherId(groupData.father_id, ep.done('get_group_children'));
+		} else {
+			ep.emit("get_group_children", null);
+		}
+	});
+
+	// 获取api所属版本下的所有一级栏目
+	ep.all('get_api', function (apiData) {
+		if(apiData){
+			projectModel.getGroupByVersionId(apiData.version_id, 1, ep.done('get_group_all_oneLevel'));
+		} else {
+			ep.emit("get_group_all_oneLevel", null);
+		}
+	});
+
+	// 获取api所属项目的所有版本
+	ep.all('get_api', function (apiData) {
+		if(apiData){
+			projectModel.getVersionsByPid(apiData.project_id, ep.done('get_versions'));
+		} else {
+			ep.emit("get_versions", null);
+		}
+	});
+
+	// 获取我的所有项目
+	projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
+
+	ep.all('get_api', 'get_group', 'get_group_children', 'get_group_all_oneLevel', 'get_versions', 'get_my_projects', function (get_api, get_group, get_group_children, get_group_all_oneLevel, get_versions, get_my_projects) {
+		logger.info("ep.all ***************************");
+		res.send({
+			status: 0,
+			data: {
+				query: req.query,
+				data: get_api,
+				group: {
+					my: get_group,
+					children: get_group_children,
+					oneLevel: get_group_all_oneLevel
+				},
+				versions: get_versions,
+				projects: get_my_projects,
+				configOptions: config.options
+			}
+		})
+	});
+
+};
+
+
 // 编辑api
 exports.update = function (req, res, next) {
 	if(!req.query.id){
 		return next("参数错误");
 	}
+
+	res.render('api/update', {
+		query: req.query
+	});
+
+	return false;
 
 	async.auto({
 		data_1: ['data_4', function(results, callback){
@@ -443,7 +537,7 @@ exports.update = function (req, res, next) {
 			projectModel.getProjectsByUserId(req.session.user.id, function(err, data){
 				callback(null, data);
 			});
-		},
+		}
 	}, function(err, results){
 		logger.info(results)
 		logger.info("==========================+++++++++++==")
@@ -456,7 +550,7 @@ exports.update = function (req, res, next) {
 				myGroup: results.data_2,
 				sonGroup: results.data_3
 			},
-			data: results.data_4,
+			data: JSON.parse(JSON.stringify(results.data_4)),
 			myVersion: results.data_5,
 			myProject: results.data_6,
 			parameterList: results.data_4.parameters

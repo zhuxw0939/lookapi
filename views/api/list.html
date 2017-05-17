@@ -1,6 +1,8 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
+<!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" />-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" type="text/css" href="/static/css/page_api.css" />
 {% endblock %}
 
@@ -11,12 +13,32 @@
 		{% include './left.html' %}
 	</div>
 	<div class="_right">
-		<div class="jumbotron">
-			<h1>{{data.name}}</h1>
+		<div class="jumbotron column_apilist_header">
+			<h1>
+				{{data.name}}
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;分类：<font id="js_fx_html"></font></span>
+				<span>&nbsp;&nbsp;|&nbsp;&nbsp;接口数量：{{apiList.length}}</span>
+				<span>
+					&nbsp;&nbsp;|&nbsp;&nbsp;版本号：
+					<select id="js_version_select" class="form-control form-control-sm" autocomplete="off" style="width: auto; display: inline-block">
+						{% for item in versionList %}
+							<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
+						{% endfor %}
+					</select>
+				</span>
+				<!--<div class="input-group input-group-sm goright">
+					<span class="input-group-addon" id="sizing-addon2">&nbsp; 版本 &nbsp;</span>
+					<select id="js_version_select" class="form-control" autocomplete="off" style="margin-right: 20px;">
+					{% for item in versionList %}
+						<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
+					{% endfor %}
+				</select>
+				</div>-->
+			</h1>
 			<div>
-				版本号：{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}&nbsp;&nbsp;&nbsp;
-				接口数量：{{apiList.length}}&nbsp;&nbsp;&nbsp;&nbsp;
-				排序：
+
+
+				<!--排序：
 				{% if query.g_id %}
 					{% if query.sort!=undefined&&query.sort=="update" %}
 					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}" class="go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}&sort=update" class="current go_sort">最后修改</a>
@@ -29,17 +51,12 @@
 					{% else %}
 					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}" class="current go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&sort=update" class="go_sort">最后修改</a>
 					{% endif %}
-				{% endif %}
-
-				<select id="js_version_select" class="select select-min" autocomplete="off" style="margin-right: 20px;">
-					{% for item in versionList %}
-						<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
-					{% endfor %}
-				</select>
+				{% endif %}-->
 			</div>
 		</div>
 		<div class="table_box">
-			<table class="table table-bordered table-hover">
+			<!--<table class="table table-bordered table-hover">-->
+			<table class="table table-striped table-hover table-api" id="example" class="display" cellspacing="0" width="100%">
 				<thead>
 					<tr>
 						<th width="25%">接口名称</th>
@@ -56,7 +73,7 @@
 							<td class="api_id" data-id="{{item.id}}" style="max-width: 250px;" title="{{item.name}}">{{item.name}}</td>
 							<td title="{{item.url}}">
 								{% if item.request_type==1 %}
-									<span class="btn btn-sm btn-type btn-primary">POST</span>
+									<span class="btn btn-sm btn-type btn-info">POST</span>
 								{% elseif item.request_type==2 %}
 									<span class="btn btn-sm btn-type btn-success">GET</span>
 								{% elseif item.request_type==3 %}
@@ -75,16 +92,21 @@
 									<span title="{{item.id}}" style="color: #999;">{{item.id}}</span>
 								{% endif %}
 							</td>
-							<td title="{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>{{item.create_time | date('m-d H:i:s', -480)}}<br>({{item.create_name}})</td>
-							<td title="{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="max-width: 120px; color: #999;"{%else%}style="color: #999; max-width: 120px;"{%endif%}>{{item.update_time | date('m-d H:i:s', -480)}}<br>
+							<td title="{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>
+								{{item.create_time | date('Y-m-d H:i:s', -480)}}
+								<!--<br>({{item.create_name}})-->
+							</td>
+							<td title="{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="max-width: 120px; color: #999;"{%else%}style="color: #999; max-width: 120px;"{%endif%}>
+								{{item.update_time | date('Y-m-d H:i:s', -480)}}
+								<!--<br>
 								{% if item.swagger_upinfo %}
 									(<a href="javascript:$.sx.alert('{{item.swagger_upinfo}}')">更新记录</a>)
-							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>
+							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>-->
 							<td>
-								<a href="/api/detail/{{item.id}}" class="btns btns-min btns-green">查看</a>
-								<a href="/api/update?id={{item.id}}" class="btns btns-min btns-green">编辑</a>
-								<a href="/api/test?id={{item.id}}" class="btns btns-min btns-blue">调试</a>
-								<a href="#" data-id="{{item.id}}" class="btns btns-min btns-orange btn_del_api">删除</a>
+								<a href="/api/detail/{{item.id}}" class="btn btn-sm btn-info"><i class="iconfont">&#xe611;</i>查看</a>
+								<!--<a href="/api/update?id={{item.id}}" class="btn btn-sm btn-warning">编辑</a>-->
+								<a href="/api/test?id={{item.id}}" class="btn btn-sm btn-success"><i class="iconfont">&#xe632;</i>调试</a>
+								<a href="javascript:void(0)" data-id="{{item.id}}" class="btn btn-sm btn-danger"><i class="iconfont">&#xe646;</i>删除</a>
 							</td>
 						</tr>
 					{% endfor%}
@@ -97,6 +119,51 @@
 
 {% block script %}
 <script type="text/javascript" src="/static/script/page_api_left.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js"></script>
 <script>
+$(function(){
+	$('#example').DataTable({
+		language: {
+			"sProcessing": "处理中...",
+			"sLengthMenu": "每页显示 _MENU_ 条数据",
+			"sZeroRecords": "没有匹配结果",
+			"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+//			"sInfo": "共 _TOTAL_ 条数据。",
+			"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			"sInfoPostFix": "",
+			"sSearch": "搜索:",
+			"sUrl": "",
+			"sEmptyTable": "表中数据为空",
+			"sLoadingRecords": "载入中...",
+			"sInfoThousands": ",",
+			"oPaginate": {
+				"sFirst": "首页",
+				"sPrevious": "上一页",
+				"sNext": "下一页",
+				"sLast": "末页"
+			},
+			"oAria": {
+				"sSortAscending": ": 以升序排列此列",
+				"sSortDescending": ": 以降序排列此列"
+			}
+		},
+		aLengthMenu: [12, 20, 50, 100, 1000],
+		destroy:        true,
+		stateSave: 		true, //保存表格状态
+		searching: 		true, //搜索
+		ordering: 		true, //排序
+		columnDefs: [
+			{
+				targets: [0, 1, 2, 5],
+				orderable: false
+			}
+		],
+		paging:			true, //分页
+		info: 			false  //数据统计
+	});
+
+});
 </script>
 {% endblock %}
