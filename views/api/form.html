@@ -4,24 +4,25 @@
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">接口名称： </label>
 	<div class="col-sm-10">
-		<input name="name" id="js_api_name" class="form-control" placeholder="2-12字符" type="text" v-model="data.name">
+		<input name="name" v-model="data.name" id="js_api_name" class="form-control" placeholder="2-12字符" type="text">
 	</div>
 </div>
 
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">简要描述： </label>
 	<div class="col-sm-10">
-		<input name="description" type="text" id="js_api_description" class="form-control" placeholder="简述接口功能，不能为空" v-model="data.description">
+		<input name="description" v-model="data.description" type="text" id="js_api_description" class="form-control" placeholder="简述接口功能，不能为空">
 	</div>
 </div>
 
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">所属项目： </label>
 	<div class="col-sm-10">
-		<select name="chose_p_id" id="js_project_select" class="form-control form-control-inline" autocomplete="off">
+		<select name="chose_p_id" v-model="data.project_id" @change="onChangeProject(data.project_id)" id="js_project_select" class="form-control form-control-inline" autocomplete="off">
 			<option v-for="item in projects" :value="item.id">${item.name}</option>
 		</select>
-		<select name="chose_v_id" id="js_version_select" class="form-control form-control-inline" autocomplete="off">
+		<select name="chose_v_id" v-model="data.version_id" @change="onChangeVersion(data.version_id)" id="js_version_select" class="form-control form-control-inline" autocomplete="off">
+			<option value="">--选择版本--</option>
 			<option v-for="item in versions" :value="item.id">${item.name}</option>
 		</select>
 	</div>
@@ -30,12 +31,12 @@
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">所属栏目： </label>
 	<div class="col-sm-10">
-		<select name="group_id" id="js_group_select" class="form-control form-control-inline" autocomplete="off">
+		<select name="group_id" id="js_group_select" v-model="group.my.father_id" @change="onChangeGroup(group.my.father_id)" class="form-control form-control-inline" autocomplete="off">
 			<option value="">--选择栏目--</option>
-			<option v-for="item in group.oneLevel" :value="item.id">${item.name}</option>
+			<option v-for="item in group.fathers" :value="item.id">${item.name}</option>
 		</select>
-		<select name="group_sonid" id="js_groupson_select" class="form-control form-control-inline" autocomplete="off">
-			<option value="">--选择栏目--</option>
+		<select name="group_sonid" id="js_groupson_select" v-model="group.my.id" class="form-control form-control-inline" autocomplete="off">
+			<option value="">--选择子栏目--</option>
 			<option v-for="item in group.children" :value="item.id">${item.name}</option>
 		</select>
 	</div>
@@ -44,7 +45,7 @@
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">请求方式： </label>
 	<div class="col-sm-3">
-		<select name="request_type" id="js_api_requests" class="form-control" autocomplete="on">
+		<select name="request_type" id="js_api_requests" v-model="data.request_type" class="form-control" autocomplete="on">
 			<option v-for="item in configOptions.apiRequestType" :value="item.value">${item.name}</option>
 		</select>
 	</div>

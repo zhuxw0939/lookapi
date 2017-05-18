@@ -1,128 +1,202 @@
 $(function(){
-
-
-
-
-
-
-	$("#js_group_select").change(function(){
-		ajaxGetGroupSonList($(this).val());
-	});
-	if(!$("#js_groupson_select").val()){
-		ajaxGetGroupSonList($("#js_group_select").val());
-	}
-
-	function ajaxGetGroupSonList(g_id){
-		if(!g_id){
-			console.info("g_id不能为空");
-			return false;
-		}
-		$.ajax({
-			url: "/project/getGroupSonList",
-			type: "POST",
-			dataType: "json",
-			data: {
-				f_id: g_id
+	var vm = new Vue({
+		el: '#js_vue',
+		delimiters: ['${', '}'],
+		data: function() {
+			return {
+				apiId: $("#js_api_id").val(),
+				data: {
+					parameters: []
+				},
+				group: {
+					my: {},
+					children: {},
+					fathers: {}
+				},
+				versions: [],
+				projects: [],
+				configOptions: [],
+				parameters: []
+			}
+		},
+		created: function() {
+			console.info(this.apiId);
+			if(!this.apiId){
+				// 创建api
+				this.ajaxGetCreateDetail(this.apiId);
+			} else {
+				this.ajaxGetApiDetail(this.apiId);
+			}
+		},
+		methods: {
+			onClickAddParameter: function() {
+				// 添加新参数
+				console.info("onClickAddParameter");
+				console.info(this.data.parameters);
+				this.data.parameters.push({in_type: '', type: '', ismust: ''})
 			},
-			success: function(data){
+			onChangeProject: function(value) {
+				console.info("onChangeProject");
+				this.ajaxGetProjectVersions(value);
+			},
+			onChangeVersion: function(value) {
+				console.info("onChangeVersion");
+				this.ajaxGetGroups(value);
+			},
+			onChangeGroup: function(value) {
+				console.info("onChangeGroup");
+				this.ajaxGetGroupChildrens(value);
+			},
+			ajaxGetProjectVersions: function(p_id) {
+				this.$http.post("/project/getProjectVersions", {
+					p_id: p_id
+				}).then(function(data){
+					data = data.body;
+					if(data.status==0){
+						data = data.data;
+						if(data.length>0){
+							this.versions = data;
+							this.data.version_id = data[0].id;
+							this.ajaxGetGroups(data[0].id);
+
+							this.group.fathers = [];
+							this.group.children = [];
+							this.group.my.id = "";
+							this.group.my.father_id = "";
+						}
+					} else {
+						this.versions = [];
+						console.info(data);
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			},
+			ajaxGetGroups: function(v_id) {
+				this.$http.post("/project/getGroupList", {
+					level: "1",
+					v_id: v_id
+				}).then(function(data){
+					data = data.body;
+					console.info(data);
+					if(data.status==0){
+						data = data.data;
+						if(data.length>0){
+							this.group.fathers = data;
+						}
+					} else {
+						this.group.children = [];
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			},
+			ajaxGetGroupChildrens: function(g_id) {
+				this.$http.post("/project/getGroupSonList", {
+					f_id: g_id
+				}).then(function(data){
+					data = data.body;
+					console.info(data);
+					if(data.status==0){
+						data = data.data;
+						if(data.length>0){
+							this.group.children = data;
+							this.group.my.id = "";
+						}
+					} else {
+						this.group.children = [];
+						console.info(data);
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			},
+			ajaxGetApiDetail: function() {
+				this.$http.get("/api/get/apiDetail?id="+this.apiId).then(function(data){
+					data = data.body;
+					if(data.status==0){
+						data = data.data;
+						console.info(data);
+						console.info(data.data.parameters);
+						this.data = data.data;
+						this.group = data.group;
+						this.versions = data.versions;
+						this.projects = data.projects;
+						this.configOptions = data.configOptions;
+					} else {
+						console.info(data);
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			},
+			ajaxGetCreateDetail: function() {
+				console.info("ajaxGetCreateDetail");
+				// 新建api时，根据p_id和v_id获取基本信息
+				this.$http.post("/api/get/apiCreate", {
+					p_id: $("#js_p_id").val(),
+					v_id: $("#js_v_id").val(),
+					g_id: $("#js_g_id").val()
+				}).then(function(data){
+					data = data.body;
+					if(data.status==0){
+						data = data.data;
+						console.info(data);
+
+						this.data.project_id = $("#js_p_id").val();
+						this.data.version_id = $("#js_v_id").val();
+						this.data.request_type = "";
+						// this.$set(this.data, 'parameters', []);
+
+						this.group = data.group;
+						this.versions = data.versions;
+						this.projects = data.projects;
+						this.configOptions = data.configOptions;
+					} else {
+						console.info(data);
+						alert(data.message);
+					}
+				}, function(error){
+					console.info("返回失败：");
+					console.error(error);
+				});
+			}
+		}
+
+	});
+
+	$("#js_saveapi").click(function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
 				if(data.status==0){
-					data = data.data;
-					if(data.length==0){
-						$("#js_groupson_select").hide();
-						return false;
+					$.sx.alert("api修改成功，即将刷新页面！");
+					setTimeout(function(){
+						if($("#js_api_id").val()!=""){
+							window.location.href='/api/detail/'+$("#js_api_id").val();
+						} else {
+							window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+						}
+					}, 1500);
+				} else if(data.status==3){
+					var shtml = '<br>';
+					for(var i=0;i<data.data.length;i++){
+						shtml+='<a href="/api/detail/'+data.data[i].id+'" target="_blank" style="display: inline-block; font-size: 12px; margin-top: 10px; padding:0 5px;">点击查看</a>';
 					}
-					var html = '<option value="">--选择栏目--</option>';
-					for(var i=0;i<data.length;i++){
-						html += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
-					}
-					$("#js_groupson_select").html(html).show();
+					$.sx.alert(data.message+shtml);
 				} else {
-					console.info(data.message);
+					$.sx.alert(data.message);
 				}
 			}
 		});
-	}
-
-
-
-
-
-
-	/*这个两个页面都要用的js*/
-	// console.info(localStorage.getItem("api_id"));
-	// console.info(localStorage.getItem("api_url"));
-	// console.info(localStorage.getItem("api_request_type"));
-	// console.info(localStorage.getItem("api_parameters"));
-	// console.info(localStorage.getItem("api_back_data"));
-
-	// var api_id = '{{data.id}}';
-	var api_id = $("#js_api_id").val();
-	console.info(api_id);
-
-	// 保存刚调试过的接口，把返回值及参数带过来
-	if( api_id!=undefined){
-		if(api_id==localStorage.getItem("api_id")){
-			console.info("update old");
-
-			// $("#js_api_url").val(localStorage.getItem("api_url"));
-			$("#js_mock_template").val(localStorage.getItem("api_back_data"));
-/*
-
-			try {
-				var myjson = JSON.parse(localStorage.getItem("api_parameters"));
-			} catch (error){
-				console.info(error);
-				return false;
-			}
-
-			console.info(myjson);
-			var myArray = [];
-			for(var prop in myjson){
-				myArray.push({
-					name: prop,
-					default: myjson[prop]
-				});
-			}
-			console.info(myArray);
-*/
-
-			// $("#js_parametersinput").val(JSON.stringify(myArray));
-		} else if(api_id==0){
-			console.info("create new");
-
-			/*和上面一样的*/
-			// $("#js_api_url").val(localStorage.getItem("api_url"));
-			$("#js_mock_template").val(localStorage.getItem("api_back_data"));
-
-			/*try {
-				var myjson = JSON.parse(localStorage.getItem("api_parameters"));
-			} catch (error){
-				console.info(error);
-				return false;
-			}
-			console.info(myjson);
-			var myArray = [];
-			for(var prop in myjson){
-				myArray.push({
-					name: prop,
-					default: myjson[prop]
-				});
-			}
-			console.info(myArray);*/
-
-			// $("#js_parametersinput").val(JSON.stringify(myArray));
-			// parametersArray = myArray;
-		} else {
-			console.info("id错误，不执行任何操作");
-			//return false;
-		}
-	}
-
-
-
+		return false;
+	});
 });
-
-
-
-
-

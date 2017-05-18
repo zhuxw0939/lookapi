@@ -1,0 +1,66 @@
+
+
+<!--请求参数 star-->
+	<div class="form-group row" id="js_parameters_chose">
+		<label class="col-sm-2 form-control-label">请求参数： </label>
+		<div class="col-sm-10">
+			{% if pageCurrent === 'apitest' %}
+				<a href="#">Data格式</a>
+				<a href="#" class="current">Json格式</a>
+			{% else %}
+				<a href="#" class="current">Data格式</a>
+				<a href="#">Json格式</a>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="form-group row" id="js_parameters_chose" v-for="(item, index) in data.parameters">
+		<label class="col-sm-2 form-control-label"></label>
+		<div class="col-sm-10">
+			<div class="parameters_box {% if pageCurrent === 'apitest' %}parameters_showjson{% endif %}" id="js_parameters_box">
+
+
+					{% if pageCurrent === 'apitest' %}
+					<input name="parameter_name" class="form-control form-control-inline" style="width: 80px;" placeholder="参数名" type="text" value="" v-model="item.name">&nbsp;
+					<input name="parameter_defaultvalue" class="form-control form-control-inline" style="width: 400px;" type="text" placeholder="参考值" v-model="item.default">
+					{% else %}
+					<input name="parameter_name" class="form-control form-control-inline" style="width: 70px;" placeholder="参数名" type="text" value="" v-model="item.name">&nbsp;
+					<input name="parameter_info" class="form-control form-control-inline" style="width: 200px;" placeholder="参数说明" type="text" v-model="item.info">&nbsp;
+					<input name="parameter_defaultvalue" class="form-control form-control-inline" style="width: 90px;" type="text" placeholder="参考值" v-model="item.default">
+					<select name="parameter_type" class="form-control form-control-inline">
+						<option :value="option.value" v-for="option in types" v-if="option.value == item.type" selected>${ option.name }</option>
+						<option :value="option.value" v-else>${ option.name }</option>
+					</select>&nbsp;
+				    <select name="parameter_ismust" class="form-control form-control-inline">
+					    <option :value="option.value" v-for="option in musts" v-if="option.value == item.ismust" selected>${ option.name }</option>
+						<option :value="option.value" v-else>${ option.name }</option>
+					</select>
+					<select name="parameter_auths" class="form-control form-control-inline">
+					    <option :value="option.value" v-for="option in auths" v-if="option.value == item.auth" selected>${ option.name }</option>
+						<option :value="option.value" v-else>${ option.name }</option>
+					</select>
+					<input type="hidden" name="parameter_in_type" :value="item.in_type">
+					<input type="hidden" name="parameter_default_object" :value="item.default_object">
+					{% endif %}
+					<a href="#" class="del_par_html">删除</a>
+
+				<li class="parameter_add" >
+				    <span class="field"></span>
+					<a href="#" id="js_add_par" class="add_btn">+ 添加</a>
+				</li>
+
+
+				<li class="parameter_send">
+					<span class="field"></span>
+					<textarea class="form-control" rows="3" name="data" style="height: 200px;" id="js_senddata" v-model="sendData"  placeholder="输入标准的json格式，可以为空"></textarea>
+				</li>
+			</div>
+
+		</div>
+	</div>
+
+	<input type="hidden" value="data.parameters" id="js_parametersinput">
+
+<script>
+	var parametersArray = {{JSON.stringify(data.parameters)}};
+</script>

@@ -27,14 +27,16 @@
 
 
 .column_apilist_header {
-	padding: 2rem 1.6rem;
+	padding: 1.6rem;
 	position: relative;
 	background: #f7f7f7;
 	z-index: 100;
 }
 .column_apilist_header h1 {
 	font-weight: 100;
-	font-size: 1.4rem;
+	font-size: 1.5rem;
+	color: #000;
+	line-height: 1.2em;
 }
 .column_apilist_header span {
 	font-size: 12px;
@@ -101,6 +103,12 @@
 	border-color: #08c;
 	padding: 1rem .75rem;
 }
+.table-api tr td {
+	border-color: #f9f9f9;
+}
+.table-api{
+	border-bottom: 1px solid #eceeef;
+}
 
 .table_box {
 	position: relative;
@@ -111,7 +119,7 @@
 }
 .table_box .dataTables_filter {
 	position: absolute;
-	top: -8px;
+	top: -5px;
 	right: 1.6rem;
 	z-index: 101;
 	font-size: 90%;

@@ -217,6 +217,15 @@ exports.detail = function (req, res, next) {
 // 创建api
 exports.create = function (req, res, next) {
 
+	if(!req.query.p_id || !req.query.v_id){
+		return next("参数错误");
+	}
+
+	res.render('api/create', {
+		query: req.query
+	});
+	return false;
+
 	if( !req.query.p_id || !req.query.v_id ){
 		// return next("参数错误");
 		logger.debug("p_id或v_id为空");
@@ -436,9 +445,9 @@ exports.getApiDetail = function (req, res, next) {
 	// 获取api所属版本下的所有一级栏目
 	ep.all('get_api', function (apiData) {
 		if(apiData){
-			projectModel.getGroupByVersionId(apiData.version_id, 1, ep.done('get_group_all_oneLevel'));
+			projectModel.getGroupByVersionId(apiData.version_id, 1, ep.done('get_group_all_fathers'));
 		} else {
-			ep.emit("get_group_all_oneLevel", null);
+			ep.emit("get_group_all_fathers", null);
 		}
 	});
 
@@ -454,7 +463,7 @@ exports.getApiDetail = function (req, res, next) {
 	// 获取我的所有项目
 	projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
 
-	ep.all('get_api', 'get_group', 'get_group_children', 'get_group_all_oneLevel', 'get_versions', 'get_my_projects', function (get_api, get_group, get_group_children, get_group_all_oneLevel, get_versions, get_my_projects) {
+	ep.all('get_api', 'get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_api, get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
 		logger.info("ep.all ***************************");
 		res.send({
 			status: 0,
@@ -464,7 +473,7 @@ exports.getApiDetail = function (req, res, next) {
 				group: {
 					my: get_group,
 					children: get_group_children,
-					oneLevel: get_group_all_oneLevel
+					fathers: get_group_all_fathers
 				},
 				versions: get_versions,
 				projects: get_my_projects,
@@ -474,6 +483,68 @@ exports.getApiDetail = function (req, res, next) {
 	});
 
 };
+
+// 创建api时获取一些数据
+exports.apiCreate = function (req, res, next) {
+
+	if( !req.body.p_id || !req.body.v_id ){
+		return next("参数错误");
+		logger.debug("p_id或v_id为空");
+		// 如果还没有项目那就不能创建，要先创建一个项目
+	}
+
+	var ep = new eventproxy();
+	ep.fail(next);
+
+
+	// 如果传了栏目id,返回我现在的栏目信息
+	if(req.body.g_id){
+		projectModel.getGroupById(req.body.g_id, ep.done('get_group'));
+	} else {
+		ep.emit("get_group", null);
+	}
+
+	// 获取这个版本下的所有一级栏目
+	projectModel.getGroupByVersionId(req.body.v_id, 1, ep.done('get_group_all_fathers'));
+
+	// 获取api所属一级栏目下的二级栏目
+	ep.all('get_group', function (groupData) {
+		// 如果传的栏目id是二级栏目,则返回子栏目信息
+		if(groupData && groupData.father_id && groupData.father_id!=0){
+			projectModel.getGroupByFatherId(groupData.father_id, ep.done('get_group_children'));
+		} else {
+			ep.emit("get_group_children", null);
+		}
+	});
+
+	// 获取我的所有项目
+	projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
+
+	// 获取所属项目的所有版本
+	projectModel.getVersionsByPid(req.body.p_id, ep.done('get_versions'));
+
+
+
+	ep.all('get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
+		logger.info("ep.all ***************************");
+		res.send({
+			status: 0,
+			data: {
+				query: req.query,
+				group: {
+					my: get_group,
+					children: get_group_children,
+					fathers: get_group_all_fathers
+				},
+				versions: get_versions,
+				projects: get_my_projects,
+				configOptions: config.options
+			}
+		})
+	});
+
+};
+
 
 
 // 编辑api
@@ -632,6 +703,8 @@ exports.updatePost = function (req, res, next) {
 				back_description: req.body.back_description,
 				writes: req.body.writes,
 				mock_template : req.body.mock_template,
+				project_id : req.body.chose_p_id,
+				version_id : req.body.chose_v_id,
 				update_id: req.body.user_id,
 				update_name: req.body.user_name,
 				update_time: new Date()

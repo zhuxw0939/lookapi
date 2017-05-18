@@ -56,8 +56,8 @@ module.exports = {
 	options: {
 		apiRequestType: [
 			{
-				name: "-请选择-",
-				value: 0
+				name: "--请选择--",
+				value: ""
 			}, {
 				name: "POST",
 				value: 1
@@ -81,10 +81,28 @@ module.exports = {
 				value: 7
 			}
 		],
+		apiParametersInType: [
+			{
+				name: "--请选择--",
+				value: ""
+			}, {
+				name: "path",
+				value: "path"
+			}, {
+				name: "query",
+				value: "query"
+			}, {
+				name: "body",
+				value: "body"
+			}, {
+				name: "form",
+				value: "form"
+			}
+		],
 		apiParametersType: [
 			{
 				name: "--请选择--",
-				value: 0
+				value: ""
 			}, {
 				name: "Number",
 				value: 1
@@ -107,8 +125,8 @@ module.exports = {
 		],
 		apiParametersMust: [
 			{
-				name: "-请选择-",
-				value: 0
+				name: "--请选择--",
+				value: ""
 			}, {
 				name: "必填",
 				value: 1
@@ -119,7 +137,7 @@ module.exports = {
 		],
 		apiParametersAuth: [
 			{
-				name: "-禁止验证-",
+				name: "--禁止验证--",
 				value: 0
 			}, {
 				name: "不能为空",

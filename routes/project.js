@@ -25,13 +25,13 @@ router.post('/updatePost', project.updatePost); // 编辑项目
 router.post('/createVersionPost', project.createVersionPost); // 创建版本
 router.post('/removeVersionPost', project.removeVersionPost); // 删除版本
 router.post('/setDefaultVersionPost', project.setDefaultVersionPost); // 设置某版本号为默认版本
+router.post('/getProjectVersions', project.getProjectVersions); // 根据pid获取该栏目下的所有版本号
 router.post('/createGroupPost', project.createGroupPost); // 创建栏目
 router.post('/updateGroupPost', project.updateGroupPost); // 编辑栏目
 router.post('/removeGroupPost', project.removeGroupPost); // 删除栏目
 router.post('/removeGroupsPost', project.removeGroupsPost); // 删除栏目
-router.post('/getGroupList', project.getGroupList); // 获取所有一级栏目
+router.post('/getGroupList', project.getGroupList); // 根据vid获取所有栏目 level为空或为0时取所有，level=1(一级栏目)，level=2(二级栏目)
 router.post('/getGroupSonList', project.getGroupSonList); // 根据某一级栏目id获取该栏目的二级栏目
-router.post('/getVersionList', project.getVersionList); // 根据pid获取该栏目下的所有版本号
 router.post('/sendJoinTeamMessage', project.sendJoinTeamMessage); // 添加项目协作成员
 router.post('/joinTeam', project.joinTeam); // 添加项目协作成员
 router.post('/removeTeamAdmin', project.removeTeamAdmin); // 删除项目协作成员

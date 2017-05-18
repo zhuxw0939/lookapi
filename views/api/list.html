@@ -15,8 +15,8 @@
 	<div class="_right">
 		<div class="jumbotron column_apilist_header">
 			<h1>
-				{{data.name}}
-				<span>&nbsp;&nbsp;&nbsp;&nbsp;分类：<font id="js_fx_html"></font></span>
+				{{data.name}}<br>
+				<span>分类：<font id="js_fx_html"></font></span>
 				<span>&nbsp;&nbsp;|&nbsp;&nbsp;接口数量：{{apiList.length}}</span>
 				<span>
 					&nbsp;&nbsp;|&nbsp;&nbsp;版本号：
@@ -26,32 +26,19 @@
 						{% endfor %}
 					</select>
 				</span>
-				<!--<div class="input-group input-group-sm goright">
-					<span class="input-group-addon" id="sizing-addon2">&nbsp; 版本 &nbsp;</span>
-					<select id="js_version_select" class="form-control" autocomplete="off" style="margin-right: 20px;">
-					{% for item in versionList %}
-						<option value="{{item.id}}" {%if query.v_id==item.id %}selected{%endif%}>{{item.name}}</option>
-					{% endfor %}
-				</select>
-				</div>-->
+				<span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a></span>
 			</h1>
 			<div>
-
-
-				<!--排序：
-				{% if query.g_id %}
-					{% if query.sort!=undefined&&query.sort=="update" %}
-					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}" class="go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}&sort=update" class="current go_sort">最后修改</a>
-					{% else %}
-					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}" class="current go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}&sort=update" class="go_sort">最后修改</a>
-					{% endif %}
-				{% else %}
-					{% if query.sort!=undefined&&query.sort=="update" %}
-					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}" class="go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&sort=update" class="current go_sort">最后修改</a>
-					{% else %}
-					<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}" class="current go_sort">创建时间</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&sort=update" class="go_sort">最后修改</a>
-					{% endif %}
-				{% endif %}-->
+				<!--<p style="text-align: right; padding-bottom: 20px; color: #999!important;">-->
+					<!--<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+					<!--{% if query.g_id %}-->
+						<!--<a href="#" id="js_swagger">swagger导入</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+						<!--<a href="/project/group/swagger_history?id={{query.g_id}}">导入记录</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+						<!--<a href="#" id="js_swagger_run">swagger扫描</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+					<!--{% endif %}-->
+					<!--<a href="#" id="js_write_apifunction" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+					<!--<a href="#" id="js_del_apis">删除所有api</a>-->
+				<!--</p>-->
 			</div>
 		</div>
 		<div class="table_box">

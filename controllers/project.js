@@ -236,6 +236,29 @@ exports.setDefaultVersionPost = function (req, res, next) {
 		}
 	});
 };
+// 获取某个项目下的所有版本号
+exports.getProjectVersions = function (req, res, next) {
+	if( !req.body.p_id){
+		return res.send({
+			status: 1,
+			message: "参数错误"
+		});
+	}
+	projectModel.getVersionsByPid(req.body.p_id, function(err, data){
+		if(err){
+			res.send({
+				status: -1,
+				message: "获取某个项目下的所有版本号失败"
+			});
+		} else {
+			res.send({
+				status: 0,
+				data: data
+			});
+		}
+	});
+};
+
 
 
 
@@ -376,32 +399,6 @@ exports.getGroupSonList = function (req, res, next) {
 	});
 };
 
-
-// 根据pid获取该栏目下的所有版本号
-exports.getVersionList = function (req, res, next) {
-	res.setHeader('Content-Type', 'application/json; charset=utf-8');
-
-	if(!req.body.p_id){
-		res.end(JSON.stringify({
-			status: 1,
-			message: "p_id不能为空"
-		}));
-	}
-	projectModel.getVersionsByPid(req.body.p_id, function(err, data){
-		if(err){
-			res.end(JSON.stringify({
-				status: -1,
-				message: err
-			}));
-		} else {
-			res.end(JSON.stringify({
-				status: 0,
-				message: "获取成功",
-				data: data
-			}));
-		}
-	});
-};
 
 
 
