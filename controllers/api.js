@@ -737,10 +737,10 @@ exports.updatePost = function (req, res, next) {
 // 删除api-提交
 exports.removeApiPost = function (req, res, next) {
 
-	if(req.session.user!=undefined && req.session.user.id!=undefined ){
-		let uid = req.session.user.id;
+	if(req.session.user && req.session.user.id ){
+		var uid = req.session.user.id;
 	} else {
-		let uid = "";
+		var uid = "";
 	}
 
 	apiModel.getApiById(req.body.id, function(err, data){
@@ -871,6 +871,7 @@ exports.removeApisPost = function (req, res, next) {
 exports.test = function (req, res, next) {
 	async.auto({
 		data_1: function(callback) {
+			// 用户的环境
 			if(req.session.user){
 				userModel.getEnvByUserId(req.session.user.id, function(err, data){
 					callback(null, data);
@@ -881,6 +882,7 @@ exports.test = function (req, res, next) {
 		},
 		data_2: function(callback) {
 			if(req.query.id){
+				// id
 				apiModel.getApiById(req.query.id, function(err, data){
 					if(data){
 						callback(null, data);
@@ -889,6 +891,7 @@ exports.test = function (req, res, next) {
 					}
 				});
 			} else if(req.query.tid) {
+				// tid
 				looksModel.getApiSaveById(req.query.tid, function(err, data){
 					if(data){
 						// callback(null, data);
@@ -920,7 +923,7 @@ exports.test = function (req, res, next) {
 		}
 	}, function(err, results) {
 		// 没有传id
-		if(results.data_2==""){
+		if(!results.data_2){
 			res.render('api/test', {
 				query: req.query,
 				dataEnv: results.data_1
@@ -935,7 +938,7 @@ exports.test = function (req, res, next) {
 			// }
 			if(req.query.tid){
 				logger.info(results.data_2);
-				res.render('api/test2', {
+				res.render('api/test', {
 					query: req.query,
 					dataEnv: results.data_1,
 					// parameterJson: JSON.stringify(backParameters),
@@ -1084,7 +1087,7 @@ exports.testSend = function (req, res, next) {
 
 		var queryData = {};
 		for(var i=0;i<apiData.parameters.length;i++){
-			let item = apiData.parameters[i];
+			var item = apiData.parameters[i];
 			if(item.in_type=="query"){
 				queryData[item.name] = resData[item.name];
 			}

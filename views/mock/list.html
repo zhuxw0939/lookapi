@@ -1,37 +1,37 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Mymocks - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
-
-
-
-<div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px;">
-	<h5 style="padding: 20px 0;">所有项目：</h5>
-	<ul class="projects_list">
-	{% for item in data %}
-		<li>
-			<a class="_link" href="/api/list?p_id={{item.id}}&v_id={{item.version_id}}">{{item.name}}</a>
-			<span>已开启mock功能</span>
-			<span><a href="#">查看配置</a></span>
-		</li>
-	{% endfor %}
-	</ul>
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">Mock接口</h1>
+		<p>……</p>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<table class="_table">
+		<thead>
+			<tr>
+				<th width="12%">项目名称</th>
+				<th width="8%">是否开启mock功能</th>
+				<th width="8%">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}
+			<tr>
+				<td><a class="_link" href="/api/list?p_id={{item.id}}&v_id={{item.version_id}}">{{item.name}}</a></td>
+				<td>已开启</td>
+				<td><a href="#">查看配置</a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
 </div>
 
-
-{% include '../common/footer.html' %}
-
-
-
-
-
-
-</body>
-</html>
+{% endblock %}

@@ -1,3 +1,42 @@
+{% extends '../common/layout.html' %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+{% endblock %}
+
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">项目监控</h1>
+		<p>……</p>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<table class="_table">
+		<thead>
+			<tr>
+				<th width="12%">项目名称</th>
+				<th width="8%">是否开启mock功能</th>
+				<th width="8%">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}
+			<tr>
+				<td><a class="_link" href="/api/list?p_id={{item.id}}&v_id={{item.version_id}}">{{item.name}}</a></td>
+				<td>接口调用文档</td>
+				<td><a href="/looks/api?p_id={{item.id}}">查看访问历史</a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+</div>
+
+{% endblock %}
+
+
 <!doctype html>
 <html>
 <head>
@@ -13,13 +52,11 @@
 
 
 <div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px;">
-	<h5 style="padding: 20px 0;">所有项目：</h5>
+	<h5 style="padding: 20px 0;">：</h5>
 	<ul class="projects_list">
 	{% for item in data %}
 		<li>
-			<a class="_link" href="/looks/api?p_id={{item.id}}">{{item.name}}</a>
-			<span>接口调用文档</span>
-			<span><a href="/looks/api?p_id={{item.id}}">查看访问历史</a></span>
+
 		</li>
 	{% endfor %}
 	</ul>

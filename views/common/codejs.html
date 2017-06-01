@@ -1,0 +1,79 @@
+
+<style type="text/css">
+
+._json {
+	font-size: 90%;
+	padding: 2rem 1.5rem;
+	margin-right: 0;
+	margin-left: 0;
+	background-color: #f7f7f9;
+	color: #999;
+	text-shadow: 0 1px #fff;
+	position: relative;
+	min-height: 120px;
+}
+._json .json_goright {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
+._json .json_goright a {
+	display: inline-block;
+	font-size: 12px;
+	margin: 2px;
+	width: 16px;
+	line-height: 16px;
+	color: #aaa;
+	text-align: center;
+	border: 1px solid #f7f7f9;
+	border-radius: 50%;
+}
+._json .json_goright a:hover {
+	border: 1px solid orange;
+	color: orange;
+	font-weight: 500;
+	text-shadow: none;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.jsonview.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/highlight/default.css" />
+<script type="text/javascript" src="/static/script/jquery.jsonview.min.js"></script>
+<script type="text/javascript" src="/static/script/highlight.pack.js"></script>
+<script>
+
+JsonEach($("._json"));
+
+function JsonEach($el){
+	console.info("JsonEach");
+	console.info($el);
+	$el.each(function () {
+		try {
+			$(this).JSONView(JSON.parse($(this).text()));
+			$(this).append('<span class="json_goright"><a href="javascript:;" class="_json_c">+</a><a href="javascript:;" class="_json_b">±</a><a href="javascript:;" class="_json_a">×</a></span>')
+		} catch(error) {
+			console.info(error);
+		}
+	});
+}
+
+
+$(document).on("click", "._json_a", function(){
+	$(this).closest('._json').find(".collapser").toggle();
+	return false;
+});
+
+$(document).on("click", "._json_b", function(){
+	$(this).closest('._json').JSONView('toggle', 2);
+	return false;
+});
+
+$(document).on("click", "._json_c", function(){
+	$(this).closest('._json').JSONView('toggle');
+	return false;
+});
+
+$('div.code').each(function(i, block) {
+	hljs.highlightBlock(block);
+});
+
+</script>

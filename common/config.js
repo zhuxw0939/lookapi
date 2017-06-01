@@ -1,7 +1,7 @@
 
 var path = require('path');
 
-var siteConfig = process.env.NODE_ENV === 'development' ? require('./config_dev') : require('./config_prod');
+var siteConfig = process.env.NODE_ENV === 'development' ? require('./config_dev') : require('./config_dev');
 
 var logger = require('./logger');
 
@@ -14,7 +14,7 @@ module.exports = {
 	// 项目名称
 	name: "lookapi.cn",
 	// 版本号
-	v: "0.1.0",
+	v: "0.1.2",
 
 	// debug 为 true 时，用于node后端本地windows开发环境调试
 	debug: siteConfig.debug,

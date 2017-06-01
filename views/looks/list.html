@@ -1,39 +1,33 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>LooksApi-index - Lookapi</title>
+{% extends '../common/layout.html' %}
+
+{% block style %}
 <link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
 <style>
-	table.table_api tr.looksd td {
+	table._table tr td.overflow {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	table._table tr.looksd td {
 		color: #999;
 	}
-	table.table_api tr.looksd td font {
+	table._table tr.looksd td font {
 		color: #999 !important;
 	}
 </style>
-</head>
+{% endblock %}
 
-<body>
-
-{% include '../common/header.html' %}
-
-
-
-<div class="wrapper" style="border-top: 1px solid #eee; margin-top: 40px; width: 1400px;">
-
-	<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd; margin-bottom: 30px; position: relative;">
+{% block body %}
+<div class="container">
+	<div class="index_title">
 		接口访问记录
-	<span class="goright" style="top: 30px; font-size: 12px;">
-		<a href="/looks/api?p_id={{p_id}}">查看所有</a>
-	</span>
-	</h4>
-
-
-
-	<div class="">
-
-		<table class="table_api" >
+		<span class="goright" style="top: 30px; font-size: 12px;">
+			<a href="/looks/api?p_id={{p_id}}">查看所有</a>
+		</span>
+	</div>
+	<div class="row">
+		<table class="_table" >
 			<thead>
 				<tr>
 					<th width="8%">方式</th>
@@ -63,9 +57,9 @@
 								<font color="#f90000">{{item.send_time}}ms</font>
 							{% endif %}
 						</td>
-						<td style="max-width: 100px;" class="back_code"></td>
-						<td style="max-width: 100px;" class="back_message"></td>
-						<td style="max-width: 100px;" title="{{item.back_data}}" class="js_back_data">{{item.back_data}}</td>
+						<td style="max-width: 100px;" class="overflow back_code"></td>
+						<td style="max-width: 100px;" class="overflow back_message"></td>
+						<td style="max-width: 100px;" title="{{item.back_data}}" class="overflow js_back_data">{{item.back_data}}</td>
 						<td align="center">
 							<a target="_blank" href="/looks/api/detail?id={{item.id}}" class="btns btns-min btns-green">详情</a>
 							<a href="/looks/api?p_id={{item.project_id}}&token=" class="btns btns-min btns-blue js_go_mylist" data-liks="{{item.parameters}}">记录</a>
@@ -76,15 +70,12 @@
 			</tbody>
 		</table>
 
-
 	</div>
-
-
 </div>
 
+{% endblock %}
 
-{% include '../common/footer.html' %}
-
+{% block script %}
 <script>
 $(function(){
 
@@ -167,10 +158,4 @@ $(function(){
 
 });
 </script>
-
-
-
-
-
-</body>
-</html>
+{% endblock %}

@@ -1,18 +1,19 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
 {% endblock %}
 
 {% block body %}
-<div class="container">
-	<div class="index_title">
-		我的项目
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">我的项目</h1>
+		<p>…… | <a href="/project/create">新建项目</a></p>
 	</div>
+</div>
+<div class="container">
+	<!--<div class="index_title">我的项目</div>-->
 	<div class="row">
-		<div class="col-sm-4" style="margin-bottom: 2rem">
-			<a href="/project/create">新建项目</a>
-		</div>
 		{% for item in data %}
 			{% set item.currentPage='my_project' %}
 			{% include '../common/project_card.html' %}

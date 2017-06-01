@@ -3,10 +3,8 @@
 
 
 .column_api {
-	min-height: 700px;
 	position: relative;
 	padding-left: 250px;
-	overflow: hidden;
 }
 .column_api ._left {
 	padding: 3.2rem 0;
@@ -16,7 +14,7 @@
 	top: 0;
 	left: 0;
 	width: 250px;
-	height: 6000px;
+	min-height: 800px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -87,16 +85,6 @@
 }
 .table_box tr td .btn-sm i.iconfont {
 }
-.table_box tr td .btn-type {
-	margin-left: -5px;
-	font-size: 11px;
-	padding: 2px 5px;
-	-webkit-transform: scale(0.8);
-	-o-transform: scale(1);
-	cursor: default;
-	border: 0;
-	margin-top: -4px;
-}
 .table-api tr th {
 	background-color: #08c;
 	color: #fff;
@@ -148,6 +136,55 @@
 footer {
 	display: none;
 }
+
+
+
+
+
+
+
+
+
+
+.api_detail h2 {
+	font-size: 22px;
+	color: rgba(0,0,0,.85);
+	font-family: Lato,Helvetica Neue For Number,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif;
+	margin: 1.6em 0 .6em;
+	font-weight: 500;
+	clear: both;
+}
+.api_detail p, .api_detail pre {
+	margin: 1em 0;
+	font-size: 14px;
+	color: #666;
+}
+.api_detail ul._ul>li {
+	font-size: 14px;
+	color: #666;
+	list-style-type: circle;
+	margin-left: 20px;
+	padding-left: 4px;
+}
+.api_detail span.url {
+	border-radius: 2px;
+	font-size: 90%;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	/*color: #d14;*/
+	text-shadow: 0 1px #fff;
+	color: #bb0606;
+	padding: 6px 12px;
+	white-space: nowrap;
+}
+
+
+
+
+
+
+
+
 
 .column_api ._left a {
 	display: block;

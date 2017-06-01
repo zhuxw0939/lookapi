@@ -23,7 +23,7 @@ $(function(){
 			console.info(this.apiId);
 			if(!this.apiId){
 				// 创建api
-				this.ajaxGetCreateDetail(this.apiId);
+				this.ajaxGetCreateDetail();
 			} else {
 				this.ajaxGetApiDetail(this.apiId);
 			}
