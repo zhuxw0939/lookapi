@@ -40,6 +40,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 form-control-label">接口名称： </label>
 				<div class="col-sm-10">
+					{{data2.name}}
 					<a href="/api/detail/{{data2.id}}" target="_blank">查看详情</a>
 				</div>
 			</div>
@@ -126,6 +127,12 @@ $(function(){
 	});
 
 	$("#js_ajax").click(function(){
+
+		if(!$("#js_url").val()){
+			$.sx.alert("接口url不能为空！");
+			return false;
+		}
+
 		$("#data").html("开始请求..");
 		$("#js_jsonp").text("");
 		$("#js_backdata").val("");
@@ -145,7 +152,7 @@ $(function(){
 					//$("#data").html(JSON.stringify(data.data));
 					try {
 						$("#js_backdata").val(JSON.stringify(data.data));
-						$("#data").text(data.data);
+						$("#data").text(JSON.stringify(data.data));
 						console.info("请求成功，JSONView");
 						JsonEach($("._json"));
 					} catch (error){

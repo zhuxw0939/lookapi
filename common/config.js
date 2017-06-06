@@ -1,7 +1,7 @@
 
 var path = require('path');
 
-var siteConfig = process.env.NODE_ENV === 'development' ? require('./config_dev') : require('./config_dev');
+var siteConfig = process.env.NODE_ENV === 'development' ? require('./config_dev_56') : require('./config_dev');
 
 var logger = require('./logger');
 

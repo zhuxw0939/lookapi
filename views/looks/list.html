@@ -1,7 +1,7 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
 <style>
 	table._table tr td.overflow {
 		white-space: nowrap;
@@ -9,43 +9,56 @@
 		text-overflow: ellipsis;
 	}
 
-	table._table tr.looksd td {
+	table._table tr td, table._table tr td a.link {
+		color: #000;
+	}
+	table._table tr.looksd td, table._table tr.looksd td a.link {
 		color: #999;
 	}
 	table._table tr.looksd td font {
-		color: #999 !important;
+		/*color: #999;*/
 	}
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container">
-	<div class="index_title">
-		接口访问记录
-		<span class="goright" style="top: 30px; font-size: 12px;">
-			<a href="/looks/api?p_id={{p_id}}">查看所有</a>
-		</span>
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">项目监控</h1>
+		<p>
+			{{pData.name}}
+
+			{% if query.token %}
+				| token={{query.token}} <a href="/looks/api?p_id={{pData.id}}">所有记录</a>
+			{% elseif query.swagger_id %}
+				| swagger_id={{query.swagger_id}} <a href="/looks/api?p_id={{pData.id}}">所有记录</a>
+			{% else %}
+				| 实时访问记录
+			{% endif %}
+
+		</p>
 	</div>
+</div>
+<div class="container">
 	<div class="row">
 		<table class="_table" >
 			<thead>
 				<tr>
-					<th width="8%">方式</th>
-					<th width="20%">接口URL</th>
-					<th width="9%">访问时间</th>
-					<th width="6%">响应</th>
+					<th width="6%">请求方式</th>
+					<th width="20%">请求接口</th>
+					<th width="6%">响应时间</th>
 					<th width="6%">code</th>
-					<th width="12%">message</th>
-					<th width="20%">返回结果</th>
-					<th width="14%" style="text-align: center">操作</th>
+					<th width="16%">data</th>
+					<th width="16%">访问时间</th>
+					<!--<th width="6%">message</th>-->
+					<th width="20%" style="text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				{%for item in data %}
 					<tr class="_{{item.id}}" data-id="{{item.id}}">
-						<td data-id="{{item.id}}">{{item.server_type}} - {{item.requests}}</td>
-						<td style="max-width: 400px;" title="{{item.url}}">{{item.url}}</td>
-						<td>{{item.time | date('Y-m-d H:i:s', -480)}}</td>
+						<td data-id="{{item.id}}" title="{{item.server_type}}">{{item.requests}}</td>
+						<td title="{{item.url}}"><a class="link" href="/looks/api?p_id={{item.project_id}}&swagger_id={{item.swagger_id}}">{{item.url}}</a></td>
 						<td>
 							{% if item.send_time<100 %}
 								<font color="#58c760">{{item.send_time}}ms</font>
@@ -58,12 +71,13 @@
 							{% endif %}
 						</td>
 						<td style="max-width: 100px;" class="overflow back_code"></td>
-						<td style="max-width: 100px;" class="overflow back_message"></td>
 						<td style="max-width: 100px;" title="{{item.back_data}}" class="overflow js_back_data">{{item.back_data}}</td>
-						<td align="center">
-							<a target="_blank" href="/looks/api/detail?id={{item.id}}" class="btns btns-min btns-green">详情</a>
-							<a href="/looks/api?p_id={{item.project_id}}&token=" class="btns btns-min btns-blue js_go_mylist" data-liks="{{item.parameters}}">记录</a>
-							<a target="_blank" href="/api/test?tid={{item.id}}" class="btns btns-min btns-orange">调试</a>
+						<td>{{item.time | date('Y-m-d H:i:s', -480)}}</td>
+						<!--<td style="max-width: 100px;" class="overflow back_message"></td>-->
+						<td class="setting_btn">
+							<a href="/looks/api/detail?id={{item.id}}" class="btn btn-sm btn-info"><i class="iconfont">&#xe611;</i>查看</a>
+							<a target="_blank" href="/api/test?tid={{item.id}}" class="btn btn-sm btn-success"><i class="iconfont">&#xe632;</i>调试</a>
+							<a href="/looks/api?p_id={{item.project_id}}&token=" class="btn btn-sm btn-danger js_go_mylist" data-liks="{{item.parameters}}"><i class="iconfont">&#xe6a5;</i>追踪</a>
 						</td>
 					</tr>
 				{% endfor%}

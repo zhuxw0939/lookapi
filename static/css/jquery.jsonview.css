@@ -34,6 +34,7 @@
 
 .jsonview .string {
     color: #07a;
+    word-wrap: break-word;
     white-space: pre-wrap; }
     .jsonview .string.multiline {
       display: inline-block;

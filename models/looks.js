@@ -42,6 +42,16 @@ exports.getApiSaveByPidAndUser = function (p_id, user, callback) {
 };
 
 
+/**
+ * 查看Api3
+ */
+exports.getApiSaveByPidAndSwaggerId = function (p_id, sw_id, callback) {
+	if (!p_id || !sw_id) {
+		return callback();
+	}
+	mongoDB.apiSave.find({ project_id: p_id, swagger_id: sw_id}, {}, {sort:{time:-1}, limit: 50}, callback);
+};
+
 
 
 /**

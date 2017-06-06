@@ -71,6 +71,7 @@ exports.userMustLogout = function (req, res, next) {
 exports.authUser = function (req, res, next) {
 
 	res.locals.static_host = config.static_host;
+	res.locals.query = req.query;
 
 	var myip = "▃▃▃ "+(req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress).split(":").pop()+" ▃▃▃";
 

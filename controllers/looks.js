@@ -27,37 +27,61 @@ exports.apiList = function (req, res, next) {
 	logger.info("apiList looks");
 	logger.info(req.query);
 
-	if(req.query.token!=undefined){
-		looksModel.getApiSaveByPidAndUser(req.query.p_id, req.query.token, function(err, data){
-			logger.info(data);
+	projectModel.getProjectById(req.query.p_id, function(projectErr, projectData){
+		if(projectErr) {
+			return next(projectErr);
+		}
+		// 带了参数
+		if(req.query.token!=undefined){
+			looksModel.getApiSaveByPidAndUser(req.query.p_id, req.query.token, function(err, data){
+				logger.info(data);
 
-			var looksApi = [];
-			for(var i=0;i<data.length;i++){
-				looksApi.push(data[i].id);
-			}
+				var looksApi = [];
+				for(var i=0;i<data.length;i++){
+					looksApi.push(data[i].id);
+				}
 
-			res.render('looks/list', {
-				looksApis: looksApi,
-				p_id: req.query.p_id,
-				data: data
+				res.render('looks/list', {
+					pData: projectData,
+					looksApis: looksApi,
+					p_id: req.query.p_id,
+					data: data
+				});
 			});
-		});
-	} else {
-		looksModel.getApiSaveByPid(req.query.p_id, function(err, data){
-			logger.info(data);
+		} else if(req.query.swagger_id!=undefined){
+			looksModel.getApiSaveByPidAndSwaggerId(req.query.p_id, req.query.swagger_id, function(err, data){
+				logger.info(data);
 
-			var looksApi = [];
-			for(var i=0;i<data.length;i++){
-				looksApi.push(data[i].id);
-			}
+				var looksApi = [];
+				for(var i=0;i<data.length;i++){
+					looksApi.push(data[i].id);
+				}
 
-			res.render('looks/list', {
-				looksApis: looksApi,
-				p_id: req.query.p_id,
-				data: data
+				res.render('looks/list', {
+					pData: projectData,
+					looksApis: looksApi,
+					p_id: req.query.p_id,
+					data: data
+				});
 			});
-		});
-	}
+		} else {
+			looksModel.getApiSaveByPid(req.query.p_id, function(err, data){
+				logger.info(data);
+
+				var looksApi = [];
+				for(var i=0;i<data.length;i++){
+					looksApi.push(data[i].id);
+				}
+
+				res.render('looks/list', {
+					pData: projectData,
+					looksApis: looksApi,
+					p_id: req.query.p_id,
+					data: data
+				});
+			});
+		}
+	});
 
 };
 

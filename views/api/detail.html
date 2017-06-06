@@ -1,8 +1,7 @@
 {% extends '../common/layout.html' %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="/static/css/page_api.css" />
-{% endblock %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_api.css"/>{% endblock %}
 
 {% block body %}
 
@@ -21,8 +20,8 @@
 						<a href="#" id="js_getapinodejscode" data-id="{{data.id}}">Node代码</a>&nbsp;&nbsp;
 						<a href="#" id="js_getapifun" data-id="{{data.id}}">获取ApiFunction</a>&nbsp;&nbsp;
 						<a href="#" id="js_makeapifunfile" data-id="{{data.id}}" data-swagger_id="{{data.swagger_id}}" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;
-						<a href="/api/test?id={{data.id}}" >调试</a>&nbsp;&nbsp;
-						<a href="/api/update?id={{data.id}}" >编辑</a>&nbsp;&nbsp;
+						<a href="/api/test?id={{data.id}}">调试</a>&nbsp;&nbsp;
+						<a href="/api/update?id={{data.id}}">编辑</a>&nbsp;&nbsp;
 						<a href="#" data-id="{{data.id}}" id="js_api_lose">设为过期</a>&nbsp;&nbsp;
 						<a class="btn_del_api" href="#" data-id="{{data.id}}">删除</a>
 					</span>
@@ -35,18 +34,18 @@
 
 					<h2>请求Url -
 					{% for item in options.apiRequestType %}
-							{%if data.request_type==item.value && item.value!=0 %}
-								{% if data.request_type==1 %}
-									<span class="btn btn-sm btn-type btn-info">POST</span>
-								{% elseif data.request_type==2 %}
-									<span class="btn btn-sm btn-type btn-success">GET</span>
-								{% elseif data.request_type==3 %}
-									<span class="btn btn-sm btn-type btn-warning">PUT</span>
-								{% elseif data.request_type==4 %}
-									<span class="btn btn-sm btn-type btn-danger">DELETE</span>
-								{% endif %}
-							{%endif%}
-						{% endfor %}
+						{%if data.request_type==item.value && item.value!=0 %}
+							{% if data.request_type==1 %}
+								<span class="btn btn-sm btn-type btn-info">POST</span>
+							{% elseif data.request_type==2 %}
+								<span class="btn btn-sm btn-type btn-success">GET</span>
+							{% elseif data.request_type==3 %}
+								<span class="btn btn-sm btn-type btn-warning">PUT</span>
+							{% elseif data.request_type==4 %}
+								<span class="btn btn-sm btn-type btn-danger">DELETE</span>
+							{% endif %}
+						{%endif%}
+					{% endfor %}
 					</h2>
 					<p>
 						<span class="url">{{data.url}}</span>
@@ -75,7 +74,7 @@
 						{% for itemArray in updatesData %}
 							{% for item in itemArray.data %}
 								<a href="/api/detail/{{itemArray.id}}">
-								<p class="{% if itemArray.id==data.id %}current {% else %}not_current {% endif %}{% if loop.first %}first {% endif %}{% if loop.last %} last{% endif %}" >
+								<p class="{% if itemArray.id==data.id %}current {% else %}not_current {% endif %}{% if loop.first %}first {% endif %}{% if loop.last %} last{% endif %}">
 									<span class="s_1">
 										<i class="red">-</i>
 										{{item.update_time | date('Y-m-d H:i:s', -480)}}
@@ -178,12 +177,9 @@
 			{% endif %}
 		</div>
 	</div>
-</div>
-{% endblock %}
+</div>{% endblock %}
 
 
 {% block script %}
-<script type="text/javascript" src="/static/script/page_api_left.js"></script>
-{% include '../common/codejs.html' %}
-{% endblock %}
+<script type="text/javascript" src="/static/script/page_api_left.js"></script>{% include '../common/codejs.html' %}{% endblock %}
 

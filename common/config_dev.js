@@ -5,7 +5,7 @@ module.exports = {
 	host: 'http://127.0.0.1',
 	port: 3200,
 
-	static_host: "http://211.149.151.88:3006",
+	static_host: "/",
 
 	debug: true,
 	logger_level: 'DEBUG',

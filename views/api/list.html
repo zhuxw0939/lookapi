@@ -89,7 +89,7 @@
 								{% if item.swagger_upinfo %}
 									(<a href="javascript:$.sx.alert('{{item.swagger_upinfo}}')">更新记录</a>)
 							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>-->
-							<td>
+							<td class="setting_btn">
 								<a href="/api/detail/{{item.id}}" class="btn btn-sm btn-info"><i class="iconfont">&#xe611;</i>查看</a>
 								<!--<a href="/api/update?id={{item.id}}" class="btn btn-sm btn-warning">编辑</a>-->
 								<a href="/api/test?id={{item.id}}" class="btn btn-sm btn-success"><i class="iconfont">&#xe632;</i>调试</a>

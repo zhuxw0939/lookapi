@@ -78,11 +78,11 @@
 	text-overflow: ellipsis;
 	max-width: 280px;
 }
-.table_box tr td .btn-sm {
-	padding: 3px 8px;
-	font-size: 12px;
+.table_box tr td.setting_btn .btn-sm {
 	margin-top: 6px;
 }
+
+
 .table_box tr td .btn-sm i.iconfont {
 }
 .table-api tr th {
