@@ -1,12 +1,13 @@
 {
-  "name": "lookapi-app",
+  "name": "lookapi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "NODE_ENV=production DEBUG=mydebug:* pm2 start app.json",
+    "start_dev": "NODE_ENV=development DEBUG=mydebug:* pm2 start app.json",
+    "start_test": "NODE_ENV=testing DEBUG=mydebug:* pm2 start app.json",
     "start_56": "cross-env NODE_ENV=production DEBUG=mydebug:* forever start -l /home/node/site/lookapi.0.1.0/logs/forever.log -a ./app.js",
     "start_56_dev": "cross-env NODE_ENV=development DEBUG=mydebug:* forever start -l /home/node/site/lookapi.0.1.0/logs/forever.log -a ./app.js",
-    "start": "cross-env NODE_ENV=production DEBUG=mydebug:* forever start -l /home/zxw/site/lookapi.0.1/logs/forever.log -a ./app.js",
-    "start_dev": "cross-env NODE_ENV=development DEBUG=mydebug:* forever start -l /home/zxw/site/lookapi.0.1/logs/forever.log -a ./app.js",
     "log": "tail -f /home/zxw/site/lookapi.0.1/logs/forever.log",
     "logall": "tail -n 1000 /home/zxw/site/lookapi.0.1/logs/forever.log",
     "log_56": "tail -f /home/node/site/lookapi.0.1.0/logs/forever.log",

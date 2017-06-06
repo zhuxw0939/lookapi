@@ -1,9 +1,15 @@
 
 var path = require('path');
-
-var siteConfig = process.env.NODE_ENV === 'development' ? require('./config_dev_56') : require('./config_dev');
-
 var logger = require('./logger');
+
+var siteConfig;
+if(process.env.NODE_ENV === 'development'){
+	// 本地开发环境
+	siteConfig = require('./config_dev_56');
+} else {
+	// 线上环境
+	siteConfig = require('./config_pro');
+}
 
 module.exports = {
 
