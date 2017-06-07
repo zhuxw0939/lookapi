@@ -1,7 +1,7 @@
 
 .index_intro {
 	background: no-repeat center, -webkit-gradient(linear, 0 0, 0 bottom, from(#3276b1), to(#398dd6));
-	min-height: 500px;
+	min-height: 560px;
 	max-height: 800px;
 	overflow: hidden;
 	position: relative;

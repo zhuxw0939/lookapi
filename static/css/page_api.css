@@ -37,6 +37,8 @@
 	line-height: 1.2em;
 }
 .column_apilist_header span {
+	display: inline-block;
+	margin-top: .8rem;
 	font-size: 12px;
 	color: #666;
 }
@@ -62,6 +64,9 @@
 }
 .column_apilist_header .form-control-sm {
 	padding: .15rem .5rem;
+}
+.column_apilist_header .btn-sm {
+	padding: 2px 8px;
 }
 
 .container-fluid {

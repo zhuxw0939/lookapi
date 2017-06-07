@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
 
-	host: 'http://192.168.2.56',
+	host: 'http://192.168.2.103',
 	port: 3200,
 
 	static_host: "/",

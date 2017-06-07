@@ -30,7 +30,7 @@ exports.DELETE = function(obj, callback){
 exports.sendRequest = function(obj, callback, type){
 
 	if(typeof(obj.body)=="object"){
-		for(let prop in obj.body){
+		for(var prop in obj.body){
 			if(obj.body[prop]===""){
 				logger.info("body参数中："+prop+"属性为空，已忽略！");
 				delete obj.body[prop];
@@ -38,7 +38,7 @@ exports.sendRequest = function(obj, callback, type){
 		}
 	}
 	if(typeof(obj.query)=="object"){
-		for(let prop in obj.query){
+		for(var prop in obj.query){
 			if(obj.query[prop]===""){
 				logger.info("form参数中："+prop+"属性为空，已忽略！");
 				delete obj.query[prop];
@@ -84,10 +84,10 @@ exports.sendRequest = function(obj, callback, type){
 		});
 	} else {
 
-		let url = obj.host!=undefined ? obj.host+obj.url : config.servers.host+obj.url;
-		let bodyObj = obj.body;
-		let queryObj = obj.query;
-		let headers = obj.header!=undefined ? obj.header : config.servers.headers;
+		var url = obj.host!=undefined ? obj.host+obj.url : config.servers.host+obj.url;
+		var bodyObj = obj.body;
+		var queryObj = obj.query;
+		var headers = obj.header!=undefined ? obj.header : config.servers.headers;
 		logger.info("从servers端发送post:"+url);
 
 		if(obj.token!=undefined){

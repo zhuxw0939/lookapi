@@ -1,50 +1,48 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>版本管理 - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
-</head>
+{% extends '../common/layout.html' %}
 
-<body>
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+{% endblock %}
 
-{% include '../common/header.html' %}
+{% block body %}
 
-<div class="wrapper">
-
-	<h4 style="padding: 20px 0; border-bottom: 1px solid #ddd;">{{data.name}}&nbsp;&nbsp;&nbsp;<span style="font-size: 12px; color:#999;">{{data.swagger_url}}</span></h4>
-
-	<table class="table_api table_api_list" width="100%">
-		<thead>
-			<tr>
-				<th width="20%">导入用户</th>
-				<th width="20%">时间</th>
-				<th width="10%">扫描数量</th>
-				<th width="10%">忽略</th>
-				<th width="10%">创建</th>
-				<th width="10%">更新</th>
-				<th width="10%">失败</th>
-				<th width="10%">操作</th>
-			</tr>
-		</thead>
-		<tbody>
-			{%for item in data.swagger_history %}
-				<tr>
-					<td>{{item.update_name}}</td>
-					<td>{{item.import_time | date('Y-m-d H:i:s', -480)}}</td>
-					<td>{{item.count_all}}</td>
-					<td>{{item.count_cancel}}</td>
-					<td>{{item.count_create}}</td>
-					<td>{{item.count_update}}</td>
-					<td>{{item.count_fail}}</td>
-					<td><a href="/build/{{item.file_name}}.txt" target="_blank" class="btns btns-min btns-green">查看日志</a></td>
-				</tr>
-			{% endfor%}
-		</tbody>
-	</table>
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">Swagger导入记录</h1>
+		<p>{{data.name}} - {{data.swagger_url}}</p>
+	</div>
 </div>
 
-{% include '../common/footer.html' %}
-
-</body>
-</html>
+<div class="container">
+	<div class="row">
+		<table class="_table" width="100%">
+			<thead>
+				<tr>
+					<th width="20%">导入用户</th>
+					<th width="20%">时间</th>
+					<th width="10%">扫描数量</th>
+					<th width="10%">忽略</th>
+					<th width="10%">创建</th>
+					<th width="10%">更新</th>
+					<th width="10%">失败</th>
+					<th width="10%">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for item in data.swagger_history %}
+					<tr>
+						<td>{{item.update_name}}</td>
+						<td>{{item.import_time | date('Y-m-d H:i:s', -480)}}</td>
+						<td>{{item.count_all}}</td>
+						<td>{{item.count_cancel}}</td>
+						<td>{{item.count_create}}</td>
+						<td>{{item.count_update}}</td>
+						<td>{{item.count_fail}}</td>
+						<td><a href="/build/{{item.file_name}}.txt" target="_blank" class="btns btns-min btns-green">查看日志</a></td>
+					</tr>
+				{% endfor%}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

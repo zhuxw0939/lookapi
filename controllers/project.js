@@ -2,6 +2,7 @@
 
 var async = require('async');
 var validator = require('validator');
+var _ = require('lodash');
 var authModel = require('../models/auth');
 var userModel = require('../models/user');
 var cacheModel = require('../models/cache');
@@ -555,6 +556,7 @@ exports.GroupSwaggerHistory = function (req, res, next) {
 		if(error){
 			return next(error);
 		}
+		_.reverse(data.swagger_history);
 		res.render('project/swaggerhistory', {
 			data: data
 		});

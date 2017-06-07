@@ -1,6 +1,6 @@
 $(function(){
 
-	$("#js_fx_html").text($(".column_api ._left .current a").text());
+	// $("#js_fx_html").text($(".column_api ._left .current a").text());
 
 	// 初始化left_menu
 	if($(".column_api ._left .current").hasClass("level_1")){
@@ -114,15 +114,19 @@ $(function(){
 
 	// swagger导入
 	$("#js_swagger").click(function(){
-		$.sx.dialog({
-			opentitle: "swagger导入api",
-			html: $("#tpl_swagger").html()
-		});
-		var tags = $("._menu .current").find("a.edit_group");
+		// $.sx.dialog({
+		// 	opentitle: "swagger导入api",
+		// 	html: $("#tpl_swagger").html()
+		// });
+		console.info("click click");
+		var tags = $("._left .current").find("a.edit_group");
+		console.info($("._left .current"));
+		console.info($("._left .current").find("a.edit_group"));
+		console.info(tags.data("name"));
+		console.info(tags.data("swagger_url"));
 		$("#js_import_name").val(tags.data("name"));
 		$("#js_import_swagger_url").val(tags.data("swagger_url"));
 //		$("#js_import_servers_api_path").val(tags.data("servers_api_path"));
-		return false;
 	});
 
 	// 编辑栏目-提交

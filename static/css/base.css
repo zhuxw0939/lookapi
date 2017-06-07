@@ -68,6 +68,7 @@ select {
 	font-weight:bold;
 	color:#111;
 }
+.hide,
 .hidden {
 	display:none;
 }
@@ -76,6 +77,7 @@ select {
 	top:-9999px;
 	left:-9999px;
 }
+.ellipsis,
 .overflow {
 	overflow: hidden;
 	white-space: nowrap;
@@ -158,6 +160,15 @@ table.center tr td {
 }
 
 
+/*sxui*/
+body .dialog-title {
+	height: 60px;
+}
+body .dialog-closed {
+	top: 0;
+	right: 28px;
+}
+
 /* bootcss */
 .btn {
 	border-radius: 2px !important;
@@ -181,6 +192,18 @@ table.center tr td {
 	display: inline-block;
 	width: auto;
 }
+table.dataTable td.dataTables_empty, table.dataTable th.dataTables_empty {
+	padding-top: 10rem;
+	padding-bottom: 10rem;
+	font-size: .95rem;
+	color: #ccc;
+}
+
+.dropdown-menu {
+	padding: .3rem 0;
+	font-size: .9rem;
+}
+
 
 
 /* table */

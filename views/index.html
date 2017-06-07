@@ -10,8 +10,8 @@
         <h1>lookapi.<font>前端专属</font></h1><br>
         <h2>迅速搭建，便于维护的api管理工具 © www.lookapi.cn</h2><br>
 		<div class="content">
-		    <a class="link link1" href="/download">了解更多</a>
-		    <a class="link" target="_blank" data-toggle="modal" data-target="#loginDialog" data-whatever="@getbootstrap" href="#">立即使用</a>
+		    <a class="link link1" href="#">了解更多</a>
+			<a class="link" href="/project/index">立即使用</a>
 		</div>
     </div>
 	<div id="a-js" class="a-js">
@@ -20,7 +20,7 @@
 </div>
 <div class="container">
 	<div class="index_title">
-		公开项目
+		公司项目
 	</div>
 	<div class="row">
 		{% for item in Projects %}
@@ -34,7 +34,7 @@
 <script type="text/javascript" src="/static/script/a.js"></script>
 <script>
 $(function(){
-	$(".index_intro").height($(window).height()-$("header").height());
+	// $(".index_intro").height($(window).height()-$("header").height());
 });
 </script>
 {% endblock %}

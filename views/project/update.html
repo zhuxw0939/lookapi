@@ -5,21 +5,16 @@
 {% endblock %}
 
 {% block body %}
-<div class="column_head bg_base64 jumbotron">
-	<div class="container">
-		<h1 class="display-3">{{data.name}}</h1>
-		<p>Amaze UI 概览，下载、使用，模板示例，二次开发……</p>
-	</div>
-</div>
+{% include './_bar.html' %}
 <div class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
 		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
 			{% set currentNav='update' %}
-			{% include './nav.html' %}
+			{% include './_nav.html' %}
 		</div>
 		<div class="col-xs-12 col-sm-9 column_right">
 			<form action="/project/updatePost" class="_form" id="js_form" method="post">
-				{% include 'form.html' %}
+				{% include './_form.html' %}
 				<input type="hidden" name="p_id" value="{{query.p_id}}">
 				<div class="form-group row">
 					<label class="col-sm-2 form-control-label"></label>
