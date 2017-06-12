@@ -1,0 +1,27 @@
+共扫描接口数量：29
+
+不导入这个接口 => 未标注完成时间 /action/select_list/applications/{applicationPackage}
+不导入这个接口 => 未标注完成时间 /action/applications_analysis
+不导入这个接口 => 未标注完成时间 /action/select_list/applications
+不导入这个接口 => 未标注完成时间 /app_rule/get_detail/{appRuleId}
+不导入这个接口 => 未标注完成时间 /bundTermianl
+不导入这个接口 => 未标注完成时间 /rule/success/{orgId}
+不导入这个接口 => 未标注完成时间 /time_plan/{orgId}
+不导入这个接口 => 未标注完成时间 /application_types
+不导入这个接口 => 未标注完成时间 /default_app_rule/get/{schoolId}
+不导入这个接口 => 未标注完成时间 /rule/validate_detail/{orgId}
+不导入这个接口 => 未标注完成时间 /unbundTermianl
+不导入这个接口 => 未标注完成时间 /app_rule/get/{orgId}
+不导入这个接口 => 未标注完成时间 /applications/{applicationId}
+不导入这个接口 => 未标注完成时间 /rule/publish/{orgId}
+不导入这个接口 => 未标注完成时间 /time_plan
+不导入这个接口 => 未标注完成时间 /website_rule/get/{orgId}
+不导入这个接口 => 未标注完成时间 /application_types/{applicationTypeId}
+不导入这个接口 => 未标注完成时间 /homepage
+不导入这个接口 => 未标注完成时间 /statisticsTermianlAlarm
+不导入这个接口 => 未标注完成时间 /updateTermianlStatus
+不导入这个接口 => 未标注完成时间 /action/select_list/application_types
+不导入这个接口 => 未标注完成时间 /applications
+不导入这个接口 => 未标注完成时间 /query
+不导入这个接口 => 未标注完成时间 /system_rule/get/{schoolId}
+不导入这个接口 => 未标注完成时间 /user_org/{orgId}

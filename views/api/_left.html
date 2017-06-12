@@ -1,0 +1,78 @@
+
+<h4 class="{%if query.g_id==''&&query.type!=2 %}current{%endif%}">
+	<a class="_link" href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}">所有接口</a>
+</h4>
+
+
+{%for item in groupList %}
+	<h4 class="level_{{item.level}} {%if query.g_id==item.id %}current active{%endif%}">
+		<a class="_link" href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{item.id}}">{{item.name}}</a>
+		<i class="iconfont">&#xe615;</i>
+		<div class="goright" style="top: .5rem; right: -3.7rem;">
+			<div class="btn-group">
+				<button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					操作
+				</button>
+				<div class="dropdown-menu">
+					<a href="#" class="dropdown-item edit_group" data-id="{{item.id}}" data-sort="{{item.sort}}" data-name="{{item.name}}" data-swagger_url="{{item.swagger_url}}" data-servers_api_path="{{item.servers_api_path}}">编辑栏目</a>
+					<a href="#" data-id="{{item.id}}" class="dropdown-item add_son">添加子栏目</a>
+					<a href="#" class="dropdown-item del_son_groups" data-edit_noapis_groups="1">删除为空的子栏目</a>
+					<a href="#" class="dropdown-item del_son_groups">删除所有子栏目</a>
+					<a href="#" class="dropdown-item del_group"  data-id="{{item.id}}">删除栏目</a>
+				</div>
+			</div>
+		</div>
+	</h4>
+	<ul class="_ul {% if loop.first %}_ul_first{% endif %}">
+	{%for itemSon in groupSonList %}
+		{%if item.id==itemSon.father_id %}
+			<li class="level_{{itemSon.level}} {%if query.g_id==itemSon.id %}current{%endif%}">
+				<a class="_link" href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{itemSon.id}}">{{itemSon.name}}</a>
+				<div class="goright" style="top: .5rem; right: -3.7rem;">
+					<div class="btn-group">
+						<button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							操作
+						</button>
+						<div class="dropdown-menu">
+							<a href="#" class="dropdown-item edit_group" data-id="{{itemSon.id}}" data-sort="{{itemSon.sort}}" data-name="{{itemSon.name}}" data-swagger_url="{{itemSon.swagger_url}}" data-servers_api_path="{{itemSon.servers_api_path}}" data-edit_children="1">编辑栏目</a>
+							<a href="#" class="dropdown-item del_group" data-id="{{itemSon.id}}">删除栏目</a>
+						</div>
+					</div>
+				</div>
+			</li>
+		{%endif%}
+	{% endfor%}
+	</ul>
+{% endfor%}
+
+<h4 class="{%if query.type==2 %}current{%endif%}">
+	<a class="_link" href="/api/list?p_id={{query.p_id}}&v_id={{query.v_id}}&type=2">回收站</a>
+</h4>
+
+<div class="_editbox cf">
+	<a href="javascript:void(0)" id="js_add_group">+ 新增</a>
+	<a href="javascript:void(0)" id="js_edit_group">+ 编辑</a>
+</div>
+
+<!--tpl_add_version-->
+<script type="text/html" id="tpl_add_group">
+	<form action="/project/createGroupPost" class="_form_dialog" id="js_form" method="post">
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">栏目名称：</label>
+			<div class="col-sm-9">
+				<input type="text" name="group_name" class="form-control" value="" placeholder="1-24个字符">
+			</div>
+		</div>
+		<input type="hidden" name="v_id" value="{{query.v_id}}">
+		<input type="hidden" name="p_id" value="{{query.p_id}}">
+		<input type="hidden" name="father_id" id="js_father_id" value="0">
+		<div class="form-group row" style="margin-top: 3rem;">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<a href="javascript:void(0)" class="btn btn-primary btn-lger" id="js_submit">确定</a>
+			</div>
+		</div>
+	</form>
+</script>
+
+<input type="hidden" id="js_input_back_url_hidden">

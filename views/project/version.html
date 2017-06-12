@@ -15,30 +15,29 @@
 		<div class="col-xs-12 col-sm-9 column_right">
 			<table class="_table">
 				<tr>
-					<th>版本号</th>
-					<th>api数量</th>
-					<th>是否默认</th>
-					<th>编辑</th>
+					<th width="40%">版本号</th>
+					<th width="20%">api数量</th>
+					<th width="40%">操作</th>
 				</tr>
 				{%for item in versions %}
 					<tr>
-						<td>{{item.name}}</td>
-						<td>10</td>
 						<td>
+							{{item.name}}
 							{%if item.id===data.version_id %}
-								<font>默认</font>
+								<font color="#bbb">（默认）</font>
 							{%endif%}
 						</td>
+						<td>0</td>
 						<td>
 							{%if item.id!=data.version_id %}
-								<a href="#" data-p_id="{{data.id}}" data-id="{{item.id}}" data-name="{{item.name}}" class="set_default" style="color: #999">设为默认</a>
-								<a href="#" data-p_id="{{data.id}}" data-id="{{item.id}}" data-name="{{item.name}}" class="del_version" style="color: red">删除</a>
+								<a href="#" data-p_id="{{data.id}}" data-id="{{item.id}}" data-name="{{item.name}}" class="btn btn-sm btn-info set_default" >设为默认</a>
+								<a href="#" data-p_id="{{data.id}}" data-id="{{item.id}}" data-name="{{item.name}}" class="btn btn-sm btn-danger del_version"><i class="iconfont">&#xe646;</i>删除</a>
 							{%endif%}
 						</td>
 					</tr>
 				{% endfor%}
 				<tr>
-					<td colspan="4"><a href="#" id="js_add_version">创建新版本</a></td>
+					<td colspan="3" style="padding: 25px; text-align: center;"><a href="#" id="js_add_version" style="color: orange;">创建新版本</a></td>
 				</tr>
 			</table>
 		</div>
@@ -47,17 +46,33 @@
 
 <!--tpl_add_version-->
 <script type="text/html" id="tpl_add_version">
-	<form action="/project/createVersionPost" id="js_form" method="post">
-		<p style="padding: 10px 50px;">版本号：<input type="text" name="newversion" class="input" value="" placeholder="输入数字或小数"> *版本号必须为整数或小数格式，版本号创建后不能修改名称</p>
-		<p style="padding: 10px 50px 10px 110px;">
-			<label class="checkbox">
-		        <input type="checkbox"> 复制已有版本api
-		    </label>
-		</p>
+	<form action="/project/createVersionPost" class="_form_dialog" id="js_form" method="post">
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">版本号：</label>
+			<div class="col-sm-9">
+				<input type="text" name="newversion" id="js_newversion" class="form-control form-control-inline" value="" placeholder="输入数字或小数">
+				<p>*版本号必须为整数或小数格式，且创建后不可修改</p>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox"> 复制已有版本api
+					</label>
+				</div>
+			</div>
+		</div>
+
 		<input type="hidden" name="p_id" value="{{query.p_id}}">
-		<p style="padding: 10px 50px 10px 110px;">
-			<a class="btns btns-blue btns-longer" id="js_submit">保存</a>
-		</p>
+
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<a href="javascript:void(0)" class="btn btn-primary btn-lger" id="js_submit">创建</a>
+			</div>
+		</div>
 	</form>
 </script>
 {% endblock %}
@@ -74,6 +89,9 @@
 		});
 
 		$("body").on("click", "#js_submit", function(){
+			if($("#js_newversion").val() == ""){
+				return alert("版本号不能为空！");
+			}
 			$("#js_form").ajaxSubmit({
 				success: function(data) {
 					console.info(data);

@@ -192,19 +192,22 @@ body .dialog-closed {
 	display: inline-block;
 	width: auto;
 }
+.btn-group-lger>.btn, .btn-lger {
+	padding-left: 3rem;
+	padding-right: 3rem;
+}
+.dropdown-menu {
+	padding: .3rem 0;
+	font-size: .9rem;
+}
+
+/*dataTable*/
 table.dataTable td.dataTables_empty, table.dataTable th.dataTables_empty {
 	padding-top: 10rem;
 	padding-bottom: 10rem;
 	font-size: .95rem;
 	color: #ccc;
 }
-
-.dropdown-menu {
-	padding: .3rem 0;
-	font-size: .9rem;
-}
-
-
 
 /* table */
 table._table {
@@ -268,6 +271,14 @@ table._table td._first:first-child {
 .table_box table tr td.setting_btn,
 table._table tr td.setting_btn {
 	text-align: center;
+}
+form._form_dialog {
+	padding: 1.5rem 3rem;
+	min-height: 12rem;
+	font-size: 90%;
+}
+form._form_dialog .form-control-label {
+	margin-right: -1.5rem;
 }
 
 

@@ -17,6 +17,27 @@ exports.getApiById = function (id, callback) {
 	mongoDB.api.findOne({ id: id }, callback);
 };
 
+
+/**
+ * 根据GroupId获取Apis
+ * 支持g_id为多项
+ */
+exports.getApisByIdGroupId = function (g_id, callback) {
+	if (!g_id) {
+		return callback();
+	}
+	var options = {};
+	if(typeof g_id==="object"){
+		logger.debug("===object");
+		options.group_id = {$in:g_id};
+	} else {
+		logger.debug("!==object");
+		options.group_id = g_id;
+	}
+	logger.debug(options);
+	mongoDB.api.find(options, {}, { sort:{create_time:-1}, limit: 500 }, callback);
+};
+
 /**
  * 根据多种查询条件获取Api
  * 支持g_id为多项

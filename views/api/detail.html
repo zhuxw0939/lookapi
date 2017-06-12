@@ -7,7 +7,7 @@
 
 <div class="column_api">
 	<div class="_left">
-		{% include './left.html' %}
+		{% include './_left.html' %}
 	</div>
 	<div class="_right">
 		<div class="look_right">
@@ -181,5 +181,155 @@
 
 
 {% block script %}
-<script type="text/javascript" src="/static/script/page_api_left.js"></script>{% include '../common/codejs.html' %}{% endblock %}
+<script type="text/javascript" src="/static/script/page_api_left.js"></script>
+<script>
+$(function(){
+
+	$("#js_getapifun").click(function(){
+		console.info($(this).data("id"));
+		$.ajax({
+			url: "/makingapi/getServersApiFunctionCode",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: $(this).data("id")
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					$("#js_getapifun_back").html("<pre>"+data.data+"</pre>").toggle();
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+
+	$("#js_getapiajaxcode").click(function(){
+		console.info($(this).data("id"));
+		$.ajax({
+			url: "/makingapi/getApiFunctionAjaxCode",
+			type: "GET",
+			dataType: "json",
+			data: {
+				id: $(this).data("id")
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					$("#js_getapiajaxcode_back").html("<pre>"+data.data+"</pre>").toggle();
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+
+	$("#js_getapinodejscode").click(function(){
+		console.info($(this).data("id"));
+		$.ajax({
+			url: "/makingapi/getApiFunctionNodejsCode",
+			type: "GET",
+			dataType: "json",
+			data: {
+				id: $(this).data("id")
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					$("#js_getapinodejscode_back").html("<pre>"+data.data+"</pre>").toggle();
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+	$("#js_makeapifunfile").click(function(){
+		console.info($(this).data("id"));
+		var back_url = $(this).data("back_url");
+		$.ajax({
+			url: "/makingapi/updateServersApiFile",
+			type: "POST",
+			dataType: "json",
+			data: {
+				id: $(this).data("id"),
+				swagger_id: $(this).data("swagger_id"),
+				v_id: $(this).data("v_id")
+			},
+			success: function(data){
+				console.info(data);
+				if(data.status==0){
+					$.sx.confirm("更新ApiFunction.js成功，是否同步到本地？", "同步将会覆盖原函数！", function(){
+						window.location.href = back_url;
+					});
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+
+	// 删除api
+	$("a.btn_del_api").click(function(){
+		var id = $(this).data("id");
+		$.sx.confirm("确定删除api？", "删除api后，将无法恢复。", function(){
+			$.ajax({
+				url: "/api/removeApiPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					id: id
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.history.go(-1);
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+
+	// 设置api为过期
+	$("#js_api_lose").click(function(){
+		var id = $(this).data("id");
+		$.sx.confirm("确定设置api为过期？", "设置后，可在过期接口栏目中查询到。", function(){
+			$.ajax({
+				url: "/api/loseApiPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					id: id
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.history.go(-1);
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+});
+</script>
+{% include '../common/codejs.html' %}
+{% endblock %}
 

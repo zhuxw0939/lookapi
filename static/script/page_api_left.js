@@ -81,9 +81,14 @@ $(function(){
 			newArray.push($(this).data("id"));
 		});
 		var v_id = $(this).data("v_id");
-		var back_url = $(this).data("back_url");
+		// var back_url = $(this).data("back_url");
+		if(!localStorage.out_apifunctions_url){
+			var back_url = "http://127.0.0.1"
+		} else {
+			var back_url = localStorage.out_apifunctions_url
+		}
 
-		$.sx.confirm("确定导出所有api？", "预计耗时10秒！", function(){
+		$.sx.confirm("确定导出所有api？", "预计耗时5秒！", function(){
 			$.sx.progress("导出ApiFunction.js", "数据处理中...");
 			$.ajax({
 				url: "/makingapi/getServersApiFile",
@@ -100,8 +105,13 @@ $(function(){
 				success: function(data){
 					console.info(data);
 					if(data.status==0){
-						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'.js" target="_blank">查看生成的文件</a>，手动进行更新。', function(){
-							window.location.href = back_url;
+						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '<br><br>同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'.js" target="_blank">查看生成的文件</a>，手动进行更新。<br><br>导出地址：<input type="text" class="form-control form-control-inline" value="'+back_url+'" style="width: 300px;" id="js_input_back_url" placeholder="不能为空"><br><br>', function(){
+							if(!$("#js_input_back_url_hidden").val()){
+								alert("导出地址不能为空！");
+							} else {
+								localStorage.setItem('out_apifunctions_url', $("#js_input_back_url_hidden").val());
+								window.location.href = $("#js_input_back_url_hidden").val()+"/api/writeServersApi";
+							}
 						});
 					} else {
 						$.sx.alertAutoClosed(data.message,"success");
@@ -112,12 +122,21 @@ $(function(){
 		return false;
 	});
 
+	$("body").on("change", "#js_input_back_url", function(){
+		if(!$(this).val()){
+			$("#js_input_back_url_hidden").val("")
+		} else {
+			$("#js_input_back_url_hidden").val($(this).val())
+		}
+	});
+
+
 	// swagger导入
 	$("#js_swagger").click(function(){
-		// $.sx.dialog({
-		// 	opentitle: "swagger导入api",
-		// 	html: $("#tpl_swagger").html()
-		// });
+		$.sx.dialog({
+			opentitle: "swagger导入api",
+			html: $("#tpl_swagger").html()
+		});
 		console.info("click click");
 		var tags = $("._left .current").find("a.edit_group");
 		console.info($("._left .current"));
@@ -209,6 +228,14 @@ $(function(){
 		return false;
 	});
 
+	// 创建新栏目
+	$("#js_edit_group").click(function(){
+		$("#js_column_api_left").toggleClass("_left_editer")
+		return false;
+	});
+
+
+
 	// 添加子栏目
 	$("a.add_son").click(function(){
 		$.sx.dialog({
@@ -243,6 +270,11 @@ $(function(){
 			opentitle: "编辑栏目",
 			html: $("#tpl_edit_group").html()
 		});
+		if($(this).data("edit_children")===1){
+			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box").hide();
+		} else {
+			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box").show();
+		}
 		$("#edit_group_name").val($(this).data("name"));
 		$("#edit_group_group_sort").val($(this).data("sort"));
 		$("#edit_group_servers_api_path").val($(this).data("servers_api_path"));
@@ -295,14 +327,26 @@ $(function(){
 		}
 		if(newArray.length>0){
 			var ids = newArray.join(",");
-			$.sx.confirm("确定删除该栏目下的所有子栏目？", "删除后，该栏目所对应的子栏目将同时删除。", function(){
-				ajaxDelGroupByIds(ids);
-			});
+
+
+			if($(this).data("edit_noapis_groups")===1){
+				// 删除为空的子栏目
+				$.sx.confirm("确定删除该栏目下的所有api为空的子栏目？", "删除后，将无法恢复！", function(){
+					ajaxDelNoApisGroupByIds(ids);
+				});
+			} else {
+				// 删除所有子栏目
+				$.sx.confirm("确定删除该栏目下的所有子栏目？", "删除后，该栏目所对应的子栏目将同时删除。", function(){
+					ajaxDelGroupByIds(ids);
+				});
+			}
 		} else {
 			$.sx.alert("子栏目为空");
 		}
 		return false;
 	});
+
+
 
 	function ajaxDelGroupById(id){
 		$.ajax({
@@ -328,6 +372,27 @@ $(function(){
 	function ajaxDelGroupByIds(ids){
 		$.ajax({
 			url: "/project/removeGroupsPost",
+			type: "POST",
+			dataType: "json",
+			data: {
+				ids: ids
+			},
+			success: function(data){
+				if(data.status==0){
+					$.sx.alert("操作成功！");
+					setTimeout(function(){
+						window.location.reload();
+					}, 1500);
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+	}
+
+	function ajaxDelNoApisGroupByIds(ids){
+		$.ajax({
+			url: "/project/removeNoApisGroupsPost",
 			type: "POST",
 			dataType: "json",
 			data: {

@@ -9,8 +9,8 @@
 {% block body %}
 
 <div class="column_api">
-	<div class="_left">
-		{% include './left.html' %}
+	<div class="_left" id="js_column_api_left">
+		{% include './_left.html' %}
 	</div>
 	<div class="_right">
 		<div class="jumbotron column_apilist_header">
@@ -38,13 +38,13 @@
 					</button>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="/project/update?p_id={{query.p_id}}">编辑项目</a>
-						<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#importDialog" data-whatever="@getbootstrap" id="js_swagger">swagger导入</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_swagger">swagger导入</a>
 						<a class="dropdown-item" href="/project/group/swagger_history?id={{query.g_id}}">导入记录</a>
 						<a class="dropdown-item" href="javascript:void(0)" id="js_swagger_run">swagger扫描</a>
-						<a class="dropdown-item" href="javascript:void(0)" id="js_write_apifunction" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出本页api</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_write_apifunction" data-v_id="{{query.v_id}}" >导出本页api</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="javascript:void(0)" id="js_del_apis">删除本页api</a>
-						</div>
+					</div>
 				</div>
 				<span>|&nbsp;&nbsp;<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a></span>
 			</h1>
@@ -84,9 +84,11 @@
 								{% elseif item.request_type==2 %}
 									<span class="btn btn-sm btn-type btn-success">GET</span>
 								{% elseif item.request_type==3 %}
-									<span class="btn btn-sm btn-type btn-warning">PUT</span>
+									<span class="btn btn-sm btn-type btn-primary">PUT</span>
 								{% elseif item.request_type==4 %}
 									<span class="btn btn-sm btn-type btn-danger">DELETE</span>
+								{% elseif item.request_type==7 %}
+									<span class="btn btn-sm btn-type btn-warning">PATCH</span>
 								{% endif %}<br>
 								{{item.url}}
 							</td>
@@ -148,54 +150,81 @@
 
 
 
-<!--tpl_add_version-->
-<script type="text/html" id="tpl_add_group">
-	<form action="/project/createGroupPost" id="js_form" method="post">
-		<p style="padding: 10px 50px;">栏目名称：<input type="text" name="group_name" class="input" value="" placeholder="1-24个字符"></p>
-		<input type="hidden" name="v_id" value="{{query.v_id}}">
-		<input type="hidden" name="p_id" value="{{query.p_id}}">
-		<input type="hidden" name="father_id" id="js_father_id" value="0">
-		<p style="padding: 10px 50px 10px 110px;">
-			<a class="btns btns-blue btns-longer" id="js_submit">保存</a>
-		</p>
-	</form>
-</script>
+
 
 <!--tpl_edit_version-->
 <script type="text/html" id="tpl_edit_group">
-	<form action="/project/updateGroupPost" id="js_form2" method="post">
-		<p style="padding: 10px 50px;"><span style="display: inline-block; width: 100px;">栏目名称：</span><input type="text" name="group_name" class="input" value="" placeholder="1-24个字符" id="edit_group_name"></p>
-		<p style="padding: 10px 50px;"><span style="display: inline-block; width: 100px;">栏目排序：</span><input type="text" name="group_sort" class="input" value="" placeholder="输入数字，越大越靠前" id="edit_group_group_sort"></p>
-		<p style="padding: 10px 50px;"><span style="display: inline-block; width: 100px;">api前缀：</span><input type="text" name="servers_api_path" class="input" value="" placeholder="/xxx/xxx" id="edit_group_servers_api_path"></p>
-		<p style="padding: 10px 50px;"><span style="display: inline-block; width: 100px;">swaggerUrl：</span><input type="text" name="swagger_url" class="input long" value="" placeholder="http://xxx/v2/api-docs" id="edit_group_swagger_url"></p>
-	<input type="hidden" name="group_id" id="edit_group_id">
-		<p style="padding: 30px 50px">
-			<span style="display: inline-block; width: 95px;"> </span>
-			<a class="btns btns-blue btns-longer" id="js_submit2">保存</a>
-		</p>
+	<form action="/project/updateGroupPost" class="_form_dialog" id="js_form2" method="post">
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">栏目名称：</label>
+			<div class="col-sm-9">
+				<input type="text" name="group_name" class="form-control" value="" placeholder="1-24个字符" id="edit_group_name">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">栏目排序：</label>
+			<div class="col-sm-9">
+				<input type="text" name="group_sort" class="form-control form-control-inline" value="" placeholder="输入数字，越大越靠前" id="edit_group_group_sort">
+			</div>
+		</div>
+		<div class="form-group row" id="js_edit_group_servers_api_path_box">
+			<label class="col-sm-3 form-control-label">api前缀：</label>
+			<div class="col-sm-9">
+				<input type="text" name="servers_api_path" class="form-control" value="" placeholder="/xxx/xxx" id="edit_group_servers_api_path">
+			</div>
+		</div>
+		<div class="form-group row" id="js_edit_group_swagger_url_box">
+			<label class="col-sm-3 form-control-label">swagger地址：</label>
+			<div class="col-sm-9">
+				<input type="text" name="swagger_url" class="form-control" value="" placeholder="http://xxx/v2/api-docs" id="edit_group_swagger_url">
+			</div>
+		</div>
+		<input type="hidden" name="group_id" id="edit_group_id">
+		<div class="form-group row" style="margin-top: 2rem;">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<a href="javascript:void(0)" class="btn btn-primary btn-lger" id="js_submit2">保存</a>
+			</div>
+		</div>
 	</form>
 </script>
 
 <!--tpl_edit_version-->
 <script type="text/html" id="tpl_swagger">
-	<form action="/makingapi/swaggerImport" id="js_form3" method="post">
-		<p style="padding: 10px 50px; display: none;">swagger地址：<input type="text" class="input" placeholder="http://192.168.2.82:8012/v2/api-docs" id="swagger_url_input" value=""></p>
-		<p><span style="display: inline-block; width: 100px; line-height: 60px;">导入栏目：</span><input type="text" readonly class="input long readonly" id="js_import_name"></p>
-		<p><span style="display: inline-block; width: 100px; line-height: 60px;">api地址：</span><input type="text" readonly class="input long readonly" id="js_import_swagger_url" name="swagger_url"></p>
-		<p><span style="display: inline-block; width: 96px; line-height: 60px;">强制导入：</span>
-		<select name="must" class="select">
-			<option value="0">否</option>
-			<option value="1">是</option>
-		</select>
-			<font style="color: red; font-size: 12px;">*强制导入会更新所有接口，请谨慎选择！</font>
-		</p>
+	<form action="/makingapi/swaggerImport" class="_form_dialog" id="js_form3" method="post">
+		<p style="display: none;">swagger地址：<input type="text" class="input" placeholder="http://192.168.2.82:8012/v2/api-docs" id="swagger_url_input" value=""></p>
 		<p style="display: none;"><span style="display: inline-block; width: 100px; line-height: 60px; ">api前缀：</span><input type="text" readonly class="input long readonly" id="js_import_servers_api_path" name="servers_api_path"></p>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">导入栏目：</label>
+			<div class="col-sm-9">
+				<input type="text" readonly class="form-control" id="js_import_name">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">api地址：</label>
+			<div class="col-sm-9">
+				<input type="text" readonly class="form-control" id="js_import_swagger_url" name="swagger_url">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">强制导入：</label>
+			<div class="col-sm-9">
+				<select name="must" class="form-control">
+					<option value="0">否</option>
+					<option value="1">是</option>
+				</select>
+				<p><font style="color: red; font-size: 12px;">*强制导入会更新所有接口，请谨慎选择！</font></p>
+			</div>
+		</div>
 		<input type="hidden" name="g_id" value="{{query.g_id}}">
 		<input type="hidden" name="v_id" value="{{query.v_id}}">
 		<input type="hidden" name="p_id" value="{{query.p_id}}">
-		<p style="padding: 30px 50px 30px 95px;">
-			<a class="btns btns-blue btns-longer" id="js_submit3">确定导入</a>
-		</p>
+		<div class="form-group row" style="margin-top: 2rem;">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<a href="javascript:void(0)" class="btn btn-primary btn-lger" id="js_submit3">确定导入</a>
+			</div>
+		</div>
 	</form>
 </script>
 
@@ -211,55 +240,6 @@
 		</p>
 	</form>
 </script>
-
-<div class="modal fade" id="importDialog" tabindex="-1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					<span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title">swagger导入</h4>
-			</div>
-			<form action="/makingapi/swaggerImport" id="js_form3" method="post">
-			<div class="modal-body">
-				<!--<div class="form-group">
-					<label class="control-label">swagger地址:</label>
-					<input type="text" class="form-control" placeholder="http://192.168.2.82:8012/v2/api-docs" id="swagger_url_input" value="">
-				</div>-->
-				<div class="form-group">
-					<label class="control-label">导入栏目:</label>
-					<input type="text" readonly class="form-control" id="js_import_name">
-				</div>
-				<div class="form-group">
-					<label class="control-label">api地址:</label>
-					<input type="text" readonly class="form-control" id="js_import_swagger_url" name="swagger_url">
-				</div>
-				<div class="form-group">
-					<label class="control-label">强制导入:</label>
-					<select name="must" class="form-control form-control-inline">
-						<option value="0">否</option>
-						<option value="1">是</option>
-					</select>
-					<font style="color: red; font-size: 12px;">*强制导入会更新所有接口，请谨慎选择！</font>
-				</div>
-				<div class="form-group hide">
-					<label class="control-label">api前缀:</label>
-					<input type="text" readonly class="form-control" id="js_import_servers_api_path" name="servers_api_path">
-				</div>
-				<input type="hidden" name="g_id" value="{{query.g_id}}">
-				<input type="hidden" name="v_id" value="{{query.v_id}}">
-				<input type="hidden" name="p_id" value="{{query.p_id}}">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="js_submit3">确定导入</button>
-			</div>
-			</form>
-		</div>
-	</div>
-</div>
 
 {% endblock %}
 

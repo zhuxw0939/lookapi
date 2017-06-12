@@ -9,6 +9,7 @@ var cacheModel = require('../models/cache');
 var message = require('../models/message');
 var mailModel = require('../models/mail');
 var projectModel = require('../models/project');
+var apiModel = require('../models/api');
 
 var logger = require('../common/logger');
 
@@ -344,8 +345,29 @@ exports.removeGroupsPost = function (req, res, next) {
 		}
 	});
 };
-
-
+// 删除多个apis为空的栏目
+exports.removeNoApisGroupsPost = function (req, res, next) {
+	var ids = req.body.ids;
+	if(!ids){
+		return res.send({
+			status: 1,
+			message: "没有栏目可供删除"
+		});
+	}
+	ids = ids.split(",");
+	for(var i=0; i<ids.length; i++){
+		var p_id = ids[i];
+		apiModel.getApisByIdGroupId(p_id, function(err, data){
+			if(!err && data.length!==0){
+				projectModel.removeGroupById(p_id, function(){});
+			}
+		});
+	}
+	return res.send({
+		status: 0,
+		message: "删除成功"
+	});
+};
 
 
 // 获取所有一级栏目

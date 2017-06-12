@@ -4,6 +4,9 @@ var request = require('request');
 var fs=require('fs');
 var eventproxy = require('eventproxy');
 var moment = require('moment');
+var _ = require('lodash');
+
+
 
 var config=require('../common/config');
 var apiModel = require('../models/api');
@@ -212,6 +215,8 @@ exports.swaggerRun = function (req, res, next) {
 							nextObject = paths[url].put;
 						} else if (paths[url].delete != undefined) {
 							nextObject = paths[url].delete;
+						} else if (paths[url].patch != undefined) {
+							nextObject = paths[url].patch;
 						} else {
 							logger.info("不支持的请求类型");
 							nextObject = "";
@@ -387,8 +392,11 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 	for (let url in paths){
 		// if(url=="/api/v1/question/save/{courseId}" || url=="/api/v1/common/list_instructors/{phase}" || url=="/api/v1/setting-touched-line/create/{examId}" || url=="/api/v1/setting-class-part/page") {
+		logger.debug("开始导入这个url："+url);
 		if(1) {
-			createApiStepONE( url, paths[url], saveFileName);
+			for(let pathType in paths[url] ){
+				createApiStepONE( url, pathType, paths[url][pathType], saveFileName);
+			}
 		}
 		pathsIndex++;
 	}
@@ -417,7 +425,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 
 
-	function createApiStepONE(url, urlData, saveFileName){
+	function createApiStepONE(url, pathType, urlData, saveFileName){
 		// *** 首先根据url检查这个api是否在这个项目版本中已经存在
 		// 不存在进入创建流程
 		// 存在时比较时间是否有修改，有修改时更新api，否则跳过
@@ -425,18 +433,36 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 		// 根据请求方式获取数据
 		var urlDataNextKey;
-		if(urlData.get != undefined) {
-			urlDataNextKey = urlData.get;
-		} else if (urlData.post != undefined) {
-			urlDataNextKey = urlData.post;
-		} else if (urlData.put != undefined) {
-			urlDataNextKey = urlData.put;
-		} else if (urlData.delete != undefined) {
-			urlDataNextKey = urlData.delete;
+
+		if(pathType === "get") {
+			urlDataNextKey = urlData;
+		} else if (pathType === "post") {
+			urlDataNextKey = urlData;
+		} else if (pathType === "put") {
+			urlDataNextKey = urlData;
+		} else if (pathType === "delete") {
+			urlDataNextKey = urlData;
+		} else if (pathType === "patch") {
+			urlDataNextKey = urlData;
 		} else {
 			logger.info("不支持的请求类型");
 			urlDataNextKey = "";
 		}
+
+		// if(urlData.get != undefined) {
+		// 	urlDataNextKey = urlData.get;
+		// } else if (urlData.post != undefined) {
+		// 	urlDataNextKey = urlData.post;
+		// } else if (urlData.put != undefined) {
+		// 	urlDataNextKey = urlData.put;
+		// } else if (urlData.delete != undefined) {
+		// 	urlDataNextKey = urlData.delete;
+		// } else if (urlData.patch != undefined) {
+		// 	urlDataNextKey = urlData.patch;
+		// } else {
+		// 	logger.info("不支持的请求类型");
+		// 	urlDataNextKey = "";
+		// }
 
 		var swagger_id = urlDataNextKey.operationId;
 
@@ -448,7 +474,6 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		ep.all('data1', function (data1) {
 			if(data1){
 				// 存在api
-
 				if(req.body.must==1){
 					// api的url发生变化，要更新这个接口
 					let logs = "※【更新接口】 =>  强制更新接口must=1"+url;
@@ -468,7 +493,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 							fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
 						}
 					});
-					createApiStepTWO(url, urlData, data1);
+					createApiStepTWO(url, pathType, urlData, data1);
 				} else if(data1.url!=url){
 					// api的url发生变化，要更新这个接口
 					let logs = "※【更新接口】 =>  这个接口的url发生了变化"+url;
@@ -488,7 +513,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 							fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
 						}
 					});
-					createApiStepTWO(url, urlData, data1);
+					createApiStepTWO(url, pathType, urlData, data1);
 				} else {
 					if(data1.swagger_time==undefined || data1.swagger_time==""){
 						// api不存在swagger_time字段，认为这个接口没有完成，并且没有更新
@@ -520,7 +545,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 								fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
 							}
 						});
-						createApiStepTWO(url, urlData, data1);
+						createApiStepTWO(url, pathType, urlData, data1);
 					}
 				}
 			} else {
@@ -528,7 +553,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 				let logs = "※【创建接口】 =>  开始创建这个新接口"+url;
 				logger.info(logs);
 
-				createApiStepTWO(url, urlData);
+				createApiStepTWO(url, pathType, urlData);
 				fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
 			}
 
@@ -567,7 +592,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		}
 	}
 
-	function createApiStepTWO(url, urlData, oldApi){
+	function createApiStepTWO(url, pathType, urlData, oldApi){
 
 		// *** api创建流程
 		var backData = {};
@@ -579,18 +604,16 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		backData.url_full = makingUrlFull(url);
 
 		// 根据请求方式获取数据
-		if(urlData.get != undefined) {
-			urlData = urlData.get;
+		if(pathType === "get") {
 			backData.request_type = 2;
-		} else if (urlData.post != undefined) {
-			urlData = urlData.post;
+		} else if (pathType === "post") {
 			backData.request_type = 1;
-		} else if (urlData.put != undefined) {
-			urlData = urlData.put;
+		} else if (pathType === "put") {
 			backData.request_type = 3;
-		} else if (urlData.delete != undefined) {
-			urlData = urlData.delete;
+		} else if (pathType === "delete") {
 			backData.request_type = 4;
+		} else if (pathType === "patch") {
+			backData.request_type = 7;
 		} else {
 			logger.info("不支持的请求类型");
 			backData.request_type = 0;
