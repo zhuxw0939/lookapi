@@ -183,22 +183,58 @@ $(function(){
 			success: function(data) {
 				console.info(data);
 				if(data.status==0){
-					$.sx.alert("api修改成功，即将刷新页面！");
-					setTimeout(function(){
-						if(isChangeFunName){
-							if($("#js_api_id").val()!=""){
-								window.location.href='/api/detail/'+$("#js_api_id").val()+'?is_change=1';
-							} else {
-								window.location.href='/api/list?is_change=1&p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
-							}
+					console.info("修改api成功");
+					if(isChangeFunName){
+						console.info("isChangeFunName 1");
+
+						if(!localStorage.out_apifunctions_url){
+							var back_url = "http://127.0.0.1"
 						} else {
-							if($("#js_api_id").val()!=""){
-								window.location.href='/api/detail/'+$("#js_api_id").val();
-							} else {
-								window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
-							}
+							var back_url = localStorage.out_apifunctions_url
 						}
-					}, 1500);
+						back_url += "/api/writeServersApi";
+						console.info(back_url);
+						$.ajax({
+							url: "/makingapi/updateServersApiFile",
+							type: "POST",
+							dataType: "json",
+							data: {
+								id: $("#js_api_id").val(),
+								swagger_id: $("#js_p_id").val(),
+								v_id: $("#js_v_id").val()
+							},
+							success: function(data){
+								console.info(data);
+								if(data.status==0){
+									console.info("更新ApiFunction.js成功");
+									$.sx.confirm("更新ApiFunction.js成功，是否同步到本地？", "同步将会覆盖原函数！", function(){
+										window.open(back_url);
+										if($("#js_api_id").val()!=""){
+											window.location.href='/api/detail/'+$("#js_api_id").val();
+										} else {
+											window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+										}
+									}, function(){
+										if($("#js_api_id").val()!=""){
+											window.location.href='/api/detail/'+$("#js_api_id").val();
+										} else {
+											window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+										}
+									});
+								} else {
+									console.info("更新ApiFunction.jsr失败");
+									$.sx.alert(data.message);
+								}
+							}
+						});
+					} else {
+						console.info("isChangeFunName 0");
+						if($("#js_api_id").val()!=""){
+							window.location.href='/api/detail/'+$("#js_api_id").val();
+						} else {
+							window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+						}
+					}
 				} else if(data.status==3){
 					var shtml = '<br>';
 					for(var i=0;i<data.data.length;i++){

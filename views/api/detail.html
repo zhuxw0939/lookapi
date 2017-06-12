@@ -178,8 +178,6 @@
 		</div>
 	</div>
 </div>
-<input type="hidden" value="{{query}}" id="js_is_change2">
-<input type="hidden" value="{{query.is_change}}" id="js_is_change">
 {% endblock %}
 
 
@@ -187,10 +185,6 @@
 <script type="text/javascript" src="/static/script/page_api_left.js"></script>
 <script>
 $(function(){
-
-	if($("#js_is_change").val()==1){
-		$("#js_makeapifunfile").click();
-	}
 
 	$("#js_getapifun").click(function(){
 		console.info($(this).data("id"));
@@ -266,7 +260,6 @@ $(function(){
 			var back_url = localStorage.out_apifunctions_url
 		}
 		back_url += "/api/writeServersApi";
-//		var back_url = $(this).data("back_url");
 		$.ajax({
 			url: "/makingapi/updateServersApiFile",
 			type: "POST",
@@ -341,6 +334,22 @@ $(function(){
 		});
 		return false;
 	});
+
+//
+//	if(GetQueryString("is_change")==1){
+//		$("#js_makeapifunfile").click();
+//	} else {
+//		localStorage.out_is_funname_change=0;
+//		$("#js_input_back_url_hidden").val(localStorage.out_apifunctions_url)
+//	}
+//
+//	function GetQueryString(name) {
+//		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+//		var r = window.location.search.substr(1).match(reg);
+//		if(r!=null)return  unescape(r[2]); return null;
+//	}
+
+
 });
 </script>
 {% include '../common/codejs.html' %}

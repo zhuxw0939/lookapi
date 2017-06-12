@@ -321,12 +321,13 @@ exports.getApplicationVersionSelectListUsingGET = function (data, callback) {
  *
  * @X-Token 	身份认证令牌-String * @file 	file-
  */
-exports.handleFileUploadUsingPOST = function (data, callback) {
+exports.analysisGOTest = function (data, callback) {
 	servers.POST({
 		url: "/action/applications_analysis",
-		token: data.TOKEN!=undefined?data.TOKEN:"",
+		token: !data.TOKEN?"":data.TOKEN,
 		swaggerId: "handleFileUploadUsingPOST",
 		query: {
+			file: data.file
 		}
 	}, callback);
 };

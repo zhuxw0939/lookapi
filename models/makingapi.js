@@ -111,6 +111,8 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 			requestType = "PUT";
 		} else if(data.request_type==4){
 			requestType = "DELETE";
+		}  else if(data.request_type==7){
+			requestType = "PATCH";
 		} else {
 			requestType = "UNSUPPORTEDREQUESTTYPE";
 		}
@@ -274,7 +276,7 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 		txt +=	'\t\t';
 		txt +=			'url: '+lastUrls+'';
 		txt +=	',\r\n\t\t';
-		txt +=			'token: data.TOKEN!=undefined?data.TOKEN:""';
+		txt +=			'token: !data.TOKEN?"":data.TOKEN';
 		txt +=	',\r\n\t\t';
 		txt +=			'swaggerId: '+parametersSwaggerId;
 		txt +=				parametersBody;
@@ -377,8 +379,8 @@ exports.makingApiFunctionAjaxCode = function (id, callback) {
 		txt +=	'// '+data.name+'\r\n';
 		txt +=	'this.$http.post("'+postUrl+'"';
 		txt +=	parameters;
-		txt +=	').then(function(data){'+'\r\n';
-		txt +=	'\t'+'data = data.body;'+'\r\n';
+		txt +=	').then((data) => {'+'\r\n';
+		txt +=	'\t'+'data = data.data;'+'\r\n';
 		txt +=	'\t'+'if(data.code==200){'+'\r\n';
 		txt +=	'\t\t'+'data = data.data;'+'\r\n';
 		txt +=	'\t\t'+'console.info(data);'+'\r\n';
