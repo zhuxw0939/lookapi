@@ -48,6 +48,10 @@
 				</div>
 				<span>|&nbsp;&nbsp;<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a></span>
 			</h1>
+
+			<input type="hidden" id="js_before_text_name" value="{{data.name}}">
+			<input type="hidden" id="js_before_text_vname" value="{% for item in versionList %}{%if query.v_id==item.id %}{{item.name}}{%endif%}{% endfor %}">
+			<input type="hidden" id="js_before_text_vnumber" value="{{apiList.length}}">
 			<!--<div>-->
 				<!--<p style="text-align: right; padding-bottom: 20px; color: #999!important;">-->
 					<!--<a href="/api/create?p_id={{query.p_id}}&v_id={{query.v_id}}&g_id={{query.g_id}}">添加接口</a>&nbsp;&nbsp;&nbsp;&nbsp;-->

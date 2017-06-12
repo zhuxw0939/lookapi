@@ -177,13 +177,20 @@
 			{% endif %}
 		</div>
 	</div>
-</div>{% endblock %}
+</div>
+<input type="hidden" value="{{query}}" id="js_is_change2">
+<input type="hidden" value="{{query.is_change}}" id="js_is_change">
+{% endblock %}
 
 
 {% block script %}
 <script type="text/javascript" src="/static/script/page_api_left.js"></script>
 <script>
 $(function(){
+
+	if($("#js_is_change").val()==1){
+		$("#js_makeapifunfile").click();
+	}
 
 	$("#js_getapifun").click(function(){
 		console.info($(this).data("id"));
@@ -253,7 +260,13 @@ $(function(){
 
 	$("#js_makeapifunfile").click(function(){
 		console.info($(this).data("id"));
-		var back_url = $(this).data("back_url");
+		if(!localStorage.out_apifunctions_url){
+			var back_url = "http://127.0.0.1"
+		} else {
+			var back_url = localStorage.out_apifunctions_url
+		}
+		back_url += "/api/writeServersApi";
+//		var back_url = $(this).data("back_url");
 		$.ajax({
 			url: "/makingapi/updateServersApiFile",
 			type: "POST",

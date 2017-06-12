@@ -173,6 +173,11 @@ $(function(){
 
 	});
 
+	var isChangeFunName = false;
+	$("body").on("change", "#js_fun_name", function(){
+		isChangeFunName = true;
+	});
+
 	$("#js_saveapi").click(function(){
 		$("#js_form").ajaxSubmit({
 			success: function(data) {
@@ -180,10 +185,18 @@ $(function(){
 				if(data.status==0){
 					$.sx.alert("api修改成功，即将刷新页面！");
 					setTimeout(function(){
-						if($("#js_api_id").val()!=""){
-							window.location.href='/api/detail/'+$("#js_api_id").val();
+						if(isChangeFunName){
+							if($("#js_api_id").val()!=""){
+								window.location.href='/api/detail/'+$("#js_api_id").val()+'?is_change=1';
+							} else {
+								window.location.href='/api/list?is_change=1&p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+							}
 						} else {
-							window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+							if($("#js_api_id").val()!=""){
+								window.location.href='/api/detail/'+$("#js_api_id").val();
+							} else {
+								window.location.href='/api/list?p_id='+$("#js_p_id").val()+'&v_id='+$("#js_v_id").val()+'';
+							}
 						}
 					}, 1500);
 				} else if(data.status==3){
