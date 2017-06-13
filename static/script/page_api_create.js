@@ -173,6 +173,45 @@ $(function(){
 
 	});
 
+
+	// 格式化代码
+	$("#js_avs_api_back").click(function(){
+		try {
+			var myObj = JSON.parse($("#js_api_back").val());
+			if(typeof(myObj)=="string"){
+				myObj = JSON.parse(myObj);
+			}
+			$("#js_api_back").val( JSON.stringify(myObj, null, "\t") );
+		} catch (error) {
+			$.sx.alert("不是标准的json格式，请检查！");
+		}
+		return false;
+	});
+
+	// 格式化代码
+	$("#js_avs_mock_template").click(function(){
+		try {
+			var myObj = JSON.parse($("#js_mock_template").val());
+			$("#js_mock_template").val( JSON.stringify(myObj, null, "\t") );
+		} catch (error) {
+			$.sx.alert("不是标准的json格式，请检查！");
+		}
+		return false;
+	});
+
+	// 格式化代码
+	$("#js_avs_api_backinfo").click(function(){
+		try {
+			var myObj = JSON.parse($("#js_api_backinfo").val());
+			$("#js_api_backinfo").val( JSON.stringify(myObj, null, "\t") );
+		} catch (error) {
+			$.sx.alert("不是标准的json格式，请检查！");
+		}
+		return false;
+	});
+
+
+
 	var isChangeFunName = false;
 	$("body").on("change", "#js_fun_name", function(){
 		isChangeFunName = true;
@@ -188,7 +227,7 @@ $(function(){
 						console.info("isChangeFunName 1");
 
 						if(!localStorage.out_apifunctions_url){
-							var back_url = "http://127.0.0.1"
+							var back_url = "http://xwcz.sxw.com:3005"
 						} else {
 							var back_url = localStorage.out_apifunctions_url
 						}

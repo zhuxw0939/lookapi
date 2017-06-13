@@ -110,8 +110,8 @@
 									<th width="8%">必选</th>
 									<th width="8%">类型</th>
 									<th width="8%">in_type</th>
-									<th width="32%">说明</th>
-									<th width="32%">示例</th>
+									<th width="19%">说明</th>
+									<th width="45%">示例</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -135,17 +135,21 @@
 										<td>{{item.in_type}}</td>
 										<td>{{item.info}}</td>
 										<td style="overflow-wrap: break-word; white-space: normal;">
-											<div class="json json_back json_back_hide">{{item.default}}</div>
+											{% if item.default_object %}
+											<div class="_json">{{item.default}}</div>
+											{% else %}
+											{{item.default}}
+											{% endif %}
 										</td>
 									</tr>
 
 									{% if item.default_object %}
-									<tr>
-										<td></td>
-										<td colspan="5" style="overflow-wrap: break-word; white-space: normal;">
-											<div class="json json_back json_back_hide">{{item.default_object|json}}</div>
-										</td>
-									</tr>
+									<!--<tr>-->
+										<!--<td></td>-->
+										<!--<td colspan="5" style="overflow-wrap: break-word; white-space: normal;">-->
+											<!--<div class="_json">{{item.default_object|json}}</div>-->
+										<!--</td>-->
+									<!--</tr>-->
 									{% endif %}
 
 								{% endfor%}
@@ -255,7 +259,7 @@ $(function(){
 	$("#js_makeapifunfile").click(function(){
 		console.info($(this).data("id"));
 		if(!localStorage.out_apifunctions_url){
-			var back_url = "http://127.0.0.1"
+			var back_url = "http://xwcz.sxw.com:3005"
 		} else {
 			var back_url = localStorage.out_apifunctions_url
 		}

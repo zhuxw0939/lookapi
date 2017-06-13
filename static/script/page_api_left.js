@@ -83,7 +83,7 @@ $(function(){
 		var v_id = $(this).data("v_id");
 		// var back_url = $(this).data("back_url");
 		if(!localStorage.out_apifunctions_url){
-			var back_url = "http://127.0.0.1"
+			var back_url = "http://xwcz.sxw.com:3005"
 		} else {
 			var back_url = localStorage.out_apifunctions_url
 			$("#js_input_back_url_hidden").val(back_url)
@@ -91,6 +91,7 @@ $(function(){
 
 		$.sx.confirm("确定导出所有api？", "预计耗时5秒！", function(){
 			$.sx.progress("导出ApiFunction.js", "数据处理中...");
+
 			$.ajax({
 				url: "/makingapi/getServersApiFile",
 				type: "POST",

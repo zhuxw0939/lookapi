@@ -79,7 +79,9 @@
 <div class="form-group row">
 	<label class="col-sm-2 form-control-label">返回参数说明： </label>
 	<div class="col-sm-10">
-		<input name="back_description" id="js_api_backinfo" class="form-control" placeholder="返回参数说明" type="text" v-model="data.back_description">
+		<textarea name="back_description" id="js_api_backinfo" class="form-control" rows="10" placeholder="返回参数说明" v-model="data.back_description"></textarea>
+		<a href="#" id="js_avs_api_backinfo" style="margin-left: 10px;">格式化</a>
+		<a href="http://tool.oschina.net/codeformat/json" target="_blank" style="margin-left: 10px;">编辑</a>
 	</div>
 </div>
 
