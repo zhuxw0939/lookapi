@@ -777,7 +777,8 @@ exports.removeApiPost = function (req, res, next) {
 // 设置某个Api过期-提交
 exports.loseApiPost = function (req, res, next) {
 	apiModel.updateApi(req.body.id, {
-		type: 2
+		type: 2,
+		group_id: ""
 	}, function (err, data) {
 		if (err) {
 			res.send({
@@ -867,11 +868,47 @@ exports.removeApisPost = function (req, res, next) {
 
 
 
+// 删除栏目id不存在的apis
+exports.removeNogroupApisPost = function (req, res, next) {
+	var ids = req.body.ids;
+	if(!ids){
+		return res.send({
+			status: 1,
+			message: "ids不能为空"
+		});
+	}
+	ids = ids.split(",");
+	for(var i=0; i<ids.length; i++){
+		exports.removeNogroupApisFunction(ids[i]);
+	}
+};
+exports.removeNogroupApisFunction = function (id) {
+	apiModel.getApiById(id, function(error, data){
+		if(error){
+			return false;
+		} else if(!data.group_id){
+			logger.warn("--> 该api无group_id，删除");
+			apiModel.removeApiById(id, function(){});
+		} else {
+			projectModel.getGroupById(data.group_id, function(err, groupData){
+				if(err) {
+					return false;
+				} else if(!groupData) {
+					logger.warn("--> 该api的group_id没有查到，删除");
+					apiModel.removeApiById(id, function(){});
+				} else {
+					// logger.warn("--> 该api有group_id，不删除");
+				}
+			});
+		}
+	});
+};
+
 // 接口测试
 exports.test = function (req, res, next) {
 	async.auto({
 		data_1: function(callback) {
-			// 用户的环境
+			// 获取用户的环境，未登录用户返回空
 			if(req.session.user){
 				userModel.getEnvByUserId(req.session.user.id, function(err, data){
 					callback(null, data);
@@ -924,9 +961,10 @@ exports.test = function (req, res, next) {
 	}, function(err, results) {
 		// 没有传id
 		if(!results.data_2){
-			res.render('api/test', {
+			res.render('api/test2', {
 				query: req.query,
-				dataEnv: results.data_1
+				dataEnv: results.data_1,
+				dataEnvStr: JSON.stringify(results.data_1)
 			});
 		// 传了id
 		} else {
@@ -936,6 +974,10 @@ exports.test = function (req, res, next) {
 			// for(var i=0;i<parameters.length; i++ ){
 			// 	backParameters[parameters[i].name] = parameters[i].default;
 			// }
+			
+			
+			logger.warn("results back");
+			
 			if(req.query.tid){
 				logger.info(results.data_2);
 				res.render('api/test', {
@@ -947,14 +989,23 @@ exports.test = function (req, res, next) {
 					dataParameter: JSON.parse(results.data_2.data1.parameters),
 					parameterList: parameters
 				});
-			} else {
-				res.render('api/test', {
+			} else if(req.query.id) {
+				
+				logger.warn("req.query.id in");
+				logger.warn(results.data_1);
+				logger.warn(results.data_2);
+				logger.warn(parameters);
+				res.render('api/test2', {
 					query: req.query,
 					dataEnv: results.data_1,
+					dataEnvStr: JSON.stringify(results.data_1),
 					// parameterJson: JSON.stringify(backParameters),
-					data: results.data_2.data1,
-					parameterList: parameters
+					data: results.data_2,
+					parameterList: parameters,
+					parameterListStr: JSON.stringify(parameters)
 				});
+			} else {
+				res.render('api/test2');
 			}
 		}
 	});

@@ -58,6 +58,7 @@ strong {
 }
 input {
 	font-family: "Helvetica Neue","HelveticaNeue","Arial","Helvetica","微软雅黑","宋体";
+	font-family: Monaco,Menlo,Consolas,"微软雅黑","宋体";
 }
 select {
 }

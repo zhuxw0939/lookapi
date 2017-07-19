@@ -73,7 +73,37 @@ $(function(){
 		});
 		return false;
 	});
-
+	
+	
+	// 删除本页无栏目的api
+	$("#js_del_nogroup_apis").click(function(){
+		var newArray = [];
+		$(".api_id").each(function(){
+			newArray.push($(this).data("id"));
+		});
+		$.sx.confirm("确定删除本页无栏目的所有api？", "删除api后，将无法恢复。", function(){
+			$.ajax({
+				url: "/api/removeNogroupApisPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					ids: newArray.join(",")
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.location.reload();
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+	
 	// js_write_apifunction
 	$("#js_write_apifunction").click(function(){
 		var newArray = [];
@@ -108,7 +138,8 @@ $(function(){
 					console.info(data);
 					if(data.status==0){
 						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '<br><br>同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'.js" target="_blank">查看生成的文件</a>，手动进行更新。<br><br>导出地址：<input type="text" class="form-control form-control-inline" value="'+back_url+'" style="width: 300px;" id="js_input_back_url" placeholder="不能为空"><br><br>', function(){
-							if(!$("#js_input_back_url_hidden").val()){
+							// if(!$("#js_input_back_url_hidden").val()){
+							if(0){
 								alert("导出地址不能为空！");
 							} else {
 								localStorage.setItem('out_apifunctions_url', $("#js_input_back_url_hidden").val());
@@ -183,8 +214,24 @@ $(function(){
 			opentitle: "swagger扫描，检查是否有重复或无效的api",
 			html: $("#tpl_swagger2").html()
 		});
-		var tags = $("._menu .current").find("a.edit_group");
-		$("#swagger_url_input2").val(tags.data("swagger_url"));
+		//
+		$.ajax({
+			url: "/project/getGroupInfo",
+			type: "POST",
+			dataType: "json",
+			data: {
+				g_id: $("#js_g_id").val()
+			},
+			success: function(data){
+				if(data.status===0 && data.data && data.data.swagger_url){
+					console.info("data ok");
+					console.info(data);
+					$("#swagger_url_input2").val(data.data.swagger_url);
+				} else {
+					console.warn(data);
+				}
+			}
+		});
 		return false;
 	});
 	// 提交
@@ -443,4 +490,63 @@ $(function(){
 		return false;
 	});
 
+	
+	
+	
+	/*操作api*/
+	// 删除api
+	$("a.btn_del_api").click(function(){
+		var id = $(this).data("id");
+		$.sx.confirm("确定删除api？", "删除api后，将无法恢复。", function(){
+			$.ajax({
+				url: "/api/removeApiPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					id: id
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.history.go(-1);
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+	
+	// 设置api为过期
+	$(".js_api_lose").click(function(){
+		var id = $(this).data("id");
+		$.sx.confirm("确定设置api为过期？", "设置后，可在过期接口栏目中查询到。", function(){
+			$.ajax({
+				url: "/api/loseApiPost",
+				type: "POST",
+				dataType: "json",
+				data: {
+					id: id
+				},
+				success: function(data){
+					if(data.status==0){
+						$.sx.alert("操作成功！");
+						setTimeout(function(){
+							window.history.go(-1);
+						}, 1500);
+					} else {
+						$.sx.alert(data.message);
+					}
+				}
+			});
+		});
+		return false;
+	});
+	
+	
+	
+	
 });

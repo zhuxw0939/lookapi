@@ -1,9 +1,9 @@
 /**!
  * swagger导入测试- 第三轮 v1.1
- * 接口数量 45
+ * 接口数量 42
  * http://127.0.0.1:3200/api/list?p_id=r1gCYmM4zW&v_id=Syb0KXzEzZ
  *
- * 2017-06-13 13:21:51 (c) sxApi Foundation, Inc.
+ * 2017-06-20 20:34:05 (c) sxApi Foundation, Inc.
  *
  **/ 
 var servers = require('../common/servers');
@@ -11,575 +11,78 @@ var servers = require('../common/servers');
 
 
 /** 
- * Created by handleFileUploadUsingPOST
+ * Created by ApplicationApi-postOneApplication
  *
- * 上传并解析应用
+ * 新增应用 #2017-06-16#
  *
- * @X-Token 	身份认证令牌-String * @file 	file-
+ * @applicationRequest 	applicationRequest-Body
  */
-exports.analysisGOTest = function (data, callback) {
+exports.ApplicationApi_postOneApplication = function (data, callback) {
 	servers.POST({
-		url: "/action/applications_analysis",
+		url: "/api/applications/create",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "handleFileUploadUsingPOST",
-		query: {
-			file: data.file
-		}
-	}, callback);
-};
-/** End handleFileUploadUsingPOST */
-
-
-
-/** 
- * Created by postOneApplicationUsingPOST
- *
- * 新增应用
- *
- * @X-Token 	身份认证令牌-String * @applicationRequest 	applicationRequest-Body
- */
-exports.postOneApplicationUsingPOST = function (data, callback) {
-	servers.POST({
-		url: "/applications",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "postOneApplicationUsingPOST",
+		swaggerId: "ApplicationApi-postOneApplication",
 		body: data.body,
 		query: {
 		}
 	}, callback);
 };
-/** End postOneApplicationUsingPOST */
+/** End ApplicationApi-postOneApplication */
 
 
 
 /** 
- * Created by editSystemRuleUsingPATCH
+ * Created by TerminalManagementControllerApi-updateBundTerminal
  *
- * 保存系统策略
+ * 更新绑定终端 #2017-06-15#
  *
- * @X-Token 	身份认证令牌-String * @ruleId 	ruleId-String * @ruleContext 	用户规则-String
- * @validateTime 	生效时段（1.在校 2.非在校）-Number
- * @isSame 	是否与在校保持一致-Number
+ * @updateBundTerminalConditionDto 	updateBundTerminalConditionDto-Body
  */
-exports.editSystemRuleUsingPATCH = function (data, callback) {
-	servers.PATCH({
-		url: "/system_rule/edit/"+data.ruleId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "editSystemRuleUsingPATCH",
-		query: {
-			ruleContext: data.ruleContext,
-			validateTime: data.validateTime,
-			isSame: data.isSame
-		}
-	}, callback);
-};
-/** End editSystemRuleUsingPATCH */
-
-
-
-/** 
- * Created by initAllAccountUsingPUT
- *
- * 初始全部用户信息（龚德志) #2017-04-1# 
- *
- * @tenantid 	租户Id-Number
- */
-exports.initAllAccountUsingPUT = function (data, callback) {
+exports.TerminalManagementControllerApi_updateBundTerminal = function (data, callback) {
 	servers.PUT({
-		url: "/myuic/api/user-auth-notify/accounts/init",
+		url: "/api/updateBundTerminal",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "initAllAccountUsingPUT",
-		query: {
-			tenantid: data.tenantid
-		}
-	}, callback);
-};
-/** End initAllAccountUsingPUT */
-
-
-
-/** 
- * Created by getApplicationTypeSelectListUsingGET
- *
- * 查询应用类型下拉列表
- *
- * @X-Token 	身份认证令牌-String
- */
-exports.getApplicationTypeSelectListUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/action/select_list/application_types",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getApplicationTypeSelectListUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getApplicationTypeSelectListUsingGET */
-
-
-
-/** 
- * Created by patchOneApplicationByIdUsingPATCH
- *
- * 修改应用
- *
- * @X-Token 	身份认证令牌-String * @applicationId 	applicationId-String * @applicationRequest 	applicationRequest-Body
- */
-exports.patchOneApplicationByIdUsingPATCH = function (data, callback) {
-	servers.PATCH({
-		url: "/applications/"+data.applicationId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "patchOneApplicationByIdUsingPATCH",
+		swaggerId: "TerminalManagementControllerApi-updateBundTerminal",
 		body: data.body,
 		query: {
 		}
 	}, callback);
 };
-/** End patchOneApplicationByIdUsingPATCH */
+/** End TerminalManagementControllerApi-updateBundTerminal */
 
 
 
 /** 
- * Created by getDefaultAppRuleUsingGET
+ * Created by TerminalManagementControllerApi-getTerminalStatus
  *
- * 查询默认应用规则
+ * 查询相应用户与设备的绑定状态 #2017-06-15#
  *
- * @X-Token 	身份认证令牌-String * @schoolId 	schoolId-String
+ * @channelId 	终端设备码-String
  */
-exports.getDefaultAppRuleUsingGET = function (data, callback) {
+exports.TerminalManagementControllerApi_getTerminalStatus = function (data, callback) {
 	servers.GET({
-		url: "/default_app_rule/get/"+data.schoolId,
+		url: "/api/getTerminalStatus",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getDefaultAppRuleUsingGET",
+		swaggerId: "TerminalManagementControllerApi-getTerminalStatus",
 		query: {
+			channelId: data.channelId
 		}
 	}, callback);
 };
-/** End getDefaultAppRuleUsingGET */
-
-
-
-/** 
- * Created by getOneApplicationByIdUsingGET
- *
- * 查询应用
- *
- * @X-Token 	身份认证令牌-String * @applicationId 	applicationId-String
- */
-exports.getOneApplicationByIdUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/applications/"+data.applicationId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getOneApplicationByIdUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getOneApplicationByIdUsingGET */
-
-
-
-/** 
- * Created by getAllApplicationsByQueryUsingGET
- *
- * 查询应用列表
- *
- * @X-Token 	身份认证令牌-String * @typeName 	应用类型名称-String
- * @pageNumber 	页码，从0开始-Number
- * @pageSize 	分页大小-Number
- */
-exports.getAllApplicationsByQueryUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/applications",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getAllApplicationsByQueryUsingGET",
-		query: {
-			typeName: data.typeName,
-			pageNumber: data.pageNumber,
-			pageSize: data.pageSize
-		}
-	}, callback);
-};
-/** End getAllApplicationsByQueryUsingGET */
-
-
-
-/** 
- * Created by editDefaultAppRuleUsingPATCH
- *
- * 修改默认应用规则
- *
- * @X-Token 	身份认证令牌-String * @ruleId 	ruleId-String * @ruleContext 	用户规则-String
- */
-exports.editDefaultAppRuleUsingPATCH = function (data, callback) {
-	servers.PATCH({
-		url: "/default_app_rule/edit/"+data.schoolId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "editDefaultAppRuleUsingPATCH",
-		query: {
-			ruleContext: data.ruleContext
-		}
-	}, callback);
-};
-/** End editDefaultAppRuleUsingPATCH */
-
-
-
-/** 
- * Created by patchOneApplicationTypeByIdUsingPATCH
- *
- * 修改应用类型
- *
- * @X-Token 	身份认证令牌-String * @applicationTypeId 	applicationTypeId-Number * @applicationTypeRequest 	applicationTypeRequest-Body
- */
-exports.patchOneApplicationTypeByIdUsingPATCH = function (data, callback) {
-	servers.PATCH({
-		url: "/application_types/"+data.applicationTypeId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "patchOneApplicationTypeByIdUsingPATCH",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End patchOneApplicationTypeByIdUsingPATCH */
-
-
-
-/** 
- * Created by getRuleValidateDetailUsingGET
- *
- * 规则生效明细查看
- *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-String * @level 	应用级别（1.公司；2.学校；3.班级）-String
- */
-exports.getRuleValidateDetailUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/rule/validate_detail/"+data.orgId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getRuleValidateDetailUsingGET",
-		query: {
-			level: data.level
-		}
-	}, callback);
-};
-/** End getRuleValidateDetailUsingGET */
-
-
-
-/** 
- * Created by authorityUsingGET
- *
- * 用户授权[未实现]（龚德志）
- *
- * @TOKEN 	登录获取到的token-String * @appId 	子系统ID-String
- * @uri 	终端访问API的URI-String
- */
-exports.authorityUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/myuic/api/auth/authority",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "authorityUsingGET",
-		query: {
-			appId: data.appId,
-			uri: data.uri
-		}
-	}, callback);
-};
-/** End authorityUsingGET */
-
-
-
-/** 
- * Created by postOneApplicationTypeUsingPOST_1
- *
- * 保存时段（完成）
- *
- * @X-Token 	身份认证令牌-String * @timePlanDto 	timePlanDto-Body
- */
-exports.postOneApplicationTypeUsingPOST_1 = function (data, callback) {
-	servers.POST({
-		url: "/time_plan",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "postOneApplicationTypeUsingPOST_1",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End postOneApplicationTypeUsingPOST_1 */
-
-
-
-/** 
- * Created by getApplicationVersionSelectListUsingGET
- *
- * 查询应用版本下拉列表
- *
- * @X-Token 	身份认证令牌-String * @applicationPackage 	applicationPackage-String
- */
-exports.getApplicationVersionSelectListUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/action/select_list/applications/"+data.applicationPackage,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getApplicationVersionSelectListUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getApplicationVersionSelectListUsingGET */
-
-
-
-/** 
- * Created by getAllApplicationTypesByQueryUsingGET
- *
- * 查询应用类型列表
- *
- * @X-Token 	身份认证令牌-String * @typeName 	应用类型名称-String
- * @createUserId 	应用类型创建人ID-Number
- * @page 	页码，从0开始-Number
- * @size 	分页大小-Number
- */
-exports.getAllApplicationTypesByQueryUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/application_types",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getAllApplicationTypesByQueryUsingGET",
-		query: {
-			typeName: data.typeName,
-			createUserId: data.createUserId,
-			page: data.page,
-			size: data.size
-		}
-	}, callback);
-};
-/** End getAllApplicationTypesByQueryUsingGET */
-
-
-
-/** 
- * Created by editAppRuleDetailUsingPATCH
- *
- * 修改应用规则详情
- *
- * @X-Token 	身份认证令牌-String * @appRuleDetailRequest 	appRuleDetailRequest-Body
- */
-exports.editAppRuleDetailUsingPATCH = function (data, callback) {
-	servers.PATCH({
-		url: "/app_rule/edit_detail",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "editAppRuleDetailUsingPATCH",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End editAppRuleDetailUsingPATCH */
-
-
-
-/** 
- * Created by refreshTokenUsingGET
- *
- * 用户刷新token（龚德志） #2017-03-13#
- *
- * @TOKEN 	登录获取到的刷新token-String * @roleId 	用户要使用的角色ID-Number
- * @appId 	子系统ID,roleId不为空的时候，appId也不能为空-String
- */
-exports.refreshTokenUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/myuic/api/auth/refresh_token",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "refreshTokenUsingGET",
-		query: {
-			roleId: data.roleId,
-			appId: data.appId
-		}
-	}, callback);
-};
-/** End refreshTokenUsingGET */
-
-
-
-/** 
- * Created by deleteOneApplicationByIdUsingDELETE
- *
- * 删除应用
- *
- * @X-Token 	身份认证令牌-String * @applicationTypeId 	applicationTypeId-String
- */
-exports.deleteOneApplicationByIdUsingDELETE = function (data, callback) {
-	servers.DELETE({
-		url: "/applications/"+data.applicationId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "deleteOneApplicationByIdUsingDELETE",
-		query: {
-		}
-	}, callback);
-};
-/** End deleteOneApplicationByIdUsingDELETE */
-
-
-
-/** 
- * Created by deleteOneApplicationTypeByIdUsingDELETE
- *
- * 删除应用类型
- *
- * @X-Token 	身份认证令牌-String * @applicationTypeId 	applicationTypeId-Number
- */
-exports.deleteOneApplicationTypeByIdUsingDELETE = function (data, callback) {
-	servers.DELETE({
-		url: "/application_types/"+data.applicationTypeId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "deleteOneApplicationTypeByIdUsingDELETE",
-		query: {
-		}
-	}, callback);
-};
-/** End deleteOneApplicationTypeByIdUsingDELETE */
-
-
-
-/** 
- * Created by postOneApplicationTypeUsingPOST
- *
- * 新增应用类型
- *
- * @X-Token 	身份认证令牌-String * @applicationTypeRequest 	applicationTypeRequest-Body
- */
-exports.postOneApplicationTypeUsingPOST = function (data, callback) {
-	servers.POST({
-		url: "/application_types",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "postOneApplicationTypeUsingPOST",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End postOneApplicationTypeUsingPOST */
-
-
-
-/** 
- * Created by getOrgByIdUsingGET
- *
- * 组织机构班级(完成)
- *
- * @X-Token 	身份认证令牌-String * @tenantId 	tenantId-String
- * @orgId 	orgId-String * @orgName 	orgName-String
- */
-exports.getOrgByIdUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/user_org/"+data.orgId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getOrgByIdUsingGET",
-		query: {
-			tenantId: data.tenantId,
-			orgName: data.orgName
-		}
-	}, callback);
-};
-/** End getOrgByIdUsingGET */
-
-
-
-/** 
- * Created by initAccountAppAndRoleUsingPUT
- *
- * 初始全部管理员账号角色与APP（龚德志) #2017-04-20# 
- *
- * @tenantid 	租户Id-Number
- */
-exports.initAccountAppAndRoleUsingPUT = function (data, callback) {
-	servers.PUT({
-		url: "/myuic/api/user-auth-notify/account/admin-app-role/init",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "initAccountAppAndRoleUsingPUT",
-		query: {
-			tenantid: data.tenantid
-		}
-	}, callback);
-};
-/** End initAccountAppAndRoleUsingPUT */
-
-
-
-/** 
- * Created by getRuleSuccessRateUsingGET
- *
- * 查询策略成功生效率
- *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-String * @level 	应用级别（1.公司；2.学校；3.班级）-String
- */
-exports.getRuleSuccessRateUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/rule/success/"+data.orgId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getRuleSuccessRateUsingGET",
-		query: {
-			level: data.level
-		}
-	}, callback);
-};
-/** End getRuleSuccessRateUsingGET */
-
-
-
-/** 
- * Created by publishRuleUsingPOST
- *
- * 发布规则
- *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-String * @level 	应用级别（1.公司；2.学校；3.班级）-String
- */
-exports.publishRuleUsingPOST = function (data, callback) {
-	servers.POST({
-		url: "/rule/publish/"+data.orgId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "publishRuleUsingPOST",
-		query: {
-			level: data.level
-		}
-	}, callback);
-};
-/** End publishRuleUsingPOST */
-
-
-
-/** 
- * Created by updateTermianlStatusUsingPOST
- *
- * 终端心跳交互接口
- *
- * @X-Token 	身份认证令牌-String * @updateTermianlStatusQueryDto 	updateTermianlStatusQueryDto-Body
- */
-exports.updateTermianlStatusUsingPOST = function (data, callback) {
-	servers.POST({
-		url: "/updateTermianlStatus",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "updateTermianlStatusUsingPOST",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End updateTermianlStatusUsingPOST */
+/** End TerminalManagementControllerApi-getTerminalStatus */
 
 
 
 /** 
  * Created by editWebsiteRuleUsingPATCH
  *
- * 修改网址规则
+ * 新增/修改网址规则 #2017-6-13#(已完成)
  *
- * @X-Token 	身份认证令牌-String * @websiteRuleRequest 	websiteRuleRequest-Body
+ * @websiteRuleRequest 	websiteRuleRequest-Body
  */
 exports.editWebsiteRuleUsingPATCH = function (data, callback) {
 	servers.PATCH({
-		url: "/website_rule/edit_detail",
+		url: "/mdc/api/website_rule/edit_detail",
 		token: !data.TOKEN?"":data.TOKEN,
 		swaggerId: "editWebsiteRuleUsingPATCH",
 		body: data.body,
@@ -592,15 +95,409 @@ exports.editWebsiteRuleUsingPATCH = function (data, callback) {
 
 
 /** 
+ * Created by ApplicationApi-patchOneApplicationById
+ *
+ * 修改应用 目前应用不支持修改 #2017-06-16#
+ *
+ * @applicationId 	applicationId-Number * @applicationRequest 	applicationRequest-Body
+ */
+exports.ApplicationApi_patchOneApplicationById = function (data, callback) {
+	servers.PUT({
+		url: "/api/applications/modify/"+data.applicationId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationApi-patchOneApplicationById",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationApi-patchOneApplicationById */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-postOneApplicationType
+ *
+ * 新增应用类型 #2017-06-13#
+ *
+ * @applicationTypeRequest 	applicationTypeRequest-Body
+ */
+exports.ApplicationTypeApi_postOneApplicationType = function (data, callback) {
+	servers.POST({
+		url: "/api/application_types/create",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-postOneApplicationType",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationTypeApi-postOneApplicationType */
+
+
+
+/** 
+ * Created by editSystemRuleUsingPATCH
+ *
+ * 保存系统规则 #2017-6-8#
+ *
+ * @systemRuleRequest 	systemRuleRequest-Body
+ */
+exports.editSystemRuleUsingPATCH = function (data, callback) {
+	servers.PATCH({
+		url: "/mdc/api/system_rule/edit",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "editSystemRuleUsingPATCH",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End editSystemRuleUsingPATCH */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-deleteOneApplicationTypeById
+ *
+ * 删除应用类型 #2017-06-13#
+ *
+ * @applicationTypeId 	applicationTypeId-Number
+ */
+exports.ApplicationTypeApi_deleteOneApplicationTypeById = function (data, callback) {
+	servers.DELETE({
+		url: "/api/application_types/delete/"+data.applicationTypeId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-deleteOneApplicationTypeById",
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationTypeApi-deleteOneApplicationTypeById */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-getAllApplicationTypesByQuery
+ *
+ * 查询应用类型列表 #2017-06-13#
+ *
+ * @applicationTypeCondition 	applicationTypeCondition-Body
+ */
+exports.ApplicationTypeApi_getAllApplicationTypesByQuery = function (data, callback) {
+	servers.POST({
+		url: "/api/application_types/find",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-getAllApplicationTypesByQuery",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationTypeApi-getAllApplicationTypesByQuery */
+
+
+
+/** 
+ * Created by IndexAPI-getHomepageByQuery
+ *
+ * 根据角色&用户获得终端预警数量 #2017-06-13#
+ *
+ * @homepageRequest 	homepageRequest-Body
+ */
+exports.IndexAPI_getHomepageByQuery = function (data, callback) {
+	servers.POST({
+		url: "/api/homepage",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "IndexAPI-getHomepageByQuery",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End IndexAPI-getHomepageByQuery */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-getOneApplicationTypeById
+ *
+ * 查询应用类型 #2017-06-13#
+ *
+ * @applicationTypeId 	applicationTypeId-Number
+ */
+exports.ApplicationTypeApi_getOneApplicationTypeById = function (data, callback) {
+	servers.GET({
+		url: "/api/application_types/find/"+data.applicationTypeId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-getOneApplicationTypeById",
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationTypeApi-getOneApplicationTypeById */
+
+
+
+/** 
+ * Created by getWebsiteRuleUsingGET_1
+ *
+ * 查询学校网址规则 #2017-6-15#(已完成)
+ *
+ * @orgId 	orgId-Number
+ * @level 	级别（2.学校；3.班级）-Number
+ * @classId 	classId-Number
+ */
+exports.getWebsiteRuleUsingGET_1 = function (data, callback) {
+	servers.GET({
+		url: "/mdc/api/website_rule/get",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "getWebsiteRuleUsingGET_1",
+		query: {
+			orgId: data.orgId,
+			level: data.level,
+			classId: data.classId
+		}
+	}, callback);
+};
+/** End getWebsiteRuleUsingGET_1 */
+
+
+
+/** 
+ * Created by ApplicationApi-deleteOneApplicationById
+ *
+ * 删除应用 #2017-06-16#
+ *
+ * @applicationId 	applicationId-Number
+ */
+exports.ApplicationApi_deleteOneApplicationById = function (data, callback) {
+	servers.DELETE({
+		url: "/api/applications/delete/"+data.applicationId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationApi-deleteOneApplicationById",
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationApi-deleteOneApplicationById */
+
+
+
+/** 
+ * Created by TimePlanAPI-getOneTimePlanById
+ *
+ * 查询时段详情 #2017-06-13#
+ *
+ * @orgId 	orgId-Number
+ */
+exports.TimePlanAPI_getOneTimePlanById = function (data, callback) {
+	servers.GET({
+		url: "/api/time_plan/"+data.orgId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TimePlanAPI-getOneTimePlanById",
+		query: {
+		}
+	}, callback);
+};
+/** End TimePlanAPI-getOneTimePlanById */
+
+
+
+/** 
+ * Created by RuleApi-updateRuleSystemApplicationList
+ *
+ * 修改学校系统默认应用规则 #2017-6-19#
+ *
+ * @ruleSystemApplicationRequests 	ruleSystemApplicationRequests-
+ */
+exports.RuleApi_updateRuleSystemApplicationList = function (data, callback) {
+	servers.POST({
+		url: "/mdc/api/rule_system_application/edit",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "RuleApi-updateRuleSystemApplicationList",
+		query: {
+		}
+	}, callback);
+};
+/** End RuleApi-updateRuleSystemApplicationList */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-patchOneApplicationTypeById
+ *
+ * 修改应用类型 #2017-06-13#
+ *
+ * @applicationTypeId 	applicationTypeId-Number * @applicationTypeRequest 	applicationTypeRequest-Body
+ */
+exports.ApplicationTypeApi_patchOneApplicationTypeById = function (data, callback) {
+	servers.PUT({
+		url: "/api/application_types/modify/"+data.applicationTypeId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-patchOneApplicationTypeById",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationTypeApi-patchOneApplicationTypeById */
+
+
+
+/** 
+ * Created by editAppRuleDetailUsingPATCH
+ *
+ * 修改应用规则详情 #2017-6-9#
+ *
+ * @appRuleDetailRequest 	appRuleDetailRequest-Body
+ */
+exports.editAppRuleDetailUsingPATCH = function (data, callback) {
+	servers.PATCH({
+		url: "/mdc/api/app_rule/edit_detail",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "editAppRuleDetailUsingPATCH",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End editAppRuleDetailUsingPATCH */
+
+
+
+/** 
+ * Created by TimePlanAPI-postOneApplicationType
+ *
+ * 保存时段 #2017-06-13#
+ *
+ * @timePlanDto 	timePlanDto-Body
+ */
+exports.TimePlanAPI_postOneApplicationType = function (data, callback) {
+	servers.POST({
+		url: "/api/time_plan",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TimePlanAPI-postOneApplicationType",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End TimePlanAPI-postOneApplicationType */
+
+
+
+/** 
+ * Created by SystemSettingControllerApi-getThreshold
+ *
+ * 查询学校预警阀值 #2017-06-16#
+ *
+ */
+exports.SystemSettingControllerApi_getThreshold = function (data, callback) {
+	servers.GET({
+		url: "/api/getThreshold",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "SystemSettingControllerApi-getThreshold"
+	}, callback);
+};
+/** End SystemSettingControllerApi-getThreshold */
+
+
+
+/** 
+ * Created by TerminalManagementControllerApi-updateTerminalStatus
+ *
+ * 终端心跳交互接口 #2017-06-15#
+ *
+ * @updateTerminalStatusConditionDto 	updateTerminalStatusConditionDto-Body
+ */
+exports.TerminalManagementControllerApi_updateTerminalStatus = function (data, callback) {
+	servers.POST({
+		url: "/api/updateTerminalStatus",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TerminalManagementControllerApi-updateTerminalStatus",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End TerminalManagementControllerApi-updateTerminalStatus */
+
+
+
+/** 
+ * Created by SystemSettingControllerApi-saveOrUpdateThreshold
+ *
+ * 设置预警阀值 #2017-06-16#
+ *
+ * @setThresholdConditionDto 	setThresholdConditionDto-Body
+ */
+exports.SystemSettingControllerApi_saveOrUpdateThreshold = function (data, callback) {
+	servers.PUT({
+		url: "/api/saveOrUpdateThreshold",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "SystemSettingControllerApi-saveOrUpdateThreshold",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End SystemSettingControllerApi-saveOrUpdateThreshold */
+
+
+
+/** 
+ * Created by ApplicationApi-postAnalysisApplication
+ *
+ * 上传并解析应用 #2017-06-16#
+ *
+ * @apk 	apk-String
+ */
+exports.ApplicationApi_postAnalysisApplication = function (data, callback) {
+	servers.GET({
+		url: "/api/applications/analysis",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationApi-postAnalysisApplication",
+		query: {
+			apk: data.apk
+		}
+	}, callback);
+};
+/** End ApplicationApi-postAnalysisApplication */
+
+
+
+/** 
+ * Created by getRuleValidateDetailUsingPOST
+ *
+ * 规则生效明细查看 #2017-6-12#
+ *
+ * @ruleValidateDto 	ruleValidateDto-Body
+ */
+exports.getRuleValidateDetailUsingPOST = function (data, callback) {
+	servers.POST({
+		url: "/mdc/api/rule/validate_detail",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "getRuleValidateDetailUsingPOST",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End getRuleValidateDetailUsingPOST */
+
+
+
+/** 
  * Created by getAppRuleDetailUsingGET
  *
- * 查询应用规则详情
+ * 查询应用规则详情 #2017-6-9#(已完成)
  *
- * @X-Token 	身份认证令牌-String * @appRuleId 	appRuleId-String
+ * @appRuleId 	appRuleId-Number
  */
 exports.getAppRuleDetailUsingGET = function (data, callback) {
 	servers.GET({
-		url: "/app_rule/get_detail/"+data.appRuleId,
+		url: "/mdc/api/app_rule/get_detail/"+data.appRuleId,
 		token: !data.TOKEN?"":data.TOKEN,
 		swaggerId: "getAppRuleDetailUsingGET",
 		query: {
@@ -612,113 +509,32 @@ exports.getAppRuleDetailUsingGET = function (data, callback) {
 
 
 /** 
- * Created by getUserAppRolesUsingGET
+ * Created by UserRoleAPI-getOrgById
  *
- * 获取用户拥有的角色（龚德志） #2017-03-13#
+ * 组织机构班级 #2017-06-13#
  *
- * @appId 	子系统ID-String
  */
-exports.getUserAppRolesUsingGET = function (data, callback) {
+exports.UserRoleAPI_getOrgById = function (data, callback) {
 	servers.GET({
-		url: "/myuic/api/role/get-userapp-role/"+data.appId,
+		url: "/api/user_org",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getUserAppRolesUsingGET",
-		query: {
-		}
+		swaggerId: "UserRoleAPI-getOrgById"
 	}, callback);
 };
-/** End getUserAppRolesUsingGET */
-
-
-
-/** 
- * Created by getSystemRuleUsingGET
- *
- * 查询系统规则
- *
- * @X-Token 	身份认证令牌-String * @schoolId 	schoolId-String
- */
-exports.getSystemRuleUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/system_rule/get/"+data.schoolId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getSystemRuleUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getSystemRuleUsingGET */
-
-
-
-/** 
- * Created by queryTermianlUsingGET
- *
- * 终端查询
- *
- * @X-Token 	身份认证令牌-String * @schooleId 	学校id-String
- * @classId 	班级id-String
- * @pageNum 	分页查询页码-Number
- * @pageSize 	分页查询页面大小-Number
- * @boundState 	设备绑定状态,0:未绑定,1:绑定-Number
- * @termianlOnLineState 	设备在线状态,0:未在线,1:在线-Number
- * @minOffLineDays 	设备离线最小天数-Number
- * @maxOffLineDays 	设备离线最大天数-Number
- * @customQueries 	自定义查询条件(学生姓名、身份证、设备mac地址)-String
- */
-exports.queryTermianlUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/query",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "queryTermianlUsingGET",
-		query: {
-			schooleId: data.schooleId,
-			classId: data.classId,
-			pageNum: data.pageNum,
-			pageSize: data.pageSize,
-			boundState: data.boundState,
-			termianlOnLineState: data.termianlOnLineState,
-			minOffLineDays: data.minOffLineDays,
-			maxOffLineDays: data.maxOffLineDays,
-			customQueries: data.customQueries
-		}
-	}, callback);
-};
-/** End queryTermianlUsingGET */
-
-
-
-/** 
- * Created by unbundTermianlUsingDELETE
- *
- * 解绑终端
- *
- * @X-Token 	身份认证令牌-String * @unbundTermianlQueryDto 	unbundTermianlQueryDto-Body
- */
-exports.unbundTermianlUsingDELETE = function (data, callback) {
-	servers.DELETE({
-		url: "/unbundTermianl",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "unbundTermianlUsingDELETE",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End unbundTermianlUsingDELETE */
+/** End UserRoleAPI-getOrgById */
 
 
 
 /** 
  * Created by getAppRuleUsingGET
  *
- * 查询应用规则
+ * 查询应用规则 #2017-6-9#(已完成)
  *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-String * @level 	应用级别（1.公司；2.学校；3.班级）-String
+ * @orgId 	组织机构ID-Number * @level 	组织机构级别（1.公司；2.学校；3.班级）-Number
  */
 exports.getAppRuleUsingGET = function (data, callback) {
 	servers.GET({
-		url: "/app_rule/get/"+data.orgId,
+		url: "/mdc/api/app_rule/get/"+data.orgId,
 		token: !data.TOKEN?"":data.TOKEN,
 		swaggerId: "getAppRuleUsingGET",
 		query: {
@@ -731,188 +547,60 @@ exports.getAppRuleUsingGET = function (data, callback) {
 
 
 /** 
- * Created by getApplicationSelectListUsingGET
+ * Created by publishRuleUsingPOST
  *
- * 查询应用名称下拉列表
+ * 发布规则 #2017-6-14#
  *
- * @X-Token 	身份认证令牌-String
+ * @orgId 	orgId-Number * @level 	应用级别（1.公司；2.学校；3.班级）-Number
  */
-exports.getApplicationSelectListUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/action/select_list/applications",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getApplicationSelectListUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getApplicationSelectListUsingGET */
-
-
-
-/** 
- * Created by loginTestUsingPOST
- *
- * 用户登录（龚德志） #2017-05-03#
- *
- * @user 	登录参数-Body
- */
-exports.loginTestUsingPOST = function (data, callback) {
+exports.publishRuleUsingPOST = function (data, callback) {
 	servers.POST({
-		url: "/myuic/api/auth/login/logintest",
+		url: "/mdc/api/rule/publish/"+data.orgId,
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "loginTestUsingPOST",
-		body: data.body,
+		swaggerId: "publishRuleUsingPOST",
 		query: {
+			level: data.level
 		}
 	}, callback);
 };
-/** End loginTestUsingPOST */
+/** End publishRuleUsingPOST */
 
 
 
 /** 
- * Created by cipherLoginUsingPOST
+ * Created by ApplicationApi-getAllApplicationsByQuery
  *
- * 用户登录（龚德志） #2017-05-03#
+ * 查询应用列表 #2017-06-16#
  *
- * @user 	登录参数-Body
+ * @applicationCondition 	applicationCondition-Body
  */
-exports.cipherLoginUsingPOST = function (data, callback) {
+exports.ApplicationApi_getAllApplicationsByQuery = function (data, callback) {
 	servers.POST({
-		url: "/myuic/api/auth/login/cipher",
+		url: "/api/applications",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "cipherLoginUsingPOST",
+		swaggerId: "ApplicationApi-getAllApplicationsByQuery",
 		body: data.body,
 		query: {
 		}
 	}, callback);
 };
-/** End cipherLoginUsingPOST */
-
-
-
-/** 
- * Created by loginUsingPOST
- *
- * 用户登录（龚德志） #2017-03-13#
- *
- * @user 	登录参数-Body
- */
-exports.loginUsingPOST = function (data, callback) {
-	servers.POST({
-		url: "/myuic/api/auth/login",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "loginUsingPOST",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End loginUsingPOST */
-
-
-
-/** 
- * Created by bundTermianlUsingPUT
- *
- * 绑定终端
- *
- * @X-Token 	身份认证令牌-String * @bundTermianlQueryDto 	bundTermianlQueryDto-Body
- */
-exports.bundTermianlUsingPUT = function (data, callback) {
-	servers.PUT({
-		url: "/bundTermianl",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "bundTermianlUsingPUT",
-		body: data.body,
-		query: {
-		}
-	}, callback);
-};
-/** End bundTermianlUsingPUT */
-
-
-
-/** 
- * Created by getHomepageByQueryUsingGET
- *
- * 根据角色&用户获得终端预警数量(完成)
- *
- * @X-Token 	身份认证令牌-String * @userId 	用户ID-String
- * @typeLevel 	级别:0 学校管理员级别;1 教师级别-Number
- * @schoolId 	学校id-String
- */
-exports.getHomepageByQueryUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/homepage",
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getHomepageByQueryUsingGET",
-		query: {
-			userId: data.userId,
-			typeLevel: data.typeLevel,
-			schoolId: data.schoolId
-		}
-	}, callback);
-};
-/** End getHomepageByQueryUsingGET */
-
-
-
-/** 
- * Created by getOneApplicationTypeByIdUsingGET
- *
- * 查询应用类型
- *
- * @X-Token 	身份认证令牌-String * @applicationTypeId 	applicationTypeId-Number
- */
-exports.getOneApplicationTypeByIdUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/application_types/"+data.applicationTypeId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getOneApplicationTypeByIdUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getOneApplicationTypeByIdUsingGET */
-
-
-
-/** 
- * Created by getOneTimePlanByIdUsingGET
- *
- * 查询时段详情（完成）
- *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-Number
- */
-exports.getOneTimePlanByIdUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/time_plan/"+data.orgId,
-		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getOneTimePlanByIdUsingGET",
-		query: {
-		}
-	}, callback);
-};
-/** End getOneTimePlanByIdUsingGET */
+/** End ApplicationApi-getAllApplicationsByQuery */
 
 
 
 /** 
  * Created by getWebsiteRuleUsingGET
  *
- * 查询网址规则
+ * 查询网址规则 #2017-6-13#(已完成)
  *
- * @X-Token 	身份认证令牌-String * @orgId 	orgId-String * @level 	应用级别（1.公司；2.学校；3.班级）-String
+ * @ruleWebsiteId 	ruleWebsiteId-Number
  */
 exports.getWebsiteRuleUsingGET = function (data, callback) {
 	servers.GET({
-		url: "/website_rule/get/"+data.orgId,
+		url: "/mdc/api/website_rule/get/"+data.ruleWebsiteId,
 		token: !data.TOKEN?"":data.TOKEN,
 		swaggerId: "getWebsiteRuleUsingGET",
 		query: {
-			level: data.level
 		}
 	}, callback);
 };
@@ -921,63 +609,254 @@ exports.getWebsiteRuleUsingGET = function (data, callback) {
 
 
 /** 
- * Created by updateAccountUsingPUT
+ * Created by RuleApi-getRuleSystemApplicationList
  *
- * 更新用户信息（龚德志) #2017-04-1#
+ * 查询学校系统默认应用规则 #2017-6-19#
  *
- * @accountId 	用户账号ID-Number
  */
-exports.updateAccountUsingPUT = function (data, callback) {
-	servers.PUT({
-		url: "/myuic/api/user-auth-notify/account",
+exports.RuleApi_getRuleSystemApplicationList = function (data, callback) {
+	servers.GET({
+		url: "/mdc/api/rule_system_application/get",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "updateAccountUsingPUT",
-		query: {
-		}
+		swaggerId: "RuleApi-getRuleSystemApplicationList"
 	}, callback);
 };
-/** End updateAccountUsingPUT */
+/** End RuleApi-getRuleSystemApplicationList */
 
 
 
 /** 
- * Created by statisticsTermianlAlarmUsingGET
+ * Created by TerminalManagementControllerApi-queryTerminal
  *
- * 预警终端数据查询
+ * 终端查询 #2017-06-15#
  *
- * @X-Token 	身份认证令牌-String * @classIds 	班级ids-
- * @typeLevel 	级别:0 学校管理员级别;1 教师级别-Number
- * @schoolId 	学校id-String
+ * @terminalConditionDto 	terminalConditionDto-Body
  */
-exports.statisticsTermianlAlarmUsingGET = function (data, callback) {
-	servers.GET({
-		url: "/statisticsTermianlAlarm",
+exports.TerminalManagementControllerApi_queryTerminal = function (data, callback) {
+	servers.POST({
+		url: "/api/queryTerminal",
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "statisticsTermianlAlarmUsingGET",
+		swaggerId: "TerminalManagementControllerApi-queryTerminal",
+		body: data.body,
 		query: {
-			classIds: data.classIds,
-			typeLevel: data.typeLevel,
+		}
+	}, callback);
+};
+/** End TerminalManagementControllerApi-queryTerminal */
+
+
+
+/** 
+ * Created by ApplicationTypeApi-getApplicationTypeSelectList
+ *
+ * 查询所有应用类型列表 #2017-06-13#
+ *
+ */
+exports.ApplicationTypeApi_getApplicationTypeSelectList = function (data, callback) {
+	servers.GET({
+		url: "/api/application_types/find_all",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeApi-getApplicationTypeSelectList"
+	}, callback);
+};
+/** End ApplicationTypeApi-getApplicationTypeSelectList */
+
+
+
+/** 
+ * Created by TerminalManagementControllerApi-bundTerminal
+ *
+ * 绑定终端 #2017-06-15#
+ *
+ * @bundTerminalConditionDto 	bundTerminalConditionDto-Body
+ */
+exports.TerminalManagementControllerApi_bundTerminal = function (data, callback) {
+	servers.PUT({
+		url: "/api/bundTerminal",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TerminalManagementControllerApi-bundTerminal",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End TerminalManagementControllerApi-bundTerminal */
+
+
+
+/** 
+ * Created by getRuleSuccessRateUsingGET
+ *
+ * 查询规则成功生效率 #2017-6-12#
+ *
+ * @ruleValidateDto 	ruleValidateDto-Body
+ */
+exports.getRuleSuccessRateUsingGET = function (data, callback) {
+	servers.GET({
+		url: "/mdc/api/rule/success",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "getRuleSuccessRateUsingGET",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End getRuleSuccessRateUsingGET */
+
+
+
+/** 
+ * Created by getSystemRuleListUsingGET
+ *
+ * 查询系统规则列表 #2017-6-8#(已完成)
+ *
+ * @schoolId 	schoolId-Number
+ */
+exports.getSystemRuleListUsingGET = function (data, callback) {
+	servers.GET({
+		url: "/mdc/api/system_rule/getList",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "getSystemRuleListUsingGET",
+		query: {
 			schoolId: data.schoolId
 		}
 	}, callback);
 };
-/** End statisticsTermianlAlarmUsingGET */
+/** End getSystemRuleListUsingGET */
 
 
 
 /** 
- * Created by getUserAppUsingPOST
+ * Created by getRuleUsingPOST
  *
- * 获取用户拥有的系统（龚德志） #2017-03-13#
+ * 获取规则 #2017-6-14#
  *
+ * @studentId 	studentId-Number
  */
-exports.getUserAppUsingPOST = function (data, callback) {
+exports.getRuleUsingPOST = function (data, callback) {
 	servers.POST({
-		url: "/myuic/api/app/get-userapp",
+		url: "/mdc/api/rule/obtain/"+data.studentId,
 		token: !data.TOKEN?"":data.TOKEN,
-		swaggerId: "getUserAppUsingPOST"
+		swaggerId: "getRuleUsingPOST",
+		query: {
+		}
 	}, callback);
 };
-/** End getUserAppUsingPOST */
+/** End getRuleUsingPOST */
+
+
+
+/** 
+ * Created by getSystemRuleUsingGET
+ *
+ * 查询系统规则 #2017-6-8#(已完成)
+ *
+ * @schoolId 	非必传，不传时为默认取系统策略-Number
+ * @validateTime 	生效时段(0.所有时段 1.在校时段 2.非在校时段) -Number
+ */
+exports.getSystemRuleUsingGET = function (data, callback) {
+	servers.GET({
+		url: "/mdc/api/system_rule/get",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "getSystemRuleUsingGET",
+		query: {
+			schoolId: data.schoolId,
+			validateTime: data.validateTime
+		}
+	}, callback);
+};
+/** End getSystemRuleUsingGET */
+
+
+
+/** 
+ * Created by ApplicationTypeAPI-getApplicationSelectList
+ *
+ * 查询应用下拉列表 #2017-06-14#
+ *
+ */
+exports.ApplicationTypeAPI_getApplicationSelectList = function (data, callback) {
+	servers.GET({
+		url: "/api/applications/find_all_select",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationTypeAPI-getApplicationSelectList"
+	}, callback);
+};
+/** End ApplicationTypeAPI-getApplicationSelectList */
+
+
+
+/** 
+ * Created by UserRoleAPI-getOrgById_1
+ *
+ * 用户类型 #2017-06-13#
+ *
+ */
+exports.UserRoleAPI_getOrgById_1 = function (data, callback) {
+	servers.GET({
+		url: "/api/user_type/find",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "UserRoleAPI-getOrgById_1"
+	}, callback);
+};
+/** End UserRoleAPI-getOrgById_1 */
+
+
+
+/** 
+ * Created by TerminalManagementControllerApi-unbundTerminal
+ *
+ * 解绑终端 #2017-06-15#
+ *
+ * @unbundTerminalQueryDto 	unbundTerminalQueryDto-Body
+ */
+exports.TerminalManagementControllerApi_unbundTerminal = function (data, callback) {
+	servers.DELETE({
+		url: "/api/unbundTerminal",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TerminalManagementControllerApi-unbundTerminal",
+		body: data.body,
+		query: {
+		}
+	}, callback);
+};
+/** End TerminalManagementControllerApi-unbundTerminal */
+
+
+
+/** 
+ * Created by ApplicationApi-getOneApplicationById
+ *
+ * 查询应用 #2017-06-16#
+ *
+ * @applicationId 	applicationId-Number
+ */
+exports.ApplicationApi_getOneApplicationById = function (data, callback) {
+	servers.GET({
+		url: "/api/applications/find/"+data.applicationId,
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "ApplicationApi-getOneApplicationById",
+		query: {
+		}
+	}, callback);
+};
+/** End ApplicationApi-getOneApplicationById */
+
+
+
+/** 
+ * Created by TerminalManagementControllerApi-statisticsTerminalAlarm
+ *
+ * 预警终端数据查询 #2017-06-15#
+ *
+ */
+exports.TerminalManagementControllerApi_statisticsTerminalAlarm = function (data, callback) {
+	servers.POST({
+		url: "/api/statisticsTerminalAlarm",
+		token: !data.TOKEN?"":data.TOKEN,
+		swaggerId: "TerminalManagementControllerApi-statisticsTerminalAlarm"
+	}, callback);
+};
+/** End TerminalManagementControllerApi-statisticsTerminalAlarm */
 
 

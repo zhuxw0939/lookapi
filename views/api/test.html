@@ -18,7 +18,7 @@
 		<form id="myform" class="_form" action="/api/testSend" method="post">
 
 			<div class="form-group row">
-				<label class="col-sm-2 form-control-label">请求方式： </label>
+				<label class="col-sm-2 form-control-label">请求方式：</label>
 				<div class="col-sm-10">
 					<select name="request_header" class="form-control form-control-inline">
 					    <option value="1">HTTP</option>
@@ -122,7 +122,7 @@ $(function(){
 		if($(this).val()=='""'||$(this).val()==""){
 			$(this).val("");
 		} else {
-			$(this).val(JSON.stringify(JSON.parse($(this).val()), null, "\t"));
+			$(this).val(JSON.stringify(JSON.parse($(this).val()), null, 2));
 		}
 	});
 

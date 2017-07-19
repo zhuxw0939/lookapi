@@ -1,115 +1,220 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Test - Lookapi</title>
-<link rel="stylesheet" type="text/css" href="/static/css/page_index.css" />
+{% extends '../common/layout.html' %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/css/page_column.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/page_editer.css" />
 <style>
-	ul._form li {
-		color: #777;
+	.span_box {
+		position: relative;
+		padding: 15px;
+		background: #f8f8f8;
+		margin-left: 15px;
+		margin-top: -10px;
+		font-size: 12px;
 	}
-	ul._form li .field {
-		color: #333;
+	.span_box p {
+		color: #999;
+		line-height: 20px;
+		padding: 3px 0;
+		margin-bottom: 15px;
 	}
-	ul._form li textarea.textarea,
-	ul._form li input.input,
-	ul._form li select.select {
-		color: #777;
-		font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	.span_box p._sub {
+		line-height: 14px;
+	}
+	span.url {
+		border-radius: 2px;
+		font-size: 90%;
+		background-color: #fff;
+		border: 1px solid #e1e1e8;
+		/*color: #d14;*/
+		text-shadow: 0 1px #fff;
+		color: #bb0606;
+		padding: 6px 12px;
+		white-space: nowrap;
+	}
+	.span_box table tr th,
+	.span_box table tr td {
+		border: 1px solid #ddd;
+		padding: 7px;
+		min-width: 100px;
 	}
 </style>
-</head>
+{% endblock %}
 
-<body>
-
-{% include '../common/header.html' %}
-
-<div class="wrapper">
-	<form id="myform"  action="/api/testSend" method="post">
-
-		<ul class="_form">
-
-			<li style="padding: 40px 0 0;">
-			    <span class="field">请求方式：</span>
-				<select name="request_header" class="select">
-				    <option value="1">HTTP</option>
-				    <option value="2">HTTPS</option>
-			    </select>
-				<select name="request_type" class="select" id="js_request_type">
-					{% for item in options.apiRequestType %}
-						{% if data.requests %}
-							<option value="{{item.value}}" {%if data.requests==item.name %}selected{%endif%}>{{item.name}}</option>
-						{% else %}
-							<option value="{{item.value}}" {%if 1==item.value %}selected{%endif%}>{{item.name}}</option>
-						{% endif %}
-					{% endfor %}
-			    </select>
-			</li>
-			<li style="padding: 5px 0">
-			    <span class="field">接口名称：</span>
-				{{data2.name}}
-				<a href="/api/detail/{{data2.id}}" target="_blank">查看详情</a>
-			</li>
-			<li style="padding: 5px 0">
-			    <span class="field">接口url：</span>
-				<font class="url" id="js_full_url">{{data2.url}}</font>
-			</li>
-			<li>
-			    <span class="field">请求url：</span>
-				<input type="text" class="input" id="js_url" style="width: 860px" autocomplete="on" name="url" id="" value="{{dataParameter.url}}" placeholder="不能为空">
-			</li>
-			<li>
-			    <span class="field">请求header：</span>
-				<textarea id="js_header" name="" class="textarea" style="width: 860px; height: 160px; font-size: 14px;">{{dataParameter.headers|json}}</textarea>
-			</li>
-			<li>
-			    <span class="field">body参数：</span>
-				<textarea id="js_body" name="" class="textarea" style="width: 860px; height: 280px; font-size: 14px;">{{dataParameter.body|json}}</textarea>
-			</li>
-		</ul>
-	</form>
-	<input type="hidden" id="js_type" value="{{data.requests}}">
-	<input type="hidden" id="js_id" value="{{data.id}}">
-	<input type="hidden" id="js_id2" value="{{data2.id}}">
-
+{% block body %}
+<div class="column_head bg_base64 jumbotron">
+	<div class="container">
+		<h1 class="display-3">接口测试</h1>
+		<p>……</p>
+	</div>
 </div>
+<div class="container">
 
-<div class="wrapper wrapper_index">
-    <p class="submit" style="position: relative;">
-	    <a href="#" class="btns btns-blue" id="js_ajax"><i class="iconfont">&#xe681;</i>测试</a>
-	    {% if query.id %}
-	    <a href="/api/update?id={{data.id}}" class="btns btns-gray2" id="js_saveDAta"><i class="iconfont" style="top: -2px;">&#xe601;</i>保存接口</a>
-	    {% endif %}
-	    <a href="#" class="btns btns-gray2" id="js_createApi"><i class="iconfont" style="top: -2px;">&#xe664;</i>创建新接口</a>
-	    <br> <font id="js_jsonp" style="display: inline-block; height: 20px; line-height: 32px; position: absolute; bottom: -20px; left:30px; color:red;"></font>
-    </p>
-    <div class="data_box">
-	    <a class="toggle-btn" href="#" id="toggle-btn">+</a>
-	    <a class="toggle-btn toggle-btn2" href="#" id="toggle-level1-btn">+</a>
-        <div id="data" class="data"></div>
-	    <input type="hidden" id="js_backdata">
-    </div>
+	<div class="col-sm-12">
+		<form id="myform" class="_form" action="/api/testSend" method="post">
+			
+			{% if data %}
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">接口名称： </label>
+				<div class="col-sm-10">
+					<a href="/api/detail/{{data.id}}" target="_blank">{{data.name}}</a>
+				</div>
+			</div>
+			{% endif %}
+			
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">选择环境： </label>
+				<div class="col-sm-8">
+					<select name="env_id" class="form-control form-control-inline" id="js_env_id">
+						<option value="{{item.id}}">--请选择--</option>
+						{% for item in dataEnv %}
+							<option value="{{item.id}}" data-host="{{item.host}}">{{item.name}}</option>
+						{% endfor %}
+				    </select>
+				<input type="hidden" name="env_host" class="env_host">
+				<input type="hidden" name="env_session_id" class="env_session_id">
+				<a href="/user/env" class="btns-txt">环境设置</a>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">请求方式：</label>
+				<div class="col-sm-10">
+					<select name="request_header" class="form-control form-control-inline">
+					    <option value="1">HTTP</option>
+					    <option value="2">HTTPS</option>
+				    </select>
+					<select name="request_type" class="form-control form-control-inline" id="js_request_type">
+						{% for item in options.apiRequestType %}
+							{% if data.request_type %}
+								<option value="{{item.value}}" data-name="{{item.name}}" {%if data.request_type==item.value %}selected{%endif%}>{{item.name}}</option>
+							{% else %}
+								<option value="{{item.value}}" data-name="{{item.name}}" {%if 1==item.value %}selected{%endif%}>{{item.name}}</option>
+							{% endif %}
+						{% endfor %}
+				    </select>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">请求url： </label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" id="js_url" style="width: 640px; display:inline-block; margin-right: 10px; font-size: 14px;" autocomplete="on" name="url" value="{{data.url_full}}" data-url="{{data.url_full}}" placeholder="不能为空"><a href="javascript:void(0)" id="js_change_url">重置</a>
+				</div>
+			</div>
+			
+			{% if parameterList %}
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label"></label>
+				<div class="col-sm-9 span_box">
+					<!--<p><span class="url">{{data.url}}</span></p>-->
+					<table>
+						<tr>
+							<th>参数名</th>
+							<th>类型</th>
+							<th>值</th>
+							<th>说明</th>
+						</tr>
+						{% for item in parameterList %}
+						<tr>
+							<td>{{item.name}}</td>
+							<td>{{item.in_type}}</td>
+							<td>
+								{% for types in options.apiParametersType %}
+									{%if item.type==types.value && types.value!=0 %}
+										{{types.name}}
+									{%endif%}
+								{% endfor %}
+							</td>
+							<td>{{item.info}}</td>
+						</tr>
+						{% endfor %}
+					</table>
+
+				</div>
+			</div>
+			{% endif %}
+
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">请求header： </label>
+				<div class="col-sm-8">
+					<textarea id="js_header" name="" class="form-control" style="width: 860px; height: 160px; font-size: 14px;"></textarea>
+				</div>
+			</div>
+
+			{% if data.request_type!=2 && parameterList %}
+			{% for item in parameterList %}
+			{% if item.in_type=="body" %}
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label">body参数： </label>
+				<div class="col-sm-8">
+					<textarea id="js_body" name="" class="form-control" style="width: 860px; height: 280px; font-size: 14px;"></textarea>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+			{% endif %}
+
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label"></label>
+				<div class="col-sm-3">
+					<a href="#" class="btn btn-lg btn-block btn-primary" id="js_ajax"><i class="iconfont">&#xe681;</i>测试</a>
+				</div>
+				<div class="col-sm-3">
+			        {% if query.id %}
+			        <!--<a href="/api/update?id={{data.id}}" class="btn btn-lg btn-block btn-primary-outline" id="js_saveDAta"><i class="iconfont" style="top: -2px;">&#xe601;</i>保存接口</a>-->
+			        {% endif %}
+				    <a href="/api/update?id={{data.id}}" class="btn btn-lg btn-block btn-outline-primary"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存接口</a>
+				</div>
+			</div>
+
+		</form>
+
+		
+	</div>
+
+	<div class="col-sm-12">
+
+	    <div class="data_box">
+	        <div id="data" class="_json"></div>
+		    <input type="hidden" id="js_backdata">
+	    </div>
+	</div>
+	
+	<input type="hidden" id="js_dataEnvs" value="{{dataEnvStr}}">
+	<input type="hidden" id="js_parameterListStr" value="{{parameterListStr}}">
 	<input type="hidden" id="js_api_id" value="{{data.id}}">
+	<input type="hidden" id="js_type" value="{{data.request_type}}">
+	<input type="hidden" id="js_g_id" value="{{data.group_id}}">
+
 </div>
+{% endblock %}
 
-{% include '../common/footer.html' %}
-
+{% block script %}
 <script>
 $(function(){
-	var dataParameters = '{{data.parameters|json}}';
-	$("textarea").each(function(){
-		if($(this).val()=='""'||$(this).val()==""){
-			$(this).val("");
-		} else {
-			$(this).val(JSON.stringify(JSON.parse($(this).val()), null, "\t"));
-		}
-	});
-
+//	var dataParameters = '{{data.parameters|json}}';
+	function eachTextarea(){
+		$("textarea").each(function(){
+			if($(this).val()=='""'||$(this).val()==""){
+				$(this).val("");
+			} else {
+				$(this).val(JSON.stringify(JSON.parse($(this).val()), null, 2));
+			}
+		});
+	}
+	
 	$("#js_ajax").click(function(){
+		
+		if(!$("#js_url").val()){
+			$.sx.alert("接口url不能为空！");
+			return false;
+		}
+		
 		$("#data").html("开始请求..");
 		$("#js_jsonp").text("");
 		$("#js_backdata").val("");
-
+		
 		$.ajax({
 			url:  "/api/testSend2",
 			type: 'POST',
@@ -117,7 +222,7 @@ $(function(){
 				url: $("#js_url").val(),
 				headers: $("#js_header").val(),
 				body: $("#js_body").val(),
-				type: $("#js_type").val()
+				type: $("#js_request_type").find("option:selected").data("name")
 			},
 			success: function(data) {
 				console.info(data);
@@ -125,14 +230,16 @@ $(function(){
 					//$("#data").html(JSON.stringify(data.data));
 					try {
 						$("#js_backdata").val(JSON.stringify(data.data));
-						$("#data").JSONView(data.data);
+						$("#data").text(JSON.stringify(data.data));
+						console.info("请求成功，JSONView");
+						JsonEach($("._json"));
 					} catch (error){
 						console.info("请求成功，返回结果转为json时失败！");
 						// $("#js_backdata").val(data.data);
 						$("#data").text(data.data);
 					}
 				} else if(data.status==-1){
-					$("#data").text(data.message+"<br>请设置接口服务器地址或sessionid");
+					$("#data").text(data.message+" 请检查请求地址或参数！");
 				}
 			},
 			complete: function() {
@@ -140,26 +247,156 @@ $(function(){
 		});
 		return false;
 	})
-
-
-	$.ajax({
-		url:  "/makingapi/getServersApiFunctionUrl",
-		type: 'GET',
-		data: {
-			id: $("#js_id2").val()
-		},
-		success: function(data) {
-			console.info(data);
-			if(data.status==0){
-				$("#js_full_url").html(data.data);
-			}
-		},
-		complete: function() {
-		}
+	
+	
+	$("#js_env_id").change(function(val){
+		console.info("js_env_id change");
+		console.info($(this).val());
+		envOnChange($(this).val());
 	});
-
-
+	function envOnChange(val){
+		let env = findEnvById(val);
+		console.info(env);
+		var backObject = {
+			"Content-Type": "application/json"
+		};
+		if(typeof val==="string" && env && env.session_id){
+			backObject.TOKEN = env.session_id;
+			localStorage.my_env = env.id;
+		} else {
+			backObject.TOKEN = "";
+		}
+		$("#js_header").val(JSON.stringify(backObject, null, 2));
+		getFullUrl($("#js_g_id").val());
+	}
+	
+	$("#js_change_url").click(function(){
+		getFullUrl($("#js_g_id").val());
+	});
+	
+	function findEnvById(id){
+		var dataEnvs = $("#js_dataEnvs").val();
+		dataEnvs = JSON.parse(dataEnvs);
+		let backObject = "";
+		for(var i=0; i<dataEnvs.length; i++){
+			let item = dataEnvs[i];
+			if(item.id===id){
+				backObject = item;
+				break;
+			}
+		}
+		return backObject;
+	}
+	
+	function getFullUrl(g_id){
+		if(!g_id){
+			makingDefaultFullUrl();
+			return false;
+		}
+		console.info(g_id);
+		$.ajax({
+			url:  "/project/getGroupInfo",
+			type: 'post',
+			data: {
+				g_id: g_id
+			},
+			success: function(data) {
+				console.info(data);
+				if(data.status===0 && data.data && data.data.father_id){
+					console.info("has father_id");
+					console.info(data.data.father_id);
+					$.ajax({
+						url:  "/project/getGroupInfo",
+						type: 'post',
+						data: {
+							g_id: data.data.father_id
+						},
+						success: function(data) {
+							console.info(data);
+							makingFullUrl(data.data);
+						}
+					});
+				} else {
+					makingFullUrl(data.data);
+				}
+			}
+		});
+	}
+	
+	function makingFullUrl(data){
+		console.info("makingFullUrl");
+		console.info(data);
+		
+		let path = "";
+		if (data.servers_api_path) {
+			path = data.servers_api_path;
+		}
+		
+		let env = findEnvById($("#js_env_id").val());
+		if(env && env.host){
+			env = env.host;
+		}
+		
+		let query = "";
+		let parameterList = $("#js_parameterListStr").val();
+		parameterList = JSON.parse(parameterList);
+		console.info(parameterList);
+		let pathArray = [];
+		let queryArray = [];
+		for(let i=0; i<parameterList.length; i++){
+			let item = parameterList[i];
+			console.info(item);
+			if(item.in_type === "query"){
+				queryArray.push(item.name);
+			} else if (item.in_type === "path"){
+				pathArray.push(item.name);
+			} else if (item.in_type === "body"){
+				$("#js_body").val(item.default);
+				eachTextarea();
+			}
+		}
+		console.info(pathArray);
+		console.info(queryArray);
+		for(let m=0; m<pathArray.length; m++){
+			let item = pathArray[m];
+			query += "/"+"{"+item+"}";
+		}
+		for(let m=0; m<queryArray.length; m++){
+			let item = queryArray[m];
+			if(m===0){
+				query += "?"+item+"=";
+			} else {
+				query += item+"=";
+			}
+			if(m!==queryArray.length-1){
+				query += "&";
+			}
+		}
+		
+		$("#js_url").val(env + path + $("#js_url").data("url") + query);
+	}
+	
+	function makingDefaultFullUrl() {
+		let env = findEnvById($("#js_env_id").val());
+		if(env && env.host){
+			env = env.host;
+		}
+		$("#js_url").val(env+"/");
+	}
+	
+	if(!localStorage.my_env){
+		console.info("localStorage my_env 没有");
+		$("#js_env_id").change();
+	} else {
+		let env_id = localStorage.my_env;
+		console.info("localStorage my_env 有值");
+		console.info(env_id);
+		$("#js_env_id").val(env_id);
+		envOnChange($("#js_env_id").val());
+	}
+	
+	eachTextarea();
 });
 </script>
-</body>
-</html>
+{% include '../common/codejs.html' %}
+{% endblock %}

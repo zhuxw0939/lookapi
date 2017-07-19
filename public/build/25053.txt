@@ -1,0 +1,4 @@
+共扫描接口数量：148
+
+※【更新接口】 =>  强制更新接口must=1/api/student/find_student/{examId}/{studentId}
+	已将旧api（ByEfL0yZsr$）标记为过期

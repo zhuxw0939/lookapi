@@ -1,0 +1,6 @@
+共扫描接口数量：34
+
+※【创建接口】 =>  开始创建这个新接口/api/user_org
+※【创建接口】 =>  开始创建这个新接口/api/updateTerminalStatus
+※【创建接口】 =>  开始创建这个新接口/website_rule/get/{ruleWebsiteId}
+※【创建接口】 =>  开始创建这个新接口/website_rule/get

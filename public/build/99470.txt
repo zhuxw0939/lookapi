@@ -1,0 +1,12 @@
+共扫描接口数量：10
+
+※【创建接口】 =>  开始创建这个新接口/api/auth/login/logintest
+※【创建接口】 =>  开始创建这个新接口/api/user-auth-notify/account
+※【创建接口】 =>  开始创建这个新接口/api/auth/login/cipher
+※【创建接口】 =>  开始创建这个新接口/api/auth/login
+※【创建接口】 =>  开始创建这个新接口/api/user-auth-notify/account/admin-app-role/init
+※【创建接口】 =>  开始创建这个新接口/api/auth/authority
+※【创建接口】 =>  开始创建这个新接口/api/app/get-userapp
+※【创建接口】 =>  开始创建这个新接口/api/user-auth-notify/accounts/init
+※【创建接口】 =>  开始创建这个新接口/api/auth/refresh_token
+※【创建接口】 =>  开始创建这个新接口/api/role/get-userapp-role/{appId}

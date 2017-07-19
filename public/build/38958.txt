@@ -1,0 +1,4 @@
+共扫描接口数量：148
+
+※【更新接口】 =>  强制更新接口must=1/api/class/export_class_section
+	已将旧api（SJnlQhJ5sH$）标记为过期

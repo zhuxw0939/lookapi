@@ -15,6 +15,7 @@ router.get('/', site.index);
 
 
 
+router.get('/json/abc/', site.json_abc);
 
 
 

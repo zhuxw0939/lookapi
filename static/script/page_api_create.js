@@ -264,6 +264,11 @@ $(function(){
 									console.info("更新ApiFunction.jsr失败");
 									$.sx.alert(data.message);
 								}
+							},
+							complete: function(o) {
+							},
+							error: function(o) {
+								window.location.href='/api/detail/'+$("#js_api_id").val();
 							}
 						});
 					} else {

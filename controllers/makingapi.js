@@ -33,15 +33,20 @@ exports.swaggerImport = function (req, res, next) {
 
 	// 读取swaggerApi文档
 	request.get({
+		json: true,
 		url: req.body.swagger_url,
 		qs: {}
 	}, function (error, response, body) {
-		// logger.info(error);
-		// logger.info(response);
-		// logger.info(body);
+		logger.info(typeof body);
+		logger.info(body);
 		try{
-			var data = JSON.parse(body);
+			if(typeof body ==="object"){
+				var data = body;
+			} else {
+				var data = JSON.parse(body);
+			}
 		} catch (error){
+			logger.warn(error);
 			res.send({
 				status: "1",
 				message: "swagger地址错误，无法获取数据"
@@ -375,6 +380,13 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		});
 	});
 	return false;*/
+	
+	// 兼容只导入一个api
+	var isImportOnlyOne = false;
+	if(typeof tags==="string"){
+		isImportOnlyOne = tags;
+		tags = [];
+	}
 
 
 
@@ -392,10 +404,19 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 	for (let url in paths){
 		// if(url=="/api/v1/question/save/{courseId}" || url=="/api/v1/common/list_instructors/{phase}" || url=="/api/v1/setting-touched-line/create/{examId}" || url=="/api/v1/setting-class-part/page") {
-		logger.debug("开始导入这个url："+url);
-		if(1) {
+		if(!isImportOnlyOne) {
+			logger.debug("开始导入这个url："+url);
 			for(let pathType in paths[url] ){
 				createApiStepONE( url, pathType, paths[url][pathType], saveFileName);
+			}
+		} else {
+			// logger.warn(paths[url][pathType].operationId);
+			// logger.warn(isImportOnlyOne);
+			for(let pathType in paths[url] ){
+				if(isImportOnlyOne===paths[url][pathType].operationId) {
+					logger.warn("--> 只导入这个api", paths[url][pathType].operationId);
+					createApiStepONE( url, pathType, paths[url][pathType], saveFileName);
+				}
 			}
 		}
 		pathsIndex++;
@@ -429,7 +450,6 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		// *** 首先根据url检查这个api是否在这个项目版本中已经存在
 		// 不存在进入创建流程
 		// 存在时比较时间是否有修改，有修改时更新api，否则跳过
-
 
 		// 根据请求方式获取数据
 		var urlDataNextKey;
@@ -465,6 +485,9 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		// }
 
 		var swagger_id = urlDataNextKey.operationId;
+		if(!swagger_id){
+			swagger_id = "my_swagger_id";
+		}
 
 		var ep = new eventproxy();
 		ep.fail(callback);
@@ -474,6 +497,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 		ep.all('data1', function (data1) {
 			if(data1){
 				// 存在api
+				logger.debug("存在api -> "+url);
 				if(req.body.must==1){
 					// api的url发生变化，要更新这个接口
 					let logs = "※【更新接口】 =>  强制更新接口must=1"+url;
@@ -550,6 +574,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 				}
 			} else {
 				// 不存在，直接创建新接口
+				logger.debug("不存在api，直接创建新接口 -> "+url);
 				let logs = "※【创建接口】 =>  开始创建这个新接口"+url;
 				logger.info(logs);
 
@@ -821,7 +846,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 			url_full: backData.url_full,
 			request_type: backData.request_type,
 			description: backData.description,
-			group_id: backData.group_id,
+			group_id: backData.group_id?backData.group_id:req.body.g_id,
 			parameters: backData.parametersObject,
 			back_data: JSON.stringify(backData.back_data),
 			back_description: JSON.stringify(backData.back_description),
@@ -899,7 +924,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 				var str = obj.properties[index].items["$ref"].split("/");
 				str = str[str.length-1];
 				// logger.info(str);
-				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO") {
+				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
 					obj.properties[index].items={
 						"type": "same_type",
 						"description": "重复的格式!!!!!!"
@@ -914,7 +939,7 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 				// logger.info(str);
 				// 自己调自己的bug
 				// 如我的parent的格式其实和我一样，这样会导致无限循环
-				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO") {
+				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
 					obj.properties[index]={
 						"type": "same_type",
 						"description": "重复的格式!!!!!!"
@@ -1205,3 +1230,112 @@ exports.getServersApiFunctionUrl = function (req, res, next) {
 };
 
 
+
+
+
+// 重新导入Api
+exports.importApiAgain = function (req, res, next) {
+	logger.warn("重新导入Api");
+	logger.warn(req.query.id);
+	if(!req.query.id){
+		return res.send({
+			status: -1,
+			message: "id不能为空"
+		});
+	}
+	
+	
+	var ep = new eventproxy();
+	ep.fail(next);
+	
+	apiModel.getApiById(req.query.id, ep.done('api_data'));
+	
+	ep.all('api_data', function (data){
+		if(data.group_id){
+			projectModel.getGroupById(data.group_id, ep.done('group_data'))
+		} else {
+			return res.send({
+				status: -2,
+				message: "group_id为空"
+			});
+		}
+	});
+	
+	ep.all('group_data', function (data){
+		if(data.father_id){
+			projectModel.getGroupById(data.father_id, ep.done('group_again_data'))
+		} else {
+			ep.emit('group_again_data', null);
+		}
+	});
+	
+	ep.all('api_data', 'group_data', 'group_again_data', function (data, group_data, group_data_again){
+		logger.warn("group_again_data");
+		if(group_data_again){
+			group_data = group_data_again;
+		}
+		logger.info(data);
+		logger.info(group_data);
+		logger.info(data.swagger_id);
+		logger.info(group_data.swagger_url);
+		
+		if(!data.swagger_id || !group_data.swagger_url){
+			return res.send({
+				status: -3,
+				message: "获取swagger_id或swagger_url数据错误"
+			});
+		}
+		
+		
+		// 读取swaggerApi文档
+		request.get({
+			json: true,
+			url: group_data.swagger_url,
+			qs: {}
+		}, function (error, response, body) {
+			
+			// logger.info(typeof body);
+			// logger.info(body);
+			try{
+				if(typeof body ==="object"){
+					var swaggerData = body;
+				} else {
+					var swaggerData = JSON.parse(body);
+				}
+			} catch (error){
+				logger.warn(error);
+				res.send({
+					status: "1",
+					message: "swagger地址错误，无法获取数据"
+				});
+				return false;
+			}
+			if(!swaggerData.tags|| !swaggerData.paths){
+				res.send({
+					status: "2",
+					message: "swagger无法获取数据"
+				});
+				return false;
+			}
+			// logger.info(swaggerData);
+			
+			req.body.p_id=data.project_id;
+			req.body.v_id=data.version_id;
+			req.body.g_id=data.group_id;
+			req.body.must=1;
+			
+			// 创建api
+			exports.createSwaggerImportApi(swaggerData, req, data.swagger_id, function(saveFileName, pathsIndex){
+				res.send({
+					status: "0",
+					message: "success",
+					data: {
+						saveFileName, pathsIndex
+					}
+				});
+			});
+			
+		});
+	});
+	
+};

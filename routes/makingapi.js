@@ -25,7 +25,8 @@ router.get('/getServersApiFunctionUrl', makingApi.getServersApiFunctionUrl);
 router.get('/getApiFunctionAjaxCode', makingApi.getApiFunctionAjaxCode);
 router.get('/getApiFunctionNodejsCode', makingApi.getApiFunctionNodejsCode);
 
-
+// 重新导入api
+router.get('/importApiAgain', makingApi.importApiAgain); // 重新导入api
 
 
 module.exports = router;

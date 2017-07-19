@@ -357,15 +357,22 @@ exports.removeNoApisGroupsPost = function (req, res, next) {
 	ids = ids.split(",");
 	for(var i=0; i<ids.length; i++){
 		var p_id = ids[i];
-		apiModel.getApisByIdGroupId(p_id, function(err, data){
-			if(!err && data.length!==0){
-				projectModel.removeGroupById(p_id, function(){});
-			}
-		});
+		exports.removeNoApisGroupsFunction(p_id);
 	}
 	return res.send({
 		status: 0,
 		message: "删除成功"
+	});
+};
+exports.removeNoApisGroupsFunction = function (p_id) {
+	apiModel.getApisByIdGroupId(p_id, function(err, data){
+		logger.debug("getApisByIdGroupId back");
+		logger.debug(p_id);
+		logger.debug(err);
+		logger.debug(data);
+		if(!err && data.length===0){
+			projectModel.removeGroupById(p_id, function(){});
+		}
 	});
 };
 
@@ -424,8 +431,26 @@ exports.getGroupSonList = function (req, res, next) {
 
 
 
-
-
+// 根据gid获取GroupInfo
+exports.getGroupInfo = function (req, res, next) {
+	if(!req.body.g_id){
+		return res.send({
+			status: 1,
+			message: "g_id不能为空"
+		});
+	}
+	projectModel.getGroupById(req.body.g_id, function(error, data){
+		if(error){
+			return next(error);
+		}
+		res.send({
+			status: 0,
+			message: "success",
+			data: data
+		});
+	})
+	
+};
 
 
 

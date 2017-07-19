@@ -33,6 +33,7 @@ router.post('/createPost', authModel.userMustLogin, api.createPost); // 创建Ap
 router.post('/updatePost', authModel.userMustLogin, api.updatePost); // 编辑Api
 router.post('/removeApiPost', authModel.userMustLogin, api.removeApiPost); // 删除Api
 router.post('/removeApisPost', authModel.userMustLogin, api.removeApisPost); // 一次删除多个Api
+router.post('/removeNogroupApisPost', authModel.userMustLogin, api.removeNogroupApisPost); // 一次删除多个Api
 router.post('/loseApiPost', authModel.userMustLogin, api.loseApiPost); // 设置某个Api过期
 router.post('/testFunName', authModel.userMustLogin, api.testFunName); // 判断fun_name是否重复
 router.post('/testSend', api.testSend); // 接口测试

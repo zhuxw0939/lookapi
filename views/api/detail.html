@@ -20,9 +20,10 @@
 						<a href="#" id="js_getapinodejscode" data-id="{{data.id}}">Node代码</a>&nbsp;&nbsp;
 						<a href="#" id="js_getapifun" data-id="{{data.id}}">获取ApiFunction</a>&nbsp;&nbsp;
 						<a href="#" id="js_makeapifunfile" data-id="{{data.id}}" data-swagger_id="{{data.swagger_id}}" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;
+						<a href="#" class="js_import_again" data-id="{{data.id}}">重新导入</a>&nbsp;&nbsp;
 						<a href="/api/test?id={{data.id}}">调试</a>&nbsp;&nbsp;
 						<a href="/api/update?id={{data.id}}">编辑</a>&nbsp;&nbsp;
-						<a href="#" data-id="{{data.id}}" id="js_api_lose">设为过期</a>&nbsp;&nbsp;
+						<a href="#" data-id="{{data.id}}" class="js_api_lose">设为过期</a>&nbsp;&nbsp;
 						<a class="btn_del_api" href="#" data-id="{{data.id}}">删除</a>
 					</span>
 				</h3>
@@ -287,58 +288,6 @@ $(function(){
 		return false;
 	});
 
-	// 删除api
-	$("a.btn_del_api").click(function(){
-		var id = $(this).data("id");
-		$.sx.confirm("确定删除api？", "删除api后，将无法恢复。", function(){
-			$.ajax({
-				url: "/api/removeApiPost",
-				type: "POST",
-				dataType: "json",
-				data: {
-					id: id
-				},
-				success: function(data){
-					if(data.status==0){
-						$.sx.alert("操作成功！");
-						setTimeout(function(){
-							window.history.go(-1);
-						}, 1500);
-					} else {
-						$.sx.alert(data.message);
-					}
-				}
-			});
-		});
-		return false;
-	});
-
-	// 设置api为过期
-	$("#js_api_lose").click(function(){
-		var id = $(this).data("id");
-		$.sx.confirm("确定设置api为过期？", "设置后，可在过期接口栏目中查询到。", function(){
-			$.ajax({
-				url: "/api/loseApiPost",
-				type: "POST",
-				dataType: "json",
-				data: {
-					id: id
-				},
-				success: function(data){
-					if(data.status==0){
-						$.sx.alert("操作成功！");
-						setTimeout(function(){
-							window.history.go(-1);
-						}, 1500);
-					} else {
-						$.sx.alert(data.message);
-					}
-				}
-			});
-		});
-		return false;
-	});
-
 //
 //	if(GetQueryString("is_change")==1){
 //		$("#js_makeapifunfile").click();
@@ -352,7 +301,26 @@ $(function(){
 //		var r = window.location.search.substr(1).match(reg);
 //		if(r!=null)return  unescape(r[2]); return null;
 //	}
-
+	$(".js_import_again").click(function(){
+		console.info($(this).data("id"));
+		$.ajax({
+			url:  "/makingapi/importApiAgain?id="+$(this).data("id"),
+			type: 'GET',
+			success: function(data) {
+				console.info(data);
+				if(data.status==0){
+					$.sx.confirm("导入成功，是否刷新页面？", "swagger导入成功，刷新获取最新数据！", function(){
+						window.location.reload();
+					});
+				} else {
+					$.sx.alert(data.message);
+				}
+			},
+			complete: function() {
+			}
+		});
+		return false;
+	});
 
 });
 </script>

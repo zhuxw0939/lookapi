@@ -1,0 +1,4 @@
+共扫描接口数量：148
+
+※【更新接口】 =>  强制更新接口must=1/api/mobile/school/find_exam_compare
+	已将旧api（rybZ73kqsr$）标记为过期
