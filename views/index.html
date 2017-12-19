@@ -20,13 +20,19 @@
 </div>
 <div class="container">
 	<div class="index_title">
-		公司项目
+		公共项目
 	</div>
+	{% if Projects && Projects.length %}
 	<div class="row">
 		{% for item in Projects %}
 			{% include './common/project_card.html' %}
 		{% endfor %}
 	</div>
+	{% else %}
+	<div class="no_data">
+		<i class="iconfont">&#xe6a0;</i><br>暂无分享的公共项目
+	</div>
+	{% endif %}
 </div>
 {% endblock %}
 

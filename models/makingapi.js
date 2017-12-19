@@ -46,6 +46,13 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 		if(1){
 			var yesUrl = [];
 			var postUrl = data.url;
+			// logger.info("--> data.url 1", postUrl);
+			// logger.info(postUrl.charAt(postUrl.length-1));
+			if(postUrl.charAt(postUrl.length-1)==="/"){
+				postUrl = postUrl.substring(0, postUrl.length-1);
+			}
+			// logger.info("--> postUrl 2", postUrl);
+			
 			// logger.info("start *** *** *** ");
 			// logger.info(postUrl);
 
@@ -60,17 +67,20 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 			// 正则查找
 			var regtxt = "/{[\\s\\S]*?}/g";
 			var URL_REG = eval(regtxt);
+			// logger.info("--> URL_REG", URL_REG);
 			var urlIndex = 0;
 			var post_url = postUrl.replace(URL_REG, function(data){
 				// logger.info(data);
 				urlIndex++;
-				//logger.info(index);
-				//data = data.replace(/[{|}]/g, "");
-				//logger.info(data);
+				// logger.info(urlIndex);
+				data = data.replace(/[{|}]/g, "");
+				// logger.info(data);
 
 			});
+			// logger.info("--> post_url 0", post_url);
 			// logger.info(urlIndex);
 			var forIndex = 0;
+			// logger.info("--> post_url 1", post_url);
 			post_url = postUrl.replace(URL_REG, function(data){
 				forIndex++;
 				data = data.replace(/[{|}]/g, "");
@@ -82,6 +92,7 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 					return '"+data.'+data+'+"';
 				}
 			});
+			// logger.info("--> post_url 2", post_url);
 			if(urlIndex==0){
 				post_url = '"'+groupData+post_url+'"';
 			} else {
@@ -278,6 +289,8 @@ exports.makingServersApiFunctionCode = function (id, types, callback) {
 		txt +=	',\r\n\t\t';
 		txt +=			'token: !data.TOKEN?"":data.TOKEN';
 		txt +=	',\r\n\t\t';
+		txt +=			'mock: !data.mock?false:data.mock';
+		txt +=	',\r\n\t\t';
 		txt +=			'swaggerId: '+parametersSwaggerId;
 		txt +=				parametersBody;
 		txt +=				parametersForm;
@@ -329,74 +342,93 @@ exports.makingApiFunctionAjaxCode = function (id, callback) {
 
 	apiModel.getApiById(id, function(error, data) {
 		// logger.info(error);
-		// logger.info(data);
-
-		var postUrl = "/api/servers/";
-		if (data.fun_name){
-			postUrl += data.fun_name;
-		} else if(data.swagger_id) {
-			postUrl += data.swagger_id.replace(/-/g, "_");
-		} else {
-			postUrl += data.id;
-		}
-
-		var parameters = ""; // 参数
-		if(data.parameters!=undefined && data.parameters.length>0 && data.parameters[0]!="" ){
-			parameters += ', {'+'\r\n';
-			for(var i=0;i<data.parameters.length;i++){
-				// 参数类型
-				var parametersType = "";
-				if(data.parameters[i].type==1){
-					parametersType = '"Number"'
-				} else if(data.parameters[i].type==2){
-					parametersType = '"String"'
-				} else if(data.parameters[i].type==3){
-					parametersType = '"Boolean"'
-				} else if(data.parameters[i].type==6){
-					parametersType = '"Body"'
-				} else {
-					parametersType = '""'
-				}
-				if(i==data.parameters.length-1){
-					if(data.parameters[i].type==6){
-						parameters += '\tbody: '+parametersType+'\r\n';
-					} else {
-						parameters += '\t'+data.parameters[i].name+': '+parametersType+'\r\n';
-					}
-				} else {
-					if(data.parameters[i].type==6){
-						parameters += '\tbody: '+parametersType+',\r\n';
-					} else {
-						parameters += '\t'+data.parameters[i].name+': '+parametersType+',\r\n';
-					}
-				}
+		logger.info(data);
+		
+		
+		exports.getGroupServersApiGatewayName(data.group_id, function(errs, gatewayName){
+			if(!gatewayName){
+				return callback("gatewayName is not find", "");
 			}
-			parameters +=	'}';
-		}
-
-		var txt = "";
-		txt +=	'\r\n';
-		txt +=	'// '+data.name+'\r\n';
-		txt +=	'this.$http.post("'+postUrl+'"';
-		txt +=	parameters;
-		txt +=	').then((data) => {'+'\r\n';
-		txt +=	'\t'+'data = data.data;'+'\r\n';
-		txt +=	'\t'+'if(data.code==200){'+'\r\n';
-		txt +=	'\t\t'+'data = data.data;'+'\r\n';
-		txt +=	'\t\t'+'console.info(data);'+'\r\n';
-		txt +=	'\t\t'+'// do something'+'\r\n';
-		txt +=	'\t'+'} else {'+'\r\n';
-		txt +=	'\t\t'+'console.warn(data);'+'\r\n';
-		txt +=	'\t'+'}'+'\r\n';
-		txt +=	'}, function(error){'+'\r\n';
-		txt +=	'\t'+'console.error(error);'+'\r\n';
-		txt +=	'});'+'\r\n\r\n';
-
-		callback(null ,txt);
-
+			
+			var postUrl = "/"+gatewayName+"/";
+			if (data.fun_name){
+				postUrl += data.fun_name;
+			} else if(data.swagger_id) {
+				postUrl += data.swagger_id.replace(/-/g, "_");
+			} else {
+				postUrl += data.id;
+			}
+			
+			var parameters = ""; // 参数
+			if(data.parameters!=undefined && data.parameters.length>0 && data.parameters[0]!="" ){
+				parameters += ', {'+'\r\n';
+				for(var i=0;i<data.parameters.length;i++){
+					// 参数类型
+					var parametersType = "";
+					if(data.parameters[i].type==1){
+						parametersType = '"Number"'
+					} else if(data.parameters[i].type==2){
+						parametersType = '"String"'
+					} else if(data.parameters[i].type==3){
+						parametersType = '"Boolean"'
+					} else if(data.parameters[i].type==6){
+						parametersType = '"Body"'
+					} else {
+						parametersType = '""'
+					}
+					if(i==data.parameters.length-1){
+						if(data.parameters[i].type==6){
+							parameters += '\tbody: '+parametersType+'\r\n';
+						} else {
+							parameters += '\t'+data.parameters[i].name+': '+parametersType+'\r\n';
+						}
+					} else {
+						if(data.parameters[i].type==6){
+							parameters += '\tbody: '+parametersType+',\r\n';
+						} else {
+							parameters += '\t'+data.parameters[i].name+': '+parametersType+',\r\n';
+						}
+					}
+				}
+				parameters +=	'}';
+			}
+			
+			var txt = "";
+			txt +=	'\r\n';
+			txt +=	'// '+data.name+'\r\n';
+			txt +=	'this.$ajax.gateway("'+postUrl+'"';
+			txt +=	parameters;
+			txt +=	', (data) => {'+'\r\n';
+			txt +=	'\t'+'if(data.code===200){'+'\r\n';
+			txt +=	'\t\t'+'data = data.data;'+'\r\n';
+			txt +=	'\t\t'+'// do something'+'\r\n';
+			txt +=	'\t\t'+'console.info(data);'+'\r\n';
+			txt +=	'\t'+'} else {'+'\r\n';
+			txt +=	'\t\t'+'console.warn(data);'+'\r\n';
+			txt +=	'\t'+'}'+'\r\n';
+			txt +=	'});'+'\r\n\r\n';
+			
+			callback(null ,txt);
+		});
 	});
 };
 
+
+exports.getGroupServersApiGatewayName = function (g_id, callback) {
+	projectModel.getGroupById(g_id, function(error, data){
+		if(!error && data.father_id){
+			projectModel.getGroupById(data.father_id, function(error, data){
+				if(!error && data.servers_api_gateway_name){
+					callback(null, data.servers_api_gateway_name);
+				}
+			});
+		} else if (!error && data.servers_api_gateway_name){
+			callback(null, data.servers_api_gateway_name);
+		} else {
+			callback(null, null);
+		}
+	});
+};
 
 /**
  * 生成makingApiFunctionNodeCode

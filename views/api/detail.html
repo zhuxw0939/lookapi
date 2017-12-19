@@ -22,6 +22,7 @@
 						<a href="#" id="js_makeapifunfile" data-id="{{data.id}}" data-swagger_id="{{data.swagger_id}}" data-v_id="{{query.v_id}}" data-back_url="{{apiFunctionBackUrl}}">导出ApiFunction</a>&nbsp;&nbsp;
 						<a href="#" class="js_import_again" data-id="{{data.id}}">重新导入</a>&nbsp;&nbsp;
 						<a href="/api/test?id={{data.id}}">调试</a>&nbsp;&nbsp;
+						<a href="/api/update?id={{data.id}}&type=2">添加调用历史</a>&nbsp;&nbsp;
 						<a href="/api/update?id={{data.id}}">编辑</a>&nbsp;&nbsp;
 						<a href="#" data-id="{{data.id}}" class="js_api_lose">设为过期</a>&nbsp;&nbsp;
 						<a class="btn_del_api" href="#" data-id="{{data.id}}">删除</a>
@@ -68,8 +69,40 @@
 						<span class="_code">{{data.fun_name}}</span>
 					</p>
 					{% endif %}
+					
+					<h2>接口调用历史记录</h2>
+					<div>
+						<table class="_table">
+							<thead>
+								<tr>
+									<th width="20%">项目名称</th>
+									<th width="30%">栏目或url</th>
+									<th width="20%">调用时间</th>
+									<th width="20%">调用者</th>
+								</tr>
+							</thead>
+							{% if data.call_history && data.call_history.length>0 %}
+								<tbody>
+									{%for item in data.call_history %}
+										<tr>
+											<td>{{item.site}}</td>
+											<td>{{item.column}}</td>
+											<td>{{item.time | date('Y-m-d H:i:s', -480)}}</td>
+											<td>{{item.user}}</td>
+										</tr>
+									{% endfor%}
+								</tbody>
+							{% else %}
+								<tbody>
+									<tr>
+										<td colspan="4" style="text-align: center; padding: 30px 0; color: #aaa;">暂无调用历史！</td>
+									</tr>
+								</tbody>
+							{% endif %}
+						</table>
+					</div>
 
-					<h2>接口记录</h2>
+					<h2>接口修改记录</h2>
 					<div class="txts_history">
 						<!--{{updatesData | json}}-->
 						{% for itemArray in updatesData %}

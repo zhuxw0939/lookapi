@@ -8,17 +8,23 @@
 <div class="column_head bg_base64 jumbotron">
 	<div class="container">
 		<h1 class="display-3">我的项目</h1>
-		<p>…… | <a href="/project/create">新建项目</a></p>
+		<p>我创建和加入的项目 | <a href="/project/create">新建项目</a></p>
 	</div>
 </div>
 <div class="container">
 	<!--<div class="index_title">我的项目</div>-->
+	{% if data && data.length %}
 	<div class="row">
 		{% for item in data %}
 			{% set item.currentPage='my_project' %}
 			{% include '../common/project_card.html' %}
 		{% endfor %}
 	</div>
+	{% else %}
+	<div class="no_data">
+		<i class="iconfont">&#xe6a0;</i><br>暂无项目
+	</div>
+	{% endif %}
 </div>
 {% endblock %}
 

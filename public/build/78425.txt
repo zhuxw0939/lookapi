@@ -1,0 +1,8 @@
+共扫描接口数量：6
+
+※【创建接口】 =>  开始创建这个新接口/api/error_library/get_group_practice
+※【创建接口】 =>  开始创建这个新接口/api/error_library/get_error_question_list
+※【创建接口】 =>  开始创建这个新接口/api/error_library/save_single_error_question_result
+※【创建接口】 =>  开始创建这个新接口/api/error_library/get_error_question_num
+※【创建接口】 =>  开始创建这个新接口/api/error_library/save_group_practice_result
+※【创建接口】 =>  开始创建这个新接口/api/error_library/save_error_library_list

@@ -51,7 +51,7 @@ exports.sendJoinProjectMessage = function (who, p_id, p_name, my_name) {
 		to: who,
 		subject: config.name + '-邀请您加入项目',
 		generateTextFromHTML : true,
-		html: '<h5>用户 ' + my_name + ' 邀请您加入项目：' + p_name + '</h5><h5><a href="' + config.host + '/user/message">点击查看</a></h5><p>谢谢。</p>'
+		html: '<h5>用户 ' + my_name + ' 邀请您加入项目：' + p_name + '</h5><h5><a href="' + config.host + ":" + config.port + '/user/message">点击查看</a></h5><p>谢谢。</p>'
 	});
 };
 

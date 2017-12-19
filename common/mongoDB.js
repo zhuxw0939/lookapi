@@ -3,11 +3,12 @@
  * mongoDB
  */
 
-var config = require("./config");
-var mongoose = require("mongoose");
-var db = mongoose.connect(config.mongodb.host);
-var shortid = require('shortid');
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$');
+const config = require("./config");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema
+const db = mongoose.connect(config.mongodb.host);
+const shortid = require('shortid');
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_@');
 
 
 db.connection.on("error", function (error) {
@@ -18,7 +19,7 @@ db.connection.on("open", function () {
 });
 
 
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	email	 		: { type:String },
 	name	 		: { type:String },
@@ -28,7 +29,7 @@ var userSchema = new mongoose.Schema({
 	type		 	: { type:Number, default:0 } //状态 0-普通用户,1-管理员,-1-已删除
 });
 
-var projectSchema = new mongoose.Schema({
+var projectSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	name	 		: { type:String },
 	password	 	: { type:String },
@@ -42,7 +43,7 @@ var projectSchema = new mongoose.Schema({
 	type 			: { type:Number, default:0 } //状态 0-已发布,1-已审核,-1-已删除
 });
 
-var projectVersionSchema = new mongoose.Schema({
+var projectVersionSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	name	 		: { type:String }, //版本号
 	project_id		: { type:String }, //对应项目id
@@ -50,12 +51,13 @@ var projectVersionSchema = new mongoose.Schema({
 	type 			: { type:Number, default:0 } //状态 0-已发布,1-已审核,-1-已删除
 });
 
-var projectGroupSchema = new mongoose.Schema({
+var projectGroupSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	name	 		: { type:String }, //栏目名称
 	sort			: { type:Number, default:10 }, //排序
 	level	 		: { type:String, default:1 }, //栏目等级：支持1级栏目，2级栏目
 	swagger_url	 	: { type:String }, //swagger导入的地址
+	servers_api_gateway_name: { type:String }, //对应微服务的名称，字符串
 	servers_api_path: { type:String }, //生成serversApiFunction的前缀，格式："/xxx/xxx"
 	swagger_history : { type:Array }, //swagger导入的历史记录 [{time:x, user_name, file_name:x}]
 	father_id	 	: { type:String, default:0 }, //上级栏目的id，默认为0
@@ -65,19 +67,23 @@ var projectGroupSchema = new mongoose.Schema({
 	type 			: { type:Number, default:0 } //状态 0-已发布,1-已审核,-1-已删除
 });
 
-var apiSchema = new mongoose.Schema({
+var apiSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	name 			: { type:String }, // 接口名称，不能为空
 	url  			: { type:String }, // 请求地址
 	url_full  		: { type:String }, // 请求地址-full
 	fun_name  		: { type:String }, // ApiFunctionName
 	parameters		: { type:Array }, // 参数-数组形式 [{name:x, type:x, ismust:x, info:x, default:x, in_type:x}]
+	call_history	: { type:Array }, // 调用历史记录-数组形式 [{site:x, column:x, time:x, user:x}]
 	group_id		: { type:String }, // 所属栏目
 	request_type 	: { type:String }, // 请求方式
 	description		: { type:String }, // 接口描述
 	back_data		: { type:String }, // 返回结果
 	back_description: { type:String }, // 接口返回说明
 	writes 			: { type:String }, // 备注
+	api_type        : { type:Number, default:0 }, // Api状态 0-未完成,1-已完成开发,2-未测试通过,3-已测试通过
+	api_writer      : { type:String }, // Api作者
+	api_writer_time : { type:String }, // Api作者完成时间
 	mock_template 	: { type:String }, // mock模板
 	project_id		: { type:String }, // 所属项目id，不能为空
 	version_id		: { type:String }, // 所属版本号id，不能为空
@@ -95,7 +101,7 @@ var apiSchema = new mongoose.Schema({
 	type 			: { type:Number, default:0 } // 状态 0-已发布,1-已审核,-1-已删除
 });
 
-var userEnvSchema = new mongoose.Schema({
+var userEnvSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	name	 		: { type:String },
 	host		 	: { type:String },
@@ -106,7 +112,7 @@ var userEnvSchema = new mongoose.Schema({
 	type		 	: { type:Number, default:0 } // 状态 0-已发布,1-已审核,-1-已删除
 });
 
-var userMessageSchema = new mongoose.Schema({
+var userMessageSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	title	 		: { type:String }, //消息标题
 	info		 	: { type:String }, //消息内容，必须是文本格式
@@ -119,7 +125,7 @@ var userMessageSchema = new mongoose.Schema({
 	type		 	: { type:Number, default:0 } // 状态 0-已发布,1-已审核,-1-已删除
 });
 
-var apiSaveSchema = new mongoose.Schema({
+var apiSaveSchema = new Schema({
 	id   			: { type:String, default:shortid.generate },
 	requests 		: { type:String },
 	server_type		: { type:String },
@@ -137,14 +143,14 @@ var apiSaveSchema = new mongoose.Schema({
 
 
 
-exports.user = db.model('lk_user', userSchema);
-exports.project = db.model('lk_project', projectSchema);
-exports.projectVersion = db.model('lk_project_version', projectVersionSchema);
-exports.projectGroup = db.model('lk_project_group', projectGroupSchema);
-exports.api = db.model('lk_api', apiSchema);
-exports.userEnv = db.model('lk_user_env', userEnvSchema);
-exports.userMessage = db.model('lk_user_message', userMessageSchema);
-exports.apiSave = db.model('lk_apisave', apiSaveSchema);
+exports.user = db.model(config.mongodb.dir+'user', userSchema);
+exports.project = db.model(config.mongodb.dir+'project', projectSchema);
+exports.projectVersion = db.model(config.mongodb.dir+'project_version', projectVersionSchema);
+exports.projectGroup = db.model(config.mongodb.dir+'project_group', projectGroupSchema);
+exports.api = db.model(config.mongodb.dir+'api', apiSchema);
+exports.userEnv = db.model(config.mongodb.dir+'user_env', userEnvSchema);
+exports.userMessage = db.model(config.mongodb.dir+'user_message', userMessageSchema);
+exports.apiSave = db.model(config.mongodb.dir+'apisave', apiSaveSchema);
 
 
 

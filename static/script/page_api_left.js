@@ -104,7 +104,39 @@ $(function(){
 		return false;
 	});
 	
-	// js_write_apifunction
+	// 扫描本页接口完成情况 js_run_api_complete_state
+	$("#js_run_api_complete_state").click(function(){
+		var newArray = [];
+		$(".api_id").each(function(){
+			newArray.push($(this).data("id"));
+		});
+		var v_id = $(this).data("v_id");
+		$.sx.confirm("确定扫描本页所有接口？", "预计耗时5秒！", function(){
+			$.sx.progress("正在扫描本页接口完成情况", "数据处理中...");
+			
+			$.ajax({
+				url: "/api/runApiCompleteState",
+				type: "POST",
+				dataType: "json",
+				data: {
+					v_id: v_id,
+					ids: newArray.join(",")
+				},
+				success: function(data){
+					if(data.status===0){
+						$.sx.confirm("恭喜，扫描本页接口完成情况成功！", data.message, function(){
+							window.location.reload();
+						});
+					} else {
+						$.sx.alertAutoClosed(data.message, "success");
+					}
+				}
+			});
+		});
+		return false;
+	});
+	
+	// 导出本页所有api
 	$("#js_write_apifunction").click(function(){
 		var newArray = [];
 		$(".api_id").each(function(){
@@ -129,7 +161,8 @@ $(function(){
 				data: {
 					v_id: v_id,
 					ids: newArray.join(","),
-					b_name: $("#js_before_text_name").val(),
+					b_name: $("#js_before_text_name").val()+" "+$("#js_g_name").val(),
+					b_gateway_name: $("#js_g_gateway_name").val(),
 					b_vname: $("#js_before_text_vname").val(),
 					b_bnumber: $("#js_before_text_vnumber").val(),
 					b_host: document.location.href
@@ -137,13 +170,12 @@ $(function(){
 				success: function(data){
 					console.info(data);
 					if(data.status==0){
-						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '<br><br>同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'.js" target="_blank">查看生成的文件</a>，手动进行更新。<br><br>导出地址：<input type="text" class="form-control form-control-inline" value="'+back_url+'" style="width: 300px;" id="js_input_back_url" placeholder="不能为空"><br><br>', function(){
-							// if(!$("#js_input_back_url_hidden").val()){
-							if(0){
+						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '<br><br>同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'_'+$("#js_g_gateway_name").val()+'.js" target="_blank">查看生成的文件</a>，手动进行更新。<br><br>导出地址：<input type="text" class="form-control form-control-inline" value="'+back_url+'" style="width: 300px;" id="js_input_back_url" placeholder="不能为空"><br><br>', function(){
+							if(!$("#js_input_back_url_hidden").val()){
 								alert("导出地址不能为空！");
 							} else {
 								localStorage.setItem('out_apifunctions_url', $("#js_input_back_url_hidden").val());
-								window.location.href = $("#js_input_back_url_hidden").val()+"/api/writeServersApi";
+								window.location.href = $("#js_input_back_url_hidden").val()+"/api/updateApis?gateway_name="+$("#js_g_gateway_name").val();
 							}
 						});
 					} else {
@@ -154,6 +186,50 @@ $(function(){
 		});
 		return false;
 	});
+	
+	$("#js_get_all_gateways").click(function(){
+		if(!localStorage.out_apifunctions_url){
+			var back_url = "http://xwcz.sxw.com:3005"
+		} else {
+			var back_url = localStorage.out_apifunctions_url
+			$("#js_input_back_url_hidden").val(back_url)
+		}
+		
+		$.sx.confirm("确定导出所有微服务Api？", "预计耗时5秒！", function(){
+			$.sx.progress("导出ApiFunction.js", "数据处理中...");
+			
+			$.ajax({
+				url: "/makingapi/getServersApiFiles",
+				type: "POST",
+				dataType: "json",
+				data: {
+					v_id: $("#js_v_id").val(),
+					b_name: $("#js_before_text_name").val(),
+					b_vname: $("#js_before_text_vname").val(),
+					b_host: document.location.href
+				},
+				success: function(data){
+					// 这儿的处理流程和上面的一模一样
+					console.info(data);
+					if(data.status==0){
+						$.sx.confirm("恭喜，导出ApiFunction.js成功，是否同步到本地？", '<br><br>同步将会覆盖原文件！您也可以点此<a href="/build/'+data.fileName+'_'+$("#js_g_gateway_name").val()+'.js" target="_blank">查看生成的文件</a>，手动进行更新。<br><br>导出地址：<input type="text" class="form-control form-control-inline" value="'+back_url+'" style="width: 300px;" id="js_input_back_url" placeholder="不能为空"><br><br>', function(){
+							if(!$("#js_input_back_url_hidden").val()){
+								alert("导出地址不能为空！");
+							} else {
+								localStorage.setItem('out_apifunctions_url', $("#js_input_back_url_hidden").val());
+								window.location.href = $("#js_input_back_url_hidden").val()+"/api/updateApis?gateway_name="+$("#js_g_gateway_name").val();
+							}
+						});
+					} else {
+						$.sx.alertAutoClosed(data.message,"success");
+					}
+				}
+			});
+			
+		});
+		return false;
+	});
+	
 
 	$("body").on("change", "#js_input_back_url", function(){
 		if(!$(this).val()){
@@ -265,10 +341,10 @@ $(function(){
 
 	// 改变版本号
 	$("#js_version_select").change(function(){
-		if("{{query.g_id}}"){
-			window.location.href = "/api/list?p_id={{query.p_id}}&v_id="+$(this).val()+"&g_id={{query.g_id}}"
+		if($("js_g_id").val()){
+			window.location.href = "/api/list?p_id="+$("#js_p_id").val()+"&v_id="+$(this).val()+"&g_id="+$("#js_g_id").val();
 		} else {
-			window.location.href = "/api/list?p_id={{query.p_id}}&v_id="+$(this).val()
+			window.location.href = "/api/list?p_id="+$("#js_p_id").val()+"&v_id="+$(this).val()
 		}
 	});
 
@@ -324,12 +400,13 @@ $(function(){
 			html: $("#tpl_edit_group").html()
 		});
 		if($(this).data("edit_children")===1){
-			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box").hide();
+			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box, #js_edit_group_servers_api_gateway_name").hide();
 		} else {
-			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box").show();
+			$("#js_edit_group_servers_api_path_box, #js_edit_group_swagger_url_box, #js_edit_group_servers_api_gateway_name").show();
 		}
 		$("#edit_group_name").val($(this).data("name"));
 		$("#edit_group_group_sort").val($(this).data("sort"));
+		$("#edit_group_servers_api_gateway_name").val($(this).data("servers_api_gateway_name"));
 		$("#edit_group_servers_api_path").val($(this).data("servers_api_path"));
 		$("#edit_group_swagger_url").val($(this).data("swagger_url"));
 		$("#edit_group_id").val($(this).data("id"));

@@ -15,6 +15,7 @@ router.post('/swaggerRun', makingApi.swaggerRun);
 
 // 根据v_id导出所有api的serversApi.js文件
 router.post('/getServersApiFile', makingApi.writeServersApiFile);
+router.post('/getServersApiFiles', makingApi.writeServersApiFiles);
 // 根据api_id导出某个api的serversApi.js文件
 router.post('/updateServersApiFile', makingApi.updateServersApiFile);
 

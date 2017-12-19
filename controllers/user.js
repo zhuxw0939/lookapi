@@ -3,6 +3,7 @@
 var async = require('async');
 var crypto = require('crypto');
 var validator = require('validator');
+var request = require('request');
 
 var authModel = require('../models/auth');
 var userModel = require('../models/user');
@@ -374,3 +375,56 @@ exports.removeMessage = function (req, res, next) {
 function md5 (text) {
 	return crypto.createHash('md5').update(text).digest('hex');
 }
+
+
+// getToken
+exports.getToken = function (req, res, next) {
+	logger.info("--> getToken");
+	logger.info(req.body);
+	if(!req.body.token_env || !req.body.token_user || !req.body.token_pass){
+		return res.send({
+			status: -1,
+			message: "参数错误"
+		});
+	}
+	let url;
+	if(req.body.token_env==1){
+		url = "http://192.168.2.81:8100";
+	} else if(req.body.token_env==2){
+		url = "http://192.168.2.85:8100";
+	} else if(req.body.token_env==3){
+		url = "http://api.pre.sxw.cn/gateway";
+	} else if(req.body.token_env==4){
+		return res.send({
+			status: -2,
+			message: "暂不支持此环境"
+		});
+	} else {
+		return res.send({
+			status: -3,
+			message: "请选择Token的生成环境"
+		});
+	}
+	
+	let postJson = {
+		json: true,
+		headers: {
+			"Content-Type": "application/json",
+			"TOKEN": ""
+		},
+		url: url+"/uic/api/auth/login/cipher",
+		body: {
+			account: req.body.token_user,
+			password: req.body.token_pass,
+			client: 4,
+			loginIdentityType: 0
+		}
+	};
+	
+	// 用户登录（龚德志） #2017-05-03#
+	request.post(postJson, function (error, response, body) {
+		logger.info(error);
+		logger.info(body);
+		res.send(body);
+	});
+};

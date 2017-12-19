@@ -1,6 +1,0 @@
-共扫描接口数量：34
-
-不导入这个接口 => 未更新 /api/user_org
-不导入这个接口 => 未更新 /website_rule/get
-※【创建接口】 =>  开始创建这个新接口/api/queryTerminal
-不导入这个接口 => 未更新 /website_rule/get/{ruleWebsiteId}

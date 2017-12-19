@@ -49,7 +49,7 @@ function JsonEach($el){
 	$el.each(function () {
 		try {
 			$(this).JSONView(JSON.parse($(this).text()));
-			$(this).append('<span class="json_goright"><a href="javascript:;" class="_json_c">+</a><a href="javascript:;" class="_json_b">±</a><a href="javascript:;" class="_json_a">×</a></span>')
+			$(this).append('<span class="json_goright"><!--<a href="javascript:;" class="_json_c">-</a>--><a href="javascript:;" class="_json_b">-</a><a href="javascript:;" class="_json_a">×</a></span>')
 		} catch(error) {
 			console.info(error);
 		}

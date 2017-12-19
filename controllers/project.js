@@ -81,6 +81,7 @@ exports.createPost = function (req, res, next) {
 			// 创建项目
 			projectModel.createProject({
 				name			: req.body.name,
+				type		    : req.body.type,
 				column			: req.body.column,
 				user_id			: req.session.user.id,
 				user_name		: req.session.user.name,
@@ -296,6 +297,7 @@ exports.updateGroupPost = function (req, res, next) {
 		name			: req.body.group_name,
 		sort			: req.body.group_sort,
 		swagger_url		: req.body.swagger_url,
+		servers_api_gateway_name: req.body.servers_api_gateway_name,
 		servers_api_path: req.body.servers_api_path
 	}, function(err, data) {
 		if(err){

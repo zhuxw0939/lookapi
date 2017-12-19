@@ -6,7 +6,8 @@ $(function(){
 			return {
 				apiId: $("#js_api_id").val(),
 				data: {
-					parameters: []
+					parameters: [],
+					request_type: ""
 				},
 				group: {
 					my: {},
@@ -27,6 +28,23 @@ $(function(){
 			} else {
 				this.ajaxGetApiDetail(this.apiId);
 			}
+			
+			var new_api_url = localStorage.getItem("new_api_url");
+			var new_api_request_type = Number(localStorage.getItem("new_api_request_type"));
+			var new_api_body = localStorage.getItem("new_api_body");
+			
+			if(new_api_url && new_api_request_type){
+				console.info("1", new_api_backdate);
+				this.data.url = new_api_url;
+				this.data.request_type = new_api_request_type;
+				// this.data.back_data = new_api_body;
+				
+				localStorage.removeItem("new_api_url");
+				localStorage.removeItem("new_api_request_type");
+				// localStorage.removeItem("new_api_body");
+			}
+			
+			window.vm = this;
 		},
 		methods: {
 			onClickAddParameter: function() {
@@ -35,12 +53,20 @@ $(function(){
 				console.info(this.data.parameters);
 				this.data.parameters.push({in_type: '', type: '', ismust: ''})
 			},
+			onClickAddCallHistory: function() {
+				// 添加新参数
+				console.info("onClickAddCallHistory");
+				console.info(this.data.call_history);
+				this.data.call_history.push({site: '', column: '', time: '', user: ''})
+			},
 			onChangeProject: function(value) {
 				console.info("onChangeProject");
+				$("#js_p_id").val(value);
 				this.ajaxGetProjectVersions(value);
 			},
 			onChangeVersion: function(value) {
 				console.info("onChangeVersion");
+				$("#js_v_id").val(value);
 				this.ajaxGetGroups(value);
 			},
 			onChangeGroup: function(value) {
@@ -48,6 +74,9 @@ $(function(){
 				this.ajaxGetGroupChildrens(value);
 			},
 			ajaxGetProjectVersions: function(p_id) {
+				if(!p_id){
+					return this.versions = [];
+				}
 				this.$http.post("/project/getProjectVersions", {
 					p_id: p_id
 				}).then(function(data){
@@ -120,6 +149,7 @@ $(function(){
 			ajaxGetApiDetail: function() {
 				this.$http.get("/api/get/apiDetail?id="+this.apiId).then(function(data){
 					data = data.body;
+					console.info(data)
 					if(data.status==0){
 						data = data.data;
 						console.info(data);
@@ -129,6 +159,14 @@ $(function(){
 						this.versions = data.versions;
 						this.projects = data.projects;
 						this.configOptions = data.configOptions;
+						
+						var new_api_backdate = localStorage.getItem("new_api_backdate");
+						console.info("2", new_api_backdate);
+						if(new_api_backdate){
+							console.info("2", new_api_backdate);
+							this.data.mock_template = new_api_backdate;
+							localStorage.removeItem("new_api_backdate");
+						}
 					} else {
 						console.info(data);
 						alert(data.message);
@@ -152,14 +190,18 @@ $(function(){
 						console.info(data);
 
 						this.data.project_id = $("#js_p_id").val();
+						// if(!this.data.project_id && data.projects && data.projects.length>0) {
+						// 	this.data.project_id = data.projects[0].id;
+						// }
 						this.data.version_id = $("#js_v_id").val();
-						this.data.request_type = "";
+						// this.data.request_type = "";
 						// this.$set(this.data, 'parameters', []);
 
 						this.group = data.group;
 						this.versions = data.versions;
 						this.projects = data.projects;
 						this.configOptions = data.configOptions;
+						
 					} else {
 						console.info(data);
 						alert(data.message);
@@ -218,6 +260,7 @@ $(function(){
 	});
 
 	$("#js_saveapi").click(function(){
+		console.info("ac");
 		$("#js_form").ajaxSubmit({
 			success: function(data) {
 				console.info(data);
@@ -292,4 +335,18 @@ $(function(){
 		});
 		return false;
 	});
+	
+	$("#js_form_tabs a").click(function(){
+		if(!$(this).hasClass("current")){
+			$(this).addClass("current").siblings("a").removeClass("current");
+			$(".sx_content_a, .sx_content_b, .sx_content_c").hide();
+			$("."+$(this).data("html")).show();
+		}
+		return false;
+	})
+	
+	if($("#js_form_tabs_type").val()==1 || $("#js_form_tabs_type").val()==2){
+		$("#js_form_tabs a").eq($("#js_form_tabs_type").val()).click();
+	}
+	
 });

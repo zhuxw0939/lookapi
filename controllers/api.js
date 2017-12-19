@@ -80,6 +80,16 @@ exports.list = function (req, res, next) {
 					callback(null, data);
 				});
 			},
+			data_6: function(callback) {
+				// 获取groupData
+				if(req.query.g_id!=undefined && req.query.g_id!=""){
+					projectModel.getGroupById(req.query.g_id, function(err, data) {
+						callback(null, data);
+					});
+				} else {
+					callback(null, null);
+				}
+			},
 			data_5: ["son_ids", function(results, callback) {
 				if(req.query.g_id!=undefined && req.query.g_id!=""){
 					var newArray = [req.query.g_id];
@@ -127,7 +137,8 @@ exports.list = function (req, res, next) {
 				versionList: results.data_2,
 				groupList: results.data_3,
 				groupSonList: results.data_4,
-				apiList: results.data_5
+				apiList: results.data_5,
+				groupData: results.data_6
 			});
 		});
 	}
@@ -218,7 +229,7 @@ exports.detail = function (req, res, next) {
 exports.create = function (req, res, next) {
 
 	if(!req.query.p_id || !req.query.v_id){
-		return next("参数错误");
+		// return next("必须在项目中才能创建Api");
 	}
 
 	res.render('api/create', {
@@ -299,7 +310,6 @@ exports.createPost = function (req, res, next) {
 	res.setHeader('Content-Type', 'application/json; charset=utf-8');
 	logger.info(req.body);
 
-	logger.info("-=-=-==============================");
 
 	// 字段校验
 	if(!req.body.url || !req.body.chose_v_id || !req.body.name){
@@ -352,6 +362,7 @@ exports.createPost = function (req, res, next) {
 			apiModel.createApi({
 				name			: req.body.name,
 				url				: req.body.url,
+				url_full		: req.body.url,
 				fun_name		: req.body.fun_name,
 				parameters		: parametersArray,
 				group_id		: req.body.group_sonid ? req.body.group_sonid : req.body.group_id,
@@ -403,13 +414,38 @@ exports.getApiDetail = function (req, res, next) {
 	if(!req.query.id){
 		return next("参数错误");
 	}
-
+	
 	var ep = new eventproxy();
 	ep.fail(next);
-
-	// api基本信息
-	apiModel.getApiById(req.query.id, ep.done('get_api'));
-
+	
+	ep.all('get_api', 'get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_api, get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
+		logger.info("ep.all ***************************");
+		res.send({
+			status: 0,
+			data: {
+				query: req.query,
+				data: get_api,
+				group: {
+					my: get_group,
+					children: get_group_children,
+					fathers: get_group_all_fathers
+				},
+				versions: get_versions,
+				projects: get_my_projects,
+				configOptions: config.options
+			}
+		})
+	});
+	
+	// 获取api所属项目的所有版本
+	ep.all('get_api', function (apiData) {
+		if(apiData){
+			projectModel.getVersionsByPid(apiData.project_id, ep.done('get_versions'));
+		} else {
+			ep.emit("get_versions", null);
+		}
+	});
+	
 	// 获取api所属的栏目
 	ep.all('get_api', function (apiData) {
 		if(!apiData){
@@ -421,7 +457,16 @@ exports.getApiDetail = function (req, res, next) {
 			next();
 		}
 	});
-
+	
+	// 获取api所属版本下的所有一级栏目
+	ep.all('get_api', function (apiData) {
+		if(apiData){
+			projectModel.getGroupByVersionId(apiData.version_id, 1, ep.done('get_group_all_fathers'));
+		} else {
+			ep.emit("get_group_all_fathers", null);
+		}
+	});
+	
 	// 获取api所属的栏目
 	ep.all('get_api', function (apiData) {
 		if(apiData && apiData.group_id){
@@ -442,107 +487,90 @@ exports.getApiDetail = function (req, res, next) {
 		}
 	});
 
-	// 获取api所属版本下的所有一级栏目
-	ep.all('get_api', function (apiData) {
-		if(apiData){
-			projectModel.getGroupByVersionId(apiData.version_id, 1, ep.done('get_group_all_fathers'));
-		} else {
-			ep.emit("get_group_all_fathers", null);
-		}
-	});
-
-	// 获取api所属项目的所有版本
-	ep.all('get_api', function (apiData) {
-		if(apiData){
-			projectModel.getVersionsByPid(apiData.project_id, ep.done('get_versions'));
-		} else {
-			ep.emit("get_versions", null);
-		}
-	});
+	
 
 	// 获取我的所有项目
 	projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
-
-	ep.all('get_api', 'get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_api, get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
-		logger.info("ep.all ***************************");
-		res.send({
-			status: 0,
-			data: {
-				query: req.query,
-				data: get_api,
-				group: {
-					my: get_group,
-					children: get_group_children,
-					fathers: get_group_all_fathers
-				},
-				versions: get_versions,
-				projects: get_my_projects,
-				configOptions: config.options
-			}
-		})
-	});
-
+	
+	// api基本信息
+	apiModel.getApiById(req.query.id, ep.done('get_api'));
+	
 };
 
 // 创建api时获取一些数据
+exports.spaceFunction = function (callback) {
+	callback(null, null);
+};
 exports.apiCreate = function (req, res, next) {
-
-	if( !req.body.p_id || !req.body.v_id ){
-		return next("参数错误");
-		logger.debug("p_id或v_id为空");
-		// 如果还没有项目那就不能创建，要先创建一个项目
-	}
-
-	var ep = new eventproxy();
-	ep.fail(next);
-
-
-	// 如果传了栏目id,返回我现在的栏目信息
-	if(req.body.g_id){
-		projectModel.getGroupById(req.body.g_id, ep.done('get_group'));
-	} else {
-		ep.emit("get_group", null);
-	}
-
-	// 获取这个版本下的所有一级栏目
-	projectModel.getGroupByVersionId(req.body.v_id, 1, ep.done('get_group_all_fathers'));
-
-	// 获取api所属一级栏目下的二级栏目
-	ep.all('get_group', function (groupData) {
-		// 如果传的栏目id是二级栏目,则返回子栏目信息
-		if(groupData && groupData.father_id && groupData.father_id!=0){
-			projectModel.getGroupByFatherId(groupData.father_id, ep.done('get_group_children'));
-		} else {
-			ep.emit("get_group_children", null);
+	
+	exports.getOnePidAndVid(req.body.p_id, req.body.v_id, req.session.user.id, function(p_id, v_id){
+		if(!p_id || !v_id){
+			return next("您必须先创建一个项目才能创建Api");
 		}
-	});
-
-	// 获取我的所有项目
-	projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
-
-	// 获取所属项目的所有版本
-	projectModel.getVersionsByPid(req.body.p_id, ep.done('get_versions'));
-
-
-
-	ep.all('get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
-		logger.info("ep.all ***************************");
-		res.send({
-			status: 0,
-			data: {
-				query: req.query,
-				group: {
-					my: get_group,
-					children: get_group_children,
-					fathers: get_group_all_fathers
-				},
-				versions: get_versions,
-				projects: get_my_projects,
-				configOptions: config.options
+		
+		var ep = new eventproxy();
+		ep.fail(next);
+		
+		ep.all('get_group', 'get_group_children', 'get_group_all_fathers', 'get_versions', 'get_my_projects', function (get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects) {
+			// logger.info("ep.all ***************************");
+			// logger.info(get_group, get_group_children, get_group_all_fathers, get_versions, get_my_projects);
+			res.send({
+				status: 0,
+				data: {
+					query: req.query,
+					group: {
+						my: get_group,
+						children: get_group_children,
+						fathers: get_group_all_fathers
+					},
+					versions: get_versions,
+					projects: get_my_projects,
+					configOptions: config.options
+				}
+			})
+		});
+		
+		// 获取api所属一级栏目下的二级栏目
+		ep.all('get_group', function (groupData) {
+			// 如果传的栏目id是二级栏目,则返回子栏目信息
+			if(groupData && groupData.father_id && groupData.father_id!=0){
+				projectModel.getGroupByFatherId(groupData.father_id, ep.done('get_group_children'));
+			} else {
+				ep.emit("get_group_children", null);
 			}
-		})
+		});
+		
+		// 如果传了栏目id,返回我现在的栏目信息
+		if(req.body.g_id){
+			projectModel.getGroupById(req.body.g_id, ep.done('get_group'));
+		} else {
+			// exports.spaceFunction(ep.done("get_group"));
+			ep.emit("get_group", null);
+		}
+		// 获取这个版本下的所有一级栏目
+		projectModel.getGroupByVersionId(v_id, 1, ep.done('get_group_all_fathers'));
+		
+		// 获取我的所有项目
+		projectModel.getProjectsByUserId(req.session.user.id, ep.done('get_my_projects'));
+		
+		// 获取所属项目的所有版本
+		projectModel.getVersionsByPid(p_id, ep.done('get_versions'));
+		
 	});
+};
 
+exports.getOnePidAndVid = function (p_id, v_id, u_id, callback){
+	if( !p_id || !v_id ){
+		projectModel.getProjectsByUserId(u_id, function(error, data){
+			if(error || !data[0].id || !data[0].version_id){
+				callback(null, null);
+			} else {
+				callback(data[0].id, data[0].version_id);
+			}
+		});
+	} else {
+		callback(p_id, v_id);
+	}
 };
 
 
@@ -627,7 +655,10 @@ exports.update = function (req, res, next) {
 			parameterList: results.data_4.parameters
 		});
 	});
-};
+}
+
+
+
 // 编辑api-提交
 exports.updatePost = function (req, res, next) {
 	res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -681,8 +712,30 @@ exports.updatePost = function (req, res, next) {
 					}
 				}
 			}
-			logger.info(parametersArray);
-
+			// logger.info(parametersArray);
+			
+			var callHistoryArray = [];
+			// logger.info("--> callHistoryArray", req.body.api_call_history_site);
+			var apiCallHistorySite = [];
+			if (typeof req.body.api_call_history_site==="string"){
+				apiCallHistorySite.push(req.body.api_call_history_site);
+			} else {
+				apiCallHistorySite = req.body.api_call_history_site;
+			}
+			if(apiCallHistorySite && apiCallHistorySite.length>0){
+				for(let i=0; i<apiCallHistorySite.length; i++){
+					if(apiCallHistorySite[i]){
+						callHistoryArray.push({
+							site: apiCallHistorySite[i],
+							column: req.body.api_call_history_column[i],
+							time: req.body.api_call_history_time[i]?req.body.api_call_history_time[i]:new Date(),
+							user: req.body.api_call_history_user[i]?req.body.api_call_history_user[i]:req.body.user_name
+						})
+					}
+				}
+			}
+			// logger.info(callHistoryArray);
+			
 			var updatesArray = {
 				update_type: "editor",
 				update_id: req.body.user_id,
@@ -696,6 +749,7 @@ exports.updatePost = function (req, res, next) {
 				url: req.body.url,
 				fun_name: req.body.fun_name,
 				parameters: parametersArray,
+				call_history: callHistoryArray,
 				group_id: req.body.group_sonid ? req.body.group_sonid : req.body.group_id,
 				description: req.body.description,
 				request_type: req.body.request_type,
@@ -1747,6 +1801,114 @@ exports.getApiList = function (req, res, next) {
 };
 
 
+exports.runApiCompleteState = function (req, res, next) {
+	// 扫描本页接口完成情况
+	
+	logger.info("--> runApiCompleteState");
+	logger.info(req.body.ids);
+	logger.info(req.body.v_id);
+	if(!req.body.ids){
+		return res.send({
+			status: -1,
+			message: "ids不能为空"
+		});
+	}
+	let idsArray = req.body.ids.split(",");
+	if(!idsArray || idsArray.length===0) {
+		return res.send({
+			status: -2,
+			message: "ids不能为空！"
+		});
+	}
+	
+	var ep = new eventproxy();
+	ep.fail(next);
+	
+	ep.after('get_api', idsArray.length, function (data) {
+		return res.send({
+			status: 0,
+			message: "已完成 "+data.length+" 个接口的更新",
+			data: data
+		});
+		// 根据父级ID查询下一级区域 #郑强/2017-11-30#
+	});
+	
+	function getApiDetails(id){
+		apiModel.getApiById(id, function(error, data){
+			if(error) {
+				logger.info(error);
+				ep.emit('get_api');
+			} else if(data && data.name) {
+				logger.info("--> data.name", data.name);
+				
+				let str = data.name;
+				if(str) str = str.match(/#(\S*)#/);
+				if(str && str.length>1){
+					str = str[1];
+				} else {
+					str = "";
+				}
+				
+				if(str) {
+					str = str.split("/")
+				}
+				
+				let api_writer;
+				let api_writer_time;
+				if(str.length===1){
+					// 未完成，有作者名
+					api_writer = str[0];
+				} else if(str.length===2) {
+					// 已完成，更新过了
+					api_writer = str[0];
+					api_writer_time = str[1];
+				} else {
+					// 未完成，作者名也没有，或不合规范
+					api_writer = "";
+					api_writer_time = "";
+				}
+				logger.info(str);
+				logger.info(api_writer);
+				logger.info(api_writer_time);
+				
+				let options = {};
+				// 需要更新api_writer
+				if(api_writer && (!data.api_writer || data.api_writer!==api_writer)) {
+					options.api_writer = api_writer;
+				}
+				// 需要更新api_writer_time
+				if(api_writer_time && (!data.api_writer_time || data.api_writer_time!==api_writer_time)) {
+					options.api_writer_time = api_writer_time;
+				}
+				logger.info(options);
+				
+				// Api状态 0-未完成,1-已完成开发,2-未测试通过,3-已测试通过
+				// 没有初始状态
+				if(typeof data.api_type==="undefined"){
+					options.api_type = 0;
+				}
+				// 未完成的接口变为已完成接口
+				if(data.api_type===0 && options.api_writer_time){
+					options.api_type = 1;
+				}
+				
+				if(options.api_writer || options.api_writer_time || (typeof options.api_type!=="undefined")){
+					apiModel.updateApi(data.id, options, ep.done('get_api'))
+				} else {
+					ep.emit('get_api');
+				}
+			} else {
+				ep.emit('get_api');
+			}
+		});
+	}
+	
+	for (let i=0; i<idsArray.length; i++){
+		getApiDetails(idsArray[i]);
+	}
+	
+	
+};
 
 
 

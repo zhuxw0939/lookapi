@@ -80,7 +80,7 @@ exports.getApisByType = function (p_id, v_id, g_id, type, callback) {
 	} else if(g_id!=undefined) {
 		options.group_id = g_id;
 	}
-	mongoDB.api.find(options, {}, { sort:{create_time:-1}, limit: 500 }, callback);
+	mongoDB.api.find(options, {}, { sort:{create_time:-1}, limit: 2000 }, callback);
 };
 
 

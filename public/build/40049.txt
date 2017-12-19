@@ -1,0 +1,26 @@
+共扫描接口数量：89
+
+※【创建接口】 =>  开始创建这个新接口/api/archive/my_resource/del_testpaper/{paperID}
+※【创建接口】 =>  开始创建这个新接口/api/archive/delete_special_topic
+※【创建接口】 =>  开始创建这个新接口/api/archive/ktservice/get_indexpage_resource
+※【创建接口】 =>  开始创建这个新接口/api/archive/ktservice/get_course_resource_list/{range}/{type}/{sortway}
+※【创建接口】 =>  开始创建这个新接口/api/archive/my_resource/download_paper
+※【创建接口】 =>  开始创建这个新接口/api/archive/ktservice/find/statistic/{userId}
+※【创建接口】 =>  开始创建这个新接口/api/archive/find/user_area
+※【创建接口】 =>  开始创建这个新接口/api/archive/my_resource/del_question_resource/{questionID}
+※【创建接口】 =>  开始创建这个新接口/api/archive/redis/opteration/find/latelyarchive
+※【创建接口】 =>  开始创建这个新接口/api/archive/my_resource/get_question_resource/{relationshiptype}/{type}
+※【创建接口】 =>  开始创建这个新接口/api/archive/search_special_topic_list
+※【创建接口】 =>  开始创建这个新接口/api/archive/question/get_high_quality_questions
+※【创建接口】 =>  开始创建这个新接口/api/compress/resource/zip/{resourceId}
+※【创建接口】 =>  开始创建这个新接口/api/archive/resource/get/praiseresource
+※【创建接口】 =>  开始创建这个新接口/api/label/save
+※【创建接口】 =>  开始创建这个新接口/api/archive/save_cover
+※【创建接口】 =>  开始创建这个新接口/api/material/find_resource_question_list
+※【创建接口】 =>  开始创建这个新接口/api/practice/find_practice_list
+※【创建接口】 =>  开始创建这个新接口/api/question/type/delete_by_id
+※【创建接口】 =>  开始创建这个新接口/api/note/rename/{noteId}/{name}
+※【创建接口】 =>  开始创建这个新接口/api/teaching/resource/find/edit_resource/{resourceId}
+※【创建接口】 =>  开始创建这个新接口/api/teaching/resource/get/{resourceId}
+※【创建接口】 =>  开始创建这个新接口/api/bookmark/del/{bookMarkId}
+※【创建接口】 =>  开始创建这个新接口/api/label/add/note

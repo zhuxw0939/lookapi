@@ -14,7 +14,7 @@
 					操作
 				</button>
 				<div class="dropdown-menu">
-					<a href="#" class="dropdown-item edit_group" data-id="{{item.id}}" data-sort="{{item.sort}}" data-name="{{item.name}}" data-swagger_url="{{item.swagger_url}}" data-servers_api_path="{{item.servers_api_path}}">编辑栏目</a>
+					<a href="#" class="dropdown-item edit_group" data-id="{{item.id}}" data-sort="{{item.sort}}" data-name="{{item.name}}" data-swagger_url="{{item.swagger_url}}" data-servers_api_path="{{item.servers_api_path}}" data-servers_api_gateway_name="{{item.servers_api_gateway_name}}">编辑栏目</a>
 					<a href="#" data-id="{{item.id}}" class="dropdown-item add_son">添加子栏目</a>
 					<a href="#" class="dropdown-item del_son_groups" data-edit_noapis_groups="1">删除为空的子栏目</a>
 					<a href="#" class="dropdown-item del_son_groups">删除所有子栏目</a>
@@ -34,7 +34,7 @@
 							操作
 						</button>
 						<div class="dropdown-menu">
-							<a href="#" class="dropdown-item edit_group" data-id="{{itemSon.id}}" data-sort="{{itemSon.sort}}" data-name="{{itemSon.name}}" data-swagger_url="{{itemSon.swagger_url}}" data-servers_api_path="{{itemSon.servers_api_path}}" data-edit_children="1">编辑栏目</a>
+							<a href="#" class="dropdown-item edit_group" data-id="{{itemSon.id}}" data-sort="{{itemSon.sort}}" data-name="{{itemSon.name}}" data-swagger_url="{{itemSon.swagger_url}}" data-servers_api_path="{{itemSon.servers_api_path}}" data-servers_api_gateway_name="{{itemSon.servers_api_gateway_name}}" data-edit_children="1">编辑栏目</a>
 							<a href="#" class="dropdown-item del_group" data-id="{{itemSon.id}}">删除栏目</a>
 						</div>
 					</div>

@@ -1,0 +1,36 @@
+<div class="form-group row">
+	<label class="col-sm-2 form-control-label" style="color: #58c760;">调用历史： </label>
+	<div class="col-sm-10">
+		<table class="table-parameters">
+			<tr>
+				<th width="15%">项目名称</th>
+				<th width="30%">栏目名称或url</th>
+				<th width="25%">调用日期</th>
+				<th width="15%">调用者</th>
+			</tr>
+			<tr class="has_out_btn" v-for="(item, index) in data.call_history">
+				<td>
+					<select name="api_call_history_site" v-model="item.site" class="form-control form-control-sm">
+						<option v-for="option in configOptions.apiCallHistory" :value="option.value">${ option.name }</option>
+					</select>
+				</td>
+				<td>
+					<input name="api_call_history_column" v-model="item.column" class="form-control form-control-sm" type="text" placeholder="可以为空">
+				</td>
+				<td>
+					<input readonly name="api_call_history_time" v-model="item.time" class="form-control form-control-sm" type="text" placeholder="当前日期">
+				</td>
+				<td class="has_btn">
+					<input readonly name="api_call_history_user" v-model="item.user" class="form-control form-control-sm" type="text" placeholder="默认用户">
+					<a href="javascript:void(0)" @click="data.call_history.splice(index, 1)"><i class="iconfont">&#xe602;</i>删除</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div class="form-group row">
+	<label class="col-sm-2 form-control-label"></label>
+	<div class="col-sm-10">
+		<a href="javascript:void(0)" class="btn btn-outline-info" @click="onClickAddCallHistory">+ 添加</a>
+	</div>
+</div>

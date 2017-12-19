@@ -45,7 +45,7 @@
 <div class="column_head bg_base64 jumbotron">
 	<div class="container">
 		<h1 class="display-3">接口测试</h1>
-		<p>……</p>
+		<p>可以选择Api和相应环境在线测试</p>
 	</div>
 </div>
 <div class="container">
@@ -56,9 +56,10 @@
 			{% if data %}
 			<div class="form-group row">
 				<label class="col-sm-2 form-control-label">接口名称： </label>
-				<div class="col-sm-10">
-					<a href="/api/detail/{{data.id}}" target="_blank">{{data.name}}</a>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" readonly value="{{data.name}}">
 				</div>
+				<a href="/api/detail/{{data.id}}" class="btns-txt" style="margin-top: 7px;" target="_blank">查看</a>
 			</div>
 			{% endif %}
 			
@@ -66,7 +67,7 @@
 				<label class="col-sm-2 form-control-label">选择环境： </label>
 				<div class="col-sm-8">
 					<select name="env_id" class="form-control form-control-inline" id="js_env_id">
-						<option value="{{item.id}}">--请选择--</option>
+						<option value="{{item.id}}" selected>--请选择--</option>
 						{% for item in dataEnv %}
 							<option value="{{item.id}}" data-host="{{item.host}}">{{item.name}}</option>
 						{% endfor %}
@@ -97,9 +98,10 @@
 			</div>
 
 			<div class="form-group row">
-				<label class="col-sm-2 form-control-label">请求url： </label>
+				<label class="col-sm-2 form-control-label">Url： </label>
 				<div class="col-sm-9">
 					<input type="text" class="form-control" id="js_url" style="width: 640px; display:inline-block; margin-right: 10px; font-size: 14px;" autocomplete="on" name="url" value="{{data.url_full}}" data-url="{{data.url_full}}" placeholder="不能为空"><a href="javascript:void(0)" id="js_change_url">重置</a>
+					<input id="js_url_full" type="hidden" value="{{data.url_full}}">
 				</div>
 			</div>
 			
@@ -136,23 +138,33 @@
 			{% endif %}
 
 			<div class="form-group row">
-				<label class="col-sm-2 form-control-label">请求header： </label>
+				<label class="col-sm-2 form-control-label">Header： </label>
 				<div class="col-sm-8">
-					<textarea id="js_header" name="" class="form-control" style="width: 860px; height: 160px; font-size: 14px;"></textarea>
+					<textarea id="js_header" name="" class="form-control" style="width: 860px; height: 150px; font-size: 13px;"></textarea>
+					<p style="width: 860px; padding-top: 3px; text-align: right; "><a href="#" id="js_get_token">获取Sxw-Token</a></p>
 				</div>
 			</div>
-
-			{% if data.request_type!=2 && parameterList %}
-			{% for item in parameterList %}
-			{% if item.in_type=="body" %}
-			<div class="form-group row">
-				<label class="col-sm-2 form-control-label">body参数： </label>
-				<div class="col-sm-8">
-					<textarea id="js_body" name="" class="form-control" style="width: 860px; height: 280px; font-size: 14px;"></textarea>
+			
+			{% if query.id || query.tid %}
+				{% if data.request_type!=2 && parameterList %}
+					{% for item in parameterList %}
+						{% if item.in_type=="body" %}
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Body： </label>
+							<div class="col-sm-8">
+								<textarea id="js_body" name="" class="form-control" style="width: 860px; height: 150px; font-size: 13px;"></textarea>
+							</div>
+						</div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			{% else %}
+				<div class="form-group row">
+					<label class="col-sm-2 form-control-label">Body： </label>
+					<div class="col-sm-8">
+						<textarea id="js_body" name="" class="form-control" style="width: 860px; height: 150px; font-size: 13px;"></textarea>
+					</div>
 				</div>
-			</div>
-			{% endif %}
-			{% endfor %}
 			{% endif %}
 
 			<div class="form-group row">
@@ -162,14 +174,15 @@
 				</div>
 				<div class="col-sm-3">
 			        {% if query.id %}
+				    <a href="#" data-url="/api/update?id={{data.id}}&type=1" class="btn btn-lg btn-block btn-outline-primary" id="js_save_api_for_back_data"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存返回结果</a>
+				    <!--<a href="/api/update?id={{data.id}}" class="btn btn-lg btn-block btn-outline-primary"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存返回结果为Mock数据</a>-->
 			        <!--<a href="/api/update?id={{data.id}}" class="btn btn-lg btn-block btn-primary-outline" id="js_saveDAta"><i class="iconfont" style="top: -2px;">&#xe601;</i>保存接口</a>-->
+			        {% else %}
+				    <a href="#" class="btn btn-lg btn-block btn-outline-primary" id="js_save_new_test_api"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存接口</a>
 			        {% endif %}
-				    <a href="/api/update?id={{data.id}}" class="btn btn-lg btn-block btn-outline-primary"><i class="iconfont" style="top: -2px;">&#xe664;</i>保存接口</a>
 				</div>
 			</div>
-
 		</form>
-
 		
 	</div>
 
@@ -188,11 +201,111 @@
 	<input type="hidden" id="js_g_id" value="{{data.group_id}}">
 
 </div>
+
+<!--tpl_add_version-->
+<script type="text/html" id="tpl_get_token">
+	<form action="/user/get/token" id="js_form" method="post">
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">选择生成环境：</label>
+			<div class="col-sm-9">
+				<select name="token_env" class="form-control form-control-inline" id="js_token_env">
+					<option value="0">--请选择--</option>
+					<option value="1">dev环境</option>
+					<option value="2">test环境</option>
+					<option value="3">beta环境</option>
+					<option value="4">正式环境</option>
+			    </select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">用户名：</label>
+			<div class="col-sm-9">
+				<input type="text" name="token_user" class="form-control" value="13778081399" placeholder="请输入手机或身份证号码">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">密码：</label>
+			<div class="col-sm-9">
+				<input type="text" id="js_token_pass" class="form-control" placeholder="请输入密码">
+				<input type="hidden" id="js_token_pass_encrypt" name="token_pass">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 form-control-label">保存token：</label>
+			<div class="col-sm-9">
+				<label class="form-check-label">
+					<input type="checkbox" value="1" id="js_token_save" class="form-check-input">
+					将获得的token保存到我的当前环境下
+	            </label>
+			</div>
+		</div>
+		<div class="form-group row" style="margin-top: 2rem;">
+			<label class="col-sm-3 form-control-label"></label>
+			<div class="col-sm-9">
+				<a href="javascript:void(0)" class="btn btn-primary btn-lger" id="js_submit">确定</a>
+			</div>
+		</div>
+	</form>
+</script>
+
 {% endblock %}
 
 {% block script %}
+<script src="/static/script/aes.js"></script>
 <script>
 $(function(){
+	
+	$("#js_get_token").click(function(){
+		$.sx.dialog({
+			opentitle: "获取Sxw-Token",
+			html: $("#tpl_get_token").html()
+		});
+//		$("#js_token_pass_encrypt").val($("#js_token_pass").val().encrypt());
+		return false;
+	});
+	
+	$("body").on("change", "#js_token_pass", function(){
+		$("#js_token_pass_encrypt").val($(this).val().encrypt());
+	});
+	
+	// 新建栏目和添加子栏目-提交
+	$("body").on("click", "#js_submit", function(){
+		$("#js_form").ajaxSubmit({
+			success: function(data) {
+				console.info(data);
+				if(data.code===200 && data.data.token){
+					var token_save = $('#js_token_save').is(':checked');
+					if(token_save && currentEnvJson.id){
+						$.ajax({
+							url: "/user/updateEnvPost",
+							type: "POST",
+							dataType: "json",
+							data: {
+								id: currentEnvJson.id,
+								name: currentEnvJson.name,
+								host: currentEnvJson.host,
+								session_id: data.data.token
+							}
+						});
+					}
+					var backObject = {
+						"Content-Type": "application/json"
+					};
+					backObject.TOKEN = data.data.token;
+					$("#js_header").val(JSON.stringify(backObject, null, 2));
+					
+					$.sx.dialogClosed();
+				} else {
+					$.sx.alert(data.message);
+				}
+			}
+		});
+		return false;
+	});
+	
+	
+	
+	
 //	var dataParameters = '{{data.parameters|json}}';
 	function eachTextarea(){
 		$("textarea").each(function(){
@@ -254,15 +367,22 @@ $(function(){
 		console.info($(this).val());
 		envOnChange($(this).val());
 	});
+	var currentEnvJson;
 	function envOnChange(val){
 		let env = findEnvById(val);
+		console.info("--> envOnChange");
 		console.info(env);
+		currentEnvJson = env;
 		var backObject = {
 			"Content-Type": "application/json"
 		};
-		if(typeof val==="string" && env && env.session_id){
-			backObject.TOKEN = env.session_id;
+		if(typeof val==="string" && env){
 			localStorage.my_env = env.id;
+			if(env.session_id){
+				backObject.TOKEN = env.session_id;
+			} else {
+				backObject.TOKEN = "";
+			}
 		} else {
 			backObject.TOKEN = "";
 		}
@@ -373,7 +493,11 @@ $(function(){
 			}
 		}
 		
-		$("#js_url").val(env + path + $("#js_url").data("url") + query);
+		if($("#js_url_full").val()){
+			$("#js_url").val(env + path + $("#js_url_full").val() + query);
+		} else if($("#js_url").data("url")) {
+			$("#js_url").val(env + path + $("#js_url").data("url") + query);
+		}
 	}
 	
 	function makingDefaultFullUrl() {
@@ -381,7 +505,13 @@ $(function(){
 		if(env && env.host){
 			env = env.host;
 		}
-		$("#js_url").val(env+"/");
+		// $("#js_url").val(env+"/");
+		$("#js_url").val(env);
+		if($("#js_url_full").val()){
+			$("#js_url").val(env + $("#js_url_full").val());
+		} else if($("#js_url").data("url")) {
+			$("#js_url").val(env + $("#js_url").data("url"));
+		}
 	}
 	
 	if(!localStorage.my_env){
@@ -396,6 +526,33 @@ $(function(){
 	}
 	
 	eachTextarea();
+	
+	$("#js_save_new_test_api").click(function() {
+		localStorage.new_api_url = $("#js_url").val();
+		localStorage.new_api_request_type = $("#js_request_type").val();
+		localStorage.new_api_body = $("#js_body").val();
+		localStorage.new_api_backdate = $("#js_backdata").val();
+		window.location.href = "/api/create";
+		return false;
+	});
+	
+	
+	$("#js_save_api_for_back_data").click(function() {
+		try {
+			if($("#js_backdata").val() && typeof JSON.parse($("#js_backdata").val())==="string" && typeof JSON.parse(JSON.parse($("#js_backdata").val()))==="object"){
+				localStorage.new_api_backdate = JSON.parse($("#js_backdata").val());
+				window.location.href = $(this).data("url");
+			} else {
+				alert("返回的可能不是一个json格式的数据");
+			}
+		} catch (error) {
+			alert("返回的可能不是一个json格式的数据");
+		}
+		return false;
+	});
+	
+	
+	
 });
 </script>
 {% include '../common/codejs.html' %}

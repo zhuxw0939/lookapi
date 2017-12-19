@@ -36,6 +36,9 @@ app.use(compression());
 
 // view engine setup
 // swig.init();
+swig.setFilter("myfilter", function (input) {
+	return input.replace(/-/g, '_');
+});
 app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');

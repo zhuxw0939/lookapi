@@ -3,12 +3,15 @@ var path = require('path');
 var logger = require('./logger');
 
 var siteConfig;
-if(process.env.NODE_ENV === 'development'){
+if(process.env.NODE_ENV === 'development') {
 	// 本地开发环境
-	siteConfig = require('./config_dev_56');
+	siteConfig = require('./config.development');
+} else if(process.env.NODE_ENV === 'test') {
+	// 211.149.151.88
+	siteConfig = require('./config.test');
 } else {
 	// 线上环境
-	siteConfig = require('./config_pro');
+	siteConfig = require('./config.development');
 }
 
 module.exports = {
@@ -32,7 +35,9 @@ module.exports = {
 	maxAge: siteConfig.maxAge, // cookie 有效期30分钟
 
 	mongodb: {
-		host: siteConfig.mongodb
+		host: siteConfig.mongodb,
+		// dir: "lk_"
+		dir: "sx_lk_"
 	},
 
 	// Redis
@@ -139,6 +144,36 @@ module.exports = {
 			}, {
 				name: "选填",
 				value: 2
+			}
+		],
+		apiCallHistory: [
+			{
+				name: "--请选择--",
+				value: ""
+			}, {
+				name: "用户中心",
+				value: "用户中心"
+			}, {
+				name: "云平台",
+				value: "云平台"
+			}, {
+				name: "成绩分析",
+				value: "成绩分析"
+			}, {
+				name: "财务系统",
+				value: "财务系统"
+			}, {
+				name: "珍藏档案馆",
+				value: "珍藏档案馆"
+			}, {
+				name: "云阅卷",
+				value: "云阅卷"
+			}, {
+				name: "生学堂H5",
+				value: "生学堂H5"
+			}, {
+				name: "管控中心",
+				value: "管控中心"
 			}
 		],
 		apiParametersAuth: [

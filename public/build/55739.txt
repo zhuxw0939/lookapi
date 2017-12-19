@@ -1,4 +1,0 @@
-共扫描接口数量：148
-
-※【更新接口】 =>  强制更新接口must=1/api/paper/find_class_question
-	已将旧api（r1QZQnk9iSW）标记为过期

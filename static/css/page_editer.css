@@ -32,3 +32,42 @@
 .table-parameters tr.has_out_btn:hover td.has_btn a {
 	display: inline-block;
 }
+
+
+
+.sx_tabs {
+	margin-bottom: 50px;
+	border-bottom: 1px solid #ddd;
+}
+.sx_tabs a {
+	display: inline-block;
+	line-height: 32px;
+	font-size: 16px;
+	padding: 5px 40px;
+	border: 1px solid #ddd;
+	float: left;
+	margin-right: -1px;
+	margin-bottom: -1px;
+	position: relative;
+	color: #666;
+}
+.sx_tabs a.current {
+	background: #0275d8;
+	color: #fff;
+	border: 1px solid #0275d8;
+	z-index: 1;
+}
+
+.sx_content_a,
+.sx_content_b,
+.sx_content_c {
+	min-height: 300px;
+	margin-bottom: 60px;
+}
+.sx_content_b,
+.sx_content_c {
+	display: none;
+}
+
+
+

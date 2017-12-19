@@ -31,6 +31,8 @@ router.post('/updateEnvPost', user.updateEnvPost); // 编辑环境
 router.post('/getMyNewMessageNumber', user.getMyNewMessageNumber); // 获取新消息数量
 router.post('/removeMessage', user.removeMessage); // 删除消息
 
+router.post('/get/token', user.getToken); // 获取sxw-token
+
 
 
 module.exports = router;

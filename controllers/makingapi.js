@@ -11,7 +11,7 @@ var _ = require('lodash');
 var config=require('../common/config');
 var apiModel = require('../models/api');
 var makingApiModel = require('../models/makingapi');
-var projectModel = require('../models/project')
+var projectModel = require('../models/project');
 
 var logger = require('../common/logger');
 
@@ -324,7 +324,7 @@ exports.createSwaggerImportGroup = function (data, req, callback) {
 
 	function backCreate(description){
 		// 根据名称查询是否已经有该栏目了，有的话则不再创建，把该栏目的id和tags绑定
-		projectModel.getGroupByName(req.body.v_id, description, function(error, findData){
+		projectModel.getGroupByNameFromVidAndFid(req.body.v_id, req.body.g_id, description, function(error, findData){
 			// logger.info(findData);
 			if(error){
 				// logger.info("*** 1 ***");
@@ -539,20 +539,21 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 					});
 					createApiStepTWO(url, pathType, urlData, data1);
 				} else {
-					if(data1.swagger_time==undefined || data1.swagger_time==""){
+					
+					if(data1.api_writer_time==undefined || data1.api_writer_time==""){
 						// api不存在swagger_time字段，认为这个接口没有完成，并且没有更新
-						let logs = "不导入这个接口 => 未标注完成时间 "+url;
+						let logs = "-【不处理】 => 接口未标注完成时间 "+url;
 						logger.info(logs);
 
 						fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
-					} else if( urlDataNextKey!="" && (data1.swagger_time == makingSwaggerTime(urlDataNextKey.summary)) ) {
+					} else if( urlDataNextKey!="" && (data1.api_writer_time == makingSwaggerTime(urlDataNextKey.summary)) ) {
 						// swagger_time相同，认为这个接口没有更新
-						let logs = "不导入这个接口 => 未更新 "+url;
+						let logs = "-【不处理】 => 接口未更新 "+url;
 
 						fs.appendFile('public/build/'+saveFileName+'.txt', logs+"\r\n");
 					} else {
 						// swagger_time不相同，认为这个接口有更新
-						let logs = "※【更新接口】 =>  这个接口有更新"+url;
+						let logs = "※【更新接口】 =>  更新时间:"+makingSwaggerTime(urlDataNextKey.summary)+" "+url;
 						// step_1 将旧api的type改为2
 						apiModel.updateApi(data1.id, {
 							type: 2
@@ -893,11 +894,30 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 	// 获取SwaggerTime，没有返回空.
 	function makingSwaggerTime(name){
-		// logger.info(name);
-		var backUrl = "";
-		var testUrl = name.split("#");
-		if(testUrl.length>=2){
-			backUrl = testUrl[testUrl.length-2];
+		// logger.info("-->makingSwaggerTime:", name);
+		// var backUrl = "";
+		// var testUrl = name.split("#");
+		// if(testUrl.length>=2){
+		// 	backUrl = testUrl[testUrl.length-2];
+		// }
+		
+		let backUrl = "";
+		
+		let str = name;
+		if(str) str = str.match(/#(\S*)#/);
+		if(str && str.length>1){
+			str = str[1];
+		} else {
+			str = "";
+		}
+		
+		if(str) {
+			str = str.split("/");
+		} else {
+			str = [];
+		}
+		if(str.length===2){
+			backUrl = str[1];
 		}
 		return backUrl;
 	}
@@ -916,30 +936,52 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 	function makingFullObject(obj){
 		// logger.info(" *** makingFullObject COMING *** ");
 		// logger.info(obj);
-
+		
+		// 获取这个DTO调用的下一个的所有DTO，如果DTO检测有重复的，则视为重复引用
+		let nextRefDTO = [];
+		for (var index in obj.properties){
+			if(obj.properties[index].items!=undefined && obj.properties[index].items["$ref"]!=undefined){
+				var str = obj.properties[index].items["$ref"].split("/");
+				str = str[str.length-1];
+				var obj2 = definitions[str];
+				for (var index in obj2.properties){
+					if(obj2.properties[index].items!=undefined && obj2.properties[index].items["$ref"]!=undefined){
+						var str2 = obj2.properties[index].items["$ref"].split("/");
+						str2 = str2[str2.length-1];
+						nextRefDTO.push(str2);
+					}
+				}
+			}
+		}
+		
+		// 如果DTO检测有重复的，则视为重复引用
 		for (var index in obj.properties){
 			// logger.info(index);
 			if(obj.properties[index].items!=undefined && obj.properties[index].items["$ref"]!=undefined){
 				// logger.info("----------- coming 1 -----------------------");
-				var str = obj.properties[index].items["$ref"].split("/");
+				let str = obj.properties[index].items["$ref"].split("/");
 				str = str[str.length-1];
 				// logger.info(str);
-				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
+				// if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
+				if(nextRefDTO.findIndex(item => item===str)!==-1) {
+					logger.warn("--> 导致无限循环了 1 .............", str);
 					obj.properties[index].items={
 						"type": "same_type",
-						"description": "重复的格式!!!!!!"
+						"description": str
 					};
 				} else {
 					obj.properties[index].items=makingFullObject(definitions[str]);
 				}
 			} else if(obj.properties[index]!=undefined && obj.properties[index]["$ref"]!=undefined){
 				// logger.info("+++++++++++++++ coming 2 ++++++++++++++++++++");
-				var str = obj.properties[index]["$ref"].split("/");
+				let str = obj.properties[index]["$ref"].split("/");
 				str = str[str.length-1];
 				// logger.info(str);
 				// 自己调自己的bug
 				// 如我的parent的格式其实和我一样，这样会导致无限循环
-				if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
+				// if(str=="ExamQuestionComplexDTO"||str=="ExamQuestionSimpleDTO"||str=="ApplicationResponse") {
+				if(nextRefDTO.findIndex(item => item===str)!==-1) {
+					logger.warn("--> 导致无限循环了 2 .............", str);
 					obj.properties[index]={
 						"type": "same_type",
 						"description": "重复的格式!!!!!!"
@@ -1032,52 +1074,130 @@ exports.createSwaggerImportApi = function (data, req, tags, callback) {
 
 
 
+// 根据vid导出所有微服务api
+exports.writeServersApiFiles = function (req, res, next) {
+	logger.warn("--> writeServersApiFiles");
+	logger.info(req.body);
 
-
-
-
-
-
-
-
-
-
-
-
-// 导出所有api
-exports.writeServersApiFile = function (req, res, next) {
-
-	var apiIds = req.body.ids.split(",");
-	var fileName = req.body.v_id;
-	// var fileName = req.body.v_id+String(Math.floor(Math.random()*10000));
-
-	var ep = new eventproxy();
-	ep.fail(next);
-
-	var beforeTxt = "/**!\r\n * "+req.body.b_name+" v"+req.body.b_vname+"\r\n * 接口数量 "+req.body.b_bnumber+"\r\n * "+req.body.b_host+"\r\n *\r\n * "+moment().format('YYYY-MM-DD HH:mm:ss')+" (c) sxApi Foundation, Inc.\r\n *\r\n **/ \r\nvar servers = require('../common/servers');\r\n\r\n\r\n";
-
-	// 【1】 首先写入文件最开始的一些注释和文字
-	fs.writeFile('public/build/'+fileName+'.js', beforeTxt, ep.done('writeBefore'));
-
-	ep.all('writeBefore', function (writeBefore) {
-		// 【2】 异步并发写入所有api文件
-		ep.after('got_file', apiIds.length, function (list) {
-			// logger.info(list);
+	projectModel.getGroupByVersionId(req.body.v_id, 1, function(error, data){
+		logger.warn("--> getApisByVid");
+		logger.info(error);
+		logger.info(data);
+		
+		var ep = new eventproxy();
+		ep.fail(next);
+		
+		ep.after('make_file', data.length, function (list) {
 			res.send({
 				status: 0,
 				message: "已全部完成",
-				data: list,
-				fileName: fileName
+				data: list
 			});
+		});
+		for (var i = 0; i < data.length; i++) {
+			let item = data[i];
+			// 每次写入一个一级栏目
+			projectModel.getGroupByFatherId(item.id, function(errors, groupData){
+				let allGroups = [item.id];
+				if(!errors){
+					for(let j=0; j<groupData.length; j++){
+						allGroups.push(groupData[j].id);
+					}
+				}
+				logger.warn("--> getGroupByFatherId");
+				logger.info(allGroups);
+				apiModel.getApisByIdGroupId(allGroups, function(err, apisData){
+					logger.warn("--> getApisByIdGroupId");
+					logger.info(err);
+					let apiIds = [];
+					if(!err){
+						for(let k=0; k<apisData.length; k++){
+							apiIds.push(apisData[k].id);
+						}
+					}
+					logger.info(apiIds);
+					exports.writeServersApiFileFunction({
+						v_id: req.body.v_id,
+						ids: apiIds.join(","),
+						b_name: req.body.b_name+" "+item.name,
+						b_gateway_name: item.servers_api_gateway_name,
+						b_vname: req.body.b_vname,
+						b_bnumber: apisData.length,
+						b_host: req.body.b_host
+					}, function(error, data){
+						if(error){
+						} else {
+							ep.emit('make_file', data);
+						}
+					});
+				});
+			});
+		}
+	});
+	
+};
+
+
+// 根据ids导出所有api
+exports.writeServersApiFile = function (req, res, next) {
+	
+	if(!req.body.ids){
+		return res.send({
+			status: -2,
+			message: "ids不能为空"
+		});
+	}
+	
+	exports.writeServersApiFileFunction(req.body, function(error, data){
+		if(error){
+			res.send({
+				status: -1,
+				message: "导出失败",
+				data: error
+			});
+		} else {
+			res.send({
+				status: 0,
+				message: "已全部完成",
+				data: data
+			});
+		}
+	});
+};
+
+
+exports.writeServersApiFileFunction = function (body, callback) {
+	var apiIds = body.ids.split(",");
+	var fileName = body.v_id;
+	// var fileName = req.body.v_id+String(Math.floor(Math.random()*10000));
+	
+	var ep = new eventproxy();
+	ep.fail(callback);
+	
+	var beforeTxt = "/**!\r\n * "+body.b_name+" v"+body.b_vname+"\r\n * 接口数量 "+body.b_bnumber+"\r\n * "+body.b_host+"\r\n *\r\n * "+moment().format('YYYY-MM-DD HH:mm:ss')+" (c) sxApi Foundation, Inc.\r\n *\r\n **/ \r\nvar servers = require('../../servers');\r\n\r\n\r\n";
+	
+	// 【1】 首先写入文件最开始的一些注释和文字
+	fs.writeFile('public/build/'+fileName+'_'+body.b_gateway_name+'.js', beforeTxt, ep.done('writeBefore'));
+	
+	ep.all('writeBefore', function (writeBefore) {
+		// 【2】 异步并发写入所有api文件
+		// logger.warn("--> 开始异步并发写入所有api文件", apiIds.length,);
+		ep.after('got_file', apiIds.length, function (list) {
+			// logger.warn("--> 写入所有api文件成功", list);
+			callback(null, list);
 		});
 		for (var i = 0; i < apiIds.length; i++) {
 			// 每次写入一个api函数
-			exports.makeApiFunctions(apiIds[i], fileName, function(error, data){
+			// logger.info("--> 每次写入一个api函数", i, apiIds.length);
+			exports.makeApiFunctions(apiIds[i], fileName+'_'+body.b_gateway_name, function(error, data){
+				// logger.info("--> 写入一个api函数成功");
 				ep.emit('got_file', data);
 			});
 		}
 	});
 };
+
+
 
 // 覆盖某个api
 exports.updateServersApiFile = function (req, res, next) {

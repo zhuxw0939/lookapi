@@ -36,6 +36,7 @@ router.post('/removeApisPost', authModel.userMustLogin, api.removeApisPost); // 
 router.post('/removeNogroupApisPost', authModel.userMustLogin, api.removeNogroupApisPost); // 一次删除多个Api
 router.post('/loseApiPost', authModel.userMustLogin, api.loseApiPost); // 设置某个Api过期
 router.post('/testFunName', authModel.userMustLogin, api.testFunName); // 判断fun_name是否重复
+router.post('/runApiCompleteState', authModel.userMustLogin, api.runApiCompleteState); // 扫描本页接口完成情况
 router.post('/testSend', api.testSend); // 接口测试
 router.post('/testSend2', api.testSend2); // 接口测试
 router.get('/testSend2', api.testSend2); // 接口测试

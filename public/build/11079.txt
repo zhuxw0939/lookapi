@@ -1,0 +1,25 @@
+共扫描接口数量：23
+
+不导入这个接口 => 未更新 /api/auth/mobile_login/cipher
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/init_basic
+不导入这个接口 => 未更新 /api/auth/login/logintest
+不导入这个接口 => 未更新 /api/app-user/has-app-user
+不导入这个接口 => 未更新 /api/app/login_name/sxt_build_session
+不导入这个接口 => 未更新 /api/role/get-userapp-role/{appId}
+不导入这个接口 => 未更新 /api/auth/refreshTokenV2
+不导入这个接口 => 未更新 /api/auth/login_proxy/{proxyUserID}
+不导入这个接口 => 未更新 /api/app/get-userapp
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/init_allparent_student
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/delete_role_cache
+不导入这个接口 => 未标注完成时间 /api/auth/authority
+不导入这个接口 => 未更新 /api/sms/valid_security_status
+不导入这个接口 => 未更新 /api/auth/refresh_token
+不导入这个接口 => 未更新 /api/sms/send_auth_code
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/delete_basic_cache
+不导入这个接口 => 未更新 /api/auth/login/cipher
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/init_alltenant_currentterm
+不导入这个接口 => 未更新 /api/app/sxt_build_session
+不导入这个接口 => 未更新 /api/auth/login
+不导入这个接口 => 未更新 /api/user-auth-notify/accounts/init_role
+不导入这个接口 => 未标注完成时间 /api/sms/redis
+不导入这个接口 => 未更新 /api/sms/valid_auth_code

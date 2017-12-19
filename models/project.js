@@ -261,13 +261,28 @@ exports.getGroupById = function (id, callback) {
 
 
 /**
- * 获取栏目-根据栏目名称
+ * 获取栏目-根据栏目名称和v_id
  */
 exports.getGroupByName = function (v_id, name, callback) {
 	if (!v_id || !name) {
 		return callback();
 	}
 	mongoDB.projectGroup.findOne({version_id: v_id, name:name}, callback);
+};
+
+
+/**
+ * 获取栏目-根据栏目名称和father_id
+ */
+exports.getGroupByNameFromVidAndFid = function (v_id, f_id, name, callback) {
+	if (!v_id || !name) {
+		return callback();
+	}
+	if (!f_id) {
+		mongoDB.projectGroup.findOne({version_id: v_id, name: name}, callback);
+	} else {
+		mongoDB.projectGroup.findOne({version_id: v_id, father_id: f_id, name: name}, callback);
+	}
 };
 
 

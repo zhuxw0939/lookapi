@@ -32,9 +32,9 @@
 }
 .column_apilist_header h1 {
 	font-weight: 100;
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	color: #000;
-	line-height: 1.2em;
+	line-height: 1.5em;
 }
 .column_apilist_header span {
 	display: inline-block;
@@ -244,11 +244,11 @@ footer {
 .column_api ._left h4.level_1 i.iconfont {
 	line-height: 3rem;
 	height: 3rem;
-	padding: 0 120px;
+	padding: 0 60px;
 	
 	position: absolute;
 	top: 0;
-	right: -100px;
+	right: -40px;
 	display: inline-block;
 	font-size: 12px;
 	font-size: 8px\9;
@@ -313,3 +313,146 @@ footer {
 	line-height: 2.2rem;
 	height: 2.2rem;
 }
+
+
+
+
+
+
+
+
+
+
+
+.txts_history {
+	border: 1px solid #e9e9e9;
+	margin-bottom: 20px;
+}
+.txts_history p {
+	padding: 0 30px 8px;
+	margin: 0;
+	border-bottom: 1px solid #f7f7f7;
+}
+.txts_history p.current a {
+	cursor: default;
+}
+.txts_history p span {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 13px;
+	line-height: 24px;
+}
+.txts_history p a {
+	color: #999;
+}
+.txts_history p.current {
+	color: #999;
+	background: #f7f7f7;
+	padding: 0 30px 0px;
+}
+.txts_history p.current a {
+	color: #58c760;
+}
+.txts_history p.not_current {
+	color: #333;
+	padding-top: 0;
+	margin-top: -5px;
+	display: none;
+}
+.txts_history p.not_current a {
+	color: #111;
+}
+.txts_history p.first {
+	display: block;
+	padding-top: 10px;
+}
+.txts_history p.first span {
+}
+.txts_history p.last {
+	padding-bottom: 10px;
+}
+.txts_history p span.s_1 {
+	font-size: 12px;
+	width: 260px;
+}
+.txts_history p span {
+	text-indent: 17px;
+}
+.txts_history p.first span {
+	text-indent: 0;
+}
+.txts_history p span.s_2 {
+	width: 480px;
+}
+.txts_history p span.s_3 {
+	width: 260px;
+}
+.txts_history p span i.red {
+	font-size: 12px;
+	padding: 0 6px 0 20px;
+	display: none;
+	color: #999;
+	margin-left: -8px;
+}
+.txts_history p.first span i.red {
+	display: inline-block;
+	color: red;
+	padding: 0 6px;
+}
+.txts_history p a._lit {
+	color: #111;
+	font-size: 12px;
+}
+.txts_history p a._lit i.red {
+	color: #111;
+}
+.txts_history p a._lit {
+	display: none;
+}
+.txts_history p.first a._lit {
+	display: inline-block;
+}
+.txts_history p.current a._lit {
+	display: none;
+}
+.txts_history p span.s_1 font {
+	display: none;
+}
+.txts_history p.first span.s_1 font {
+	display: inline-block;
+}
+
+
+.table td.status_td {
+	text-align: center;
+}
+.table td.status_td span {
+	display: inline-block;
+	color: #ddd;
+	margin-top: 6px;
+	font-size: 20px;
+	cursor: default;
+}
+.table td.status_td span.status_1 {
+	font-size: 22px;
+	color: #ccc;
+}
+.table td.status_td span.status_2 {
+	color: #00e100;
+}
+.table td.status_td span.status_3 {
+	color: #00c600;
+}
+.table td.status_td span.status_4 {
+	font-size: 14px;
+	color: red;
+}
+
+
+
+
+
+
+
+
+

@@ -15,7 +15,7 @@
 	<div class="_right">
 		<div class="jumbotron column_apilist_header">
 			<h1>
-				{{data.name}}<br>
+				<font style="font-weight: 400;">{{data.name}}</font>  {{groupData.name}}<br>
 				<!--<span>分类：<font id="js_fx_html"></font></span>-->
 
 				<span>&nbsp;接口数量：{{apiList.length}}</span>
@@ -60,12 +60,18 @@
 							<a class="dropdown-item swagger_edit_btn" href="/project/group/swagger_history?id={{query.g_id}}">导入记录</a>
 							<a class="dropdown-item swagger_edit_btn" href="javascript:void(0)" id="js_swagger_run">swagger扫描</a>
 						{% endif %}
-						<a class="dropdown-item" href="javascript:void(0)" id="js_write_apifunction" data-v_id="{{query.v_id}}" >导出本页api</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_run_api_complete_state" data-v_id="{{query.v_id}}">扫描本页接口完成情况</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_write_apifunction" data-v_id="{{query.v_id}}" >导出本页所有Api</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="javascript:void(0)" id="js_del_nogroup_apis">删除本页无栏目的api</a>
-						<a class="dropdown-item" href="javascript:void(0)" id="js_del_apis">删除本页api</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_del_nogroup_apis">删除本页无栏目的Api</a>
+						<a class="dropdown-item" href="javascript:void(0)" id="js_del_apis">删除本页所有Api</a>
 					</div>
 				</div>
+				{% if !query.g_id %}
+				<button type="button" class="btn btn-sm btn-info" id="js_get_all_gateways">
+					导出所有微服务
+				</button>
+				{% endif %}
 			</h1>
 
 			<input type="hidden" id="js_before_text_name" value="{{data.name}}">
@@ -89,17 +95,29 @@
 			<table class="table table-striped table-hover table-api" id="example" class="display" cellspacing="0" width="100%">
 				<thead>
 					<tr>
-						<th width="25%">接口名称</th>
-						<th width="25%">接口URL</th>
-						<th width="15%">functionName</th>
-						<th width="10%">创建时间</th>
-						<th width="10%">最后修改</th>
+						<th width="5%">状态</th>
+						<th width="20%">接口名称</th>
+						<th width="30%">接口URL</th>
+						<th width="15%">创建时间/最后修改</th>
+						<th width="15%">调用历史</th>
 						<th width="15%" style="text-align: center;">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 					{%for item in apiList %}
 						<tr>
+							<td class="status_td">
+								<!--( ⊙   )啊！☆★◎◇◆□¤※   □ ○-->
+								{% if item.api_type==1 %}
+									<span title="已完成开发" class="status_2">○</span>
+								{% elseif item.api_type==2 %}
+									<span title="未测试通过" class="status_4">※</span>
+								{% elseif item.api_type==3 %}
+									<span title="已测试通过" class="status_3">●</span>
+								{% else %}
+									<span title="未完成开发" class="status_1">◇</span>
+								{% endif %}
+							</td>
 							<td class="api_id" data-id="{{item.id}}" style="max-width: 250px;" title="{{item.name}}"><a href="/api/detail/{{item.id}}" style="color: #333">{{item.name}}</a></td>
 							<td title="{{item.url}}">
 								{% if item.request_type==1 %}
@@ -112,28 +130,31 @@
 									<span class="btn btn-sm btn-type btn-danger">DELETE</span>
 								{% elseif item.request_type==7 %}
 									<span class="btn btn-sm btn-type btn-warning">PATCH</span>
-								{% endif %}<br>
-								{{item.url}}
-							</td>
-							<td style="max-width: 100px;">
+								{% endif %}
 								{% if item.fun_name %}
 									<span title="{{item.fun_name}}" style="color: #58c760;">{{item.fun_name}}</span>
 								{% elseif item.swagger_id %}
-									<span title="{{item.swagger_id}}" style="color: #999;">{{item.swagger_id}}</span>
+									<span title="{{item.swagger_id}}" style="color: #999;">{{item.swagger_id | myfilter}}</span>
 								{% else %}
 									<span title="{{item.id}}" style="color: #999;">{{item.id}}</span>
 								{% endif %}
+								<br>
+								{{item.url}}
 							</td>
-							<td title="{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>
-								{{item.create_time | date('Y-m-d H:i:s', -480)}}
+							<td {% if query.sort!=undefined&&query.sort=="update" %}style="color: #999; max-width: 120px;"{%else%}style="max-width: 120px; color: #999;"{%endif%}>
+								<span title="创建时间：{{item.create_time | date('Y-m-d H:i:s', -480)}} ({{item.create_name}})">{{item.create_time | date('Y-m-d H:i:s', -480)}}</span>
+								
+								{% if item.create_time | date('Y-m-d H:i:s', -480) !==item.update_time | date('Y-m-d H:i:s', -480) %}
+									<br>
+									<span style="color: #58c760" title="更新时间：{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})">{{item.update_time | date('Y-m-d H:i:s', -480)}}</span>
+								{% endif %}
 								<!--<br>({{item.create_name}})-->
 							</td>
-							<td title="{{item.update_time | date('Y-m-d H:i:s', -480)}} ({{item.update_name}})" {% if query.sort!=undefined&&query.sort=="update" %}style="max-width: 120px; color: #999;"{%else%}style="color: #999; max-width: 120px;"{%endif%}>
-								{{item.update_time | date('Y-m-d H:i:s', -480)}}
-								<!--<br>
-								{% if item.swagger_upinfo %}
-									(<a href="javascript:$.sx.alert('{{item.swagger_upinfo}}')">更新记录</a>)
-							    {% elseif item.update_name %}({{item.update_name}}){% endif %}</td>-->
+							<td style="max-width: 100px;">
+								{%for historyItem in item.call_history %}
+									<span title="{{historyItem.user}} | {{historyItem.time | date('Y-m-d H:i:s', -480)}}" style="color: #58c760;">::{{historyItem.site}}</span>
+								{% endfor%}
+							</td>
 							<td class="setting_btn" style="overflow: visible">
 								
 								<!--<a href="/api/update?id={{item.id}}" class="btn btn-sm btn-warning">编辑</a>-->
@@ -203,6 +224,12 @@
 			<label class="col-sm-3 form-control-label">栏目排序：</label>
 			<div class="col-sm-9">
 				<input type="text" name="group_sort" class="form-control form-control-inline" value="" placeholder="输入数字，越大越靠前" id="edit_group_group_sort">
+			</div>
+		</div>
+		<div class="form-group row" id="js_edit_group_servers_api_gateway_name">
+			<label class="col-sm-3 form-control-label">微服务名称：</label>
+			<div class="col-sm-9">
+				<input type="text" name="servers_api_gateway_name" class="form-control" value="" placeholder="如platform" id="edit_group_servers_api_gateway_name">
 			</div>
 		</div>
 		<div class="form-group row" id="js_edit_group_servers_api_path_box">
@@ -291,6 +318,8 @@
 <input type="hidden" id="js_g_id" value="{{query.g_id}}">
 <input type="hidden" id="js_v_id" value="{{query.v_id}}">
 <input type="hidden" id="js_p_id" value="{{query.p_id}}">
+<input type="hidden" id="js_g_name" value="{{groupData.name}}">
+<input type="hidden" id="js_g_gateway_name" value="{{groupData.servers_api_gateway_name}}">
 
 {% endblock %}
 
@@ -338,19 +367,18 @@ $(function(){
 		aLengthMenu: [20, 50, 100, 1000],
 		iDisplayLength: 1000,
 		destroy:        true,
-		stateSave: 		true, //保存表格状态
+		stateSave: 		false, //保存表格状态
 		searching: 		true, //搜索
 		ordering: 		false, //排序
 		columnDefs: [
 			{
-				targets: [0, 1, 2, 5],
+				targets: [0, 1, 2],
 				orderable: false
 			}
 		],
 		paging:			true, //分页
 		info: 			false  //数据统计
 	});
-	
 	
 	$(".js_import_again").click(function(){
 		console.info($(this).data("id"));
